@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 Raoul Duke: There's a uh, big machine in the sky, some kind of, I dunno, electric snake, 	    coming straight at us. 
 Dr. Gonzo:  Shoot it. 
 Raoul Duke: Not yet, I want to study its habits. 
+=======
+Group Members:
+David Yu
+Daniel Sopel
+>>>>>>> 847523ce449817c19793e656c48ad8de823fc4d1
