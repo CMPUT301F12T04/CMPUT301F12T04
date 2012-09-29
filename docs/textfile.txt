@@ -6,4 +6,5 @@ Raoul Duke: Not yet, I want to study its habits.
 Group Members:
 David Yu
 Daniel Sopel
+Jason Reddekopp
 >>>>>>> 847523ce449817c19793e656c48ad8de823fc4d1
