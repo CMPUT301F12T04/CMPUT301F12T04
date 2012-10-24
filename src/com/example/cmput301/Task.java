@@ -7,6 +7,7 @@ import java.util.List;
 public class Task
 {
 	private List<Response> responses;
+	
 	private String name;
 	private String description;
 	private String tid;
