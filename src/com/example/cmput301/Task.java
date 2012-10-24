@@ -9,7 +9,7 @@ public class Task
 	private List<Response> responses;
 	private String name;
 	private String description;
-	private int tid;
+	private String tid;
 	private Date timestamp;
 	private Class<Response> type;
 	
@@ -36,7 +36,7 @@ public class Task
 	{
 		return this.responses;
 	}
-	public void setTid(int tid)
+	public void setTid(String tid)
 	{
 		this.tid = tid;
 	}	
@@ -48,7 +48,7 @@ public class Task
 	{
 		return this.timestamp;
 	}
-	public int getTid()
+	public String getTid()
 	{
 		return this.tid;
 	}
