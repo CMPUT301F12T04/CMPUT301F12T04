@@ -2,7 +2,7 @@ package com.example.cmput301;
 
 import java.util.Date;
 
-abstract class Response
+public abstract class Response
 {
 	String rid;
 	Date timestamp;
