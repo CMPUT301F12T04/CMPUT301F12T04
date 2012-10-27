@@ -16,57 +16,51 @@ import org.json.JSONObject;
 
 public class WebService
 {
-
-	private static JSONObject getHttpResponse(URLConnection conn, String data) throws IOException
-	{
-		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-		wr.write(data);
-		wr.flush(); 
-		wr.close(); 
-
-		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		String line, HTTPresponse = "";
-		while ((line = rd.readLine()) != null) {
-			// Process line...
-			HTTPresponse += line;
-		}
-		rd.close();
-		try
-		{
-			return new JSONObject(HTTPresponse);
-		}
-		catch (JSONException e)
-		{
-			return null;
-		}
-	}
+	// public methods
+	/**
+	 * Adds a task to the web server.  
+	 * @param task Task to be added
+	 * @return The task received from web server with id included
+	 */
 	public static Task post(Task task)
 	{
-		try {
+		try 
+		{
+			//Construct data string
 			String data =  constructData(task);
 
-			// Send data
+			//setup connection
 			HttpURLConnection conn = setupConnections();
 
-			// Get the response
+			//send data and get response
 			JSONObject nTask = getHttpResponse(conn, data);
-
+			
 			return new Task(nTask.getString("summary"), nTask.getString("description"), nTask.getString("id"));
 
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			System.err.println("Exception " + e.toString());
 		}
+		
 		return null;
 	}
+	
+	/**
+	 * Deletes a task from the web server.
+	 * @param id ID of task to be deleted.
+	 */
 	public static void deleteTask(String id)
 	{
 		try
 		{
+			//Construct data string 
 			String data =  constructData("remove", id);
 
+			//setup connection
 			HttpURLConnection conn = setupConnections(); 
 
-			// Get the response
+			//send data and get response
 			JSONObject nTask = getHttpResponse(conn, data);
 
 			if(nTask.getString("message").equals("removed"))
@@ -77,11 +71,6 @@ public class WebService
 			{
 				throw new NoSuchElementException("Task not found");
 			}
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		catch (IOException e)
 		{
@@ -94,6 +83,12 @@ public class WebService
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Gets a task (if exists) from the web server.
+	 * @param id ID of task to search for
+	 * @return Task found, if nothing found returns null.
+	 */
 	public static Task getTask(String id)
 	{
 		try
@@ -104,7 +99,7 @@ public class WebService
 			// Setup Connection
 			HttpURLConnection conn = setupConnections(); 
 
-			// Get the response
+			// Send data and get response
 			JSONObject nTask = getHttpResponse(conn, data);
 
 			if(nTask.isNull("summary")||nTask.isNull("description"))
@@ -134,44 +129,16 @@ public class WebService
 		return null;
 	}
 
-	public static void post(Response response)
+	public void postResponse(Response response) throws Exception
 	{
-		try {
-			// Construct data
-			//			j.put("test", "something");
-			//			j.put("test2", "something2");
-			String data =  URLEncoder.encode("action", "UTF-8") + "=" + URLEncoder.encode("update","UTF-8");
-			data += "&" + URLEncoder.encode("summary", "UTF-8") + "=" + URLEncoder.encode("someReasonse", "UTF-8");
-			data += "&" + URLEncoder.encode("description", "UTF-8") + "=" + URLEncoder.encode("this is a response", "UTF-8");
-			data += "&" + URLEncoder.encode("id", "UTF-8") + "=" + URLEncoder.encode("39a2569b6b8298bf572a8675c7d9196366fcbeb1","UTF-8");
-			//		    data += "&" + URLEncoder.encode("content", "UTF-8") + "=" + URLEncoder.encode(j.toString(), "UTF-8");
-			System.out.println(data);
-
-			// Send data
-			URL url = new URL("http://crowdsourcer.softwareprocess.es/F12/CMPUT301F12T04/?");
-			URLConnection conn = url.openConnection();
-			conn.setDoOutput(true);
-			if (conn instanceof HttpURLConnection) {
-				((HttpURLConnection)conn).setRequestMethod("POST");
-			}
-			conn.setDoOutput(true);
-			OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-			wr.write(data);
-			wr.flush();
-
-			// Get the response
-			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String line;
-			while ((line = rd.readLine()) != null) {
-				// Process line...
-				System.out.println(line);
-			}
-			wr.close();
-			rd.close();
-		} catch (Exception e) {
-		}
+		throw new Exception("Not implemented");
 	}
-//private methods	
+	
+	//private methods
+	
+	/*
+	 * Constructs a data string to send to the web server.  
+	 */
 	private static String constructData(Task task) throws UnsupportedEncodingException
 	{
 		String data =  URLEncoder.encode("action","UTF8")  + "=" + URLEncoder.encode("post","UTF8");
@@ -180,6 +147,9 @@ public class WebService
 		return data;
 	}
 
+	/*
+	 * Constructs a data string to send to the web server and returns the data string.
+	 */
 	private static String constructData(String action, String id) throws UnsupportedEncodingException
 	{
 		String data =  URLEncoder.encode("action","UTF8")  + "=" + URLEncoder.encode(action,"UTF8");
@@ -187,6 +157,9 @@ public class WebService
 		return data;
 	}
 
+	/*
+	 * Sets up http connection to the web server and returns the connection.
+	 */
 	private static HttpURLConnection setupConnections() throws IOException
 	{
 		// Send data
@@ -197,5 +170,30 @@ public class WebService
 		return conn;
 	}
 
+	/*
+	 * Sends data to the web server and returns the response.
+	 */
+	private static JSONObject getHttpResponse(URLConnection conn, String data) throws IOException
+	{
+		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+		wr.write(data);
+		wr.flush(); 
+		wr.close(); 
 
+		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String line, HTTPresponse = "";
+		while ((line = rd.readLine()) != null) {
+			// Process line...
+			HTTPresponse += line;
+		}
+		rd.close();
+		try
+		{
+			return new JSONObject(HTTPresponse);
+		}
+		catch (JSONException e)
+		{
+			return null;
+		}
+	}
 }
