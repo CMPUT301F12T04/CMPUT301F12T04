@@ -4,18 +4,7 @@ import java.util.Date;
 
 public abstract class Response
 {
-	String rid;
 	Date timestamp;
-	
-	public String getRid()
-	{
-		return this.rid;
-	}
-	
-	public void setRid(String rid)
-	{
-		this.rid = rid;
-	}
 	
 	public Date getTimestamp()
 	{
