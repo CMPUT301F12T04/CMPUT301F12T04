@@ -10,18 +10,24 @@ public class Task
 	
 	private String name;
 	private String description;
-	private String tid;
+	private String id;
 	private Date timestamp;
 	private Class<Response> type;
 	
-	public Task(String name, String description, Date timestamp)
+	public Task(String name, String description)
 	{
 		this.name = name;
 		this.description = description;
-		this.timestamp = timestamp;
 		responses = new ArrayList<Response>();
 	}
 	
+	public Task(String name, String description, String id)
+	{
+		this.name = name;
+		this.description = description;
+		this.id = id;
+		responses = new ArrayList<Response>();
+	}
 	public void addResponse(Response response)
 	{
 		throw new UnsupportedOperationException("Not implemented yet");
@@ -37,9 +43,9 @@ public class Task
 	{
 		return this.responses;
 	}
-	public void setTid(String tid)
+	public void setId(String id)
 	{
-		this.tid = tid;
+		this.id = id;
 	}	
 	public Class<Response> getType()
 	{
@@ -49,9 +55,9 @@ public class Task
 	{
 		return this.timestamp;
 	}
-	public String getTid()
+	public String getId()
 	{
-		return this.tid;
+		return this.id;
 	}
 	public String getName()
 	{
