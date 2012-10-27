@@ -7,6 +7,11 @@ public abstract class Response
 	Date timestamp;
 	String annotation;
 	
+	public Response(String annotation, Date timestamp)
+	{
+		this.annotation = annotation;
+		this.timestamp = timestamp;
+	}
 	public String getAnnotation()
 	{
 		return this.annotation;

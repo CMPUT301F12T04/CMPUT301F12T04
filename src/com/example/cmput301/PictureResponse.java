@@ -8,9 +8,9 @@ public class PictureResponse extends Response
 {
 	private Picture picture;
 	
-	public PictureResponse(Picture picture, Date timestamp)
+	public PictureResponse(Picture picture, String annotation, Date timestamp)
 	{
-		super.setTimestamp(timestamp);
+		super(annotation, timestamp);
 		this.picture = picture;
 	}
 	

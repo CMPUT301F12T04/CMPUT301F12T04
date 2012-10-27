@@ -8,7 +8,7 @@ public class TextResponse extends Response
 
 	public TextResponse(String text, Date timestamp)
 	{
-		super.setTimestamp(timestamp);
+		super(null,timestamp);
 		this.text = text;
 	}
 	

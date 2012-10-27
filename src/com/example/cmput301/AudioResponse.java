@@ -8,9 +8,9 @@ public class AudioResponse extends Response
 {
 	private Audio audio;
 	
-	public AudioResponse(Audio audio, Date timestamp)
+	public AudioResponse(Audio audio, String annotation, Date timestamp)
 	{
-		super.setTimestamp(timestamp);
+		super(annotation, timestamp);
 		this.audio = audio;
 	}
 	public Audio getAudio()
