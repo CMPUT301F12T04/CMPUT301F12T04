@@ -5,6 +5,17 @@ import java.util.Date;
 public abstract class Response
 {
 	Date timestamp;
+	String annotation;
+	
+	public String getAnnotation()
+	{
+		return this.annotation;
+	}
+	
+	public void setAnnotation(String annotation)
+	{
+		this.annotation = annotation;
+	}
 	
 	public Date getTimestamp()
 	{
