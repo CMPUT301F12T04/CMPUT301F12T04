@@ -6,6 +6,8 @@ import java.util.List;
 
 public class Task
 {
+        public static final int OWNER_LOCAL = 1;
+        public static final int OWNER_REMOTE = 2;
 	private List<Response> responses;
 	
 	private String name;
@@ -13,12 +15,14 @@ public class Task
 	private String id;
 	private Date timestamp;
 	private Class<Response> type;
+        private int owner;
 	
 	public Task(String name, String description)
 	{
 		this.name = name;
 		this.description = description;
 		responses = new ArrayList<Response>();
+                this.owner = Task.OWNER_LOCAL;
 	}
 	
 	public Task(String name, String description, String id)
@@ -27,7 +31,27 @@ public class Task
 		this.description = description;
 		this.id = id;
 		responses = new ArrayList<Response>();
+                this.owner = Task.OWNER_LOCAL;
 	}
+        
+        public Task(String name, String description, int owner)
+	{
+		this.name = name;
+		this.description = description;
+		responses = new ArrayList<Response>();
+                this.owner = owner;
+	}
+	
+	public Task(String name, String description, String id, int owner)
+	{
+		this.name = name;
+		this.description = description;
+		this.id = id;
+		responses = new ArrayList<Response>();
+                this.owner = owner;
+	}
+        
+        
 	public void addResponse(Response response)
 	{
 		throw new UnsupportedOperationException("Not implemented yet");
@@ -47,6 +71,10 @@ public class Task
 	{
 		this.id = id;
 	}	
+        public void setOwner(int owner) 
+        {
+            this.owner = owner;
+        }
 	public Class<Response> getType()
 	{
 		return this.type;
@@ -67,4 +95,9 @@ public class Task
 	{
 		return this.description;
 	}
+        
+        public int getOwner() 
+        {
+            return this.owner;
+        }
 }
