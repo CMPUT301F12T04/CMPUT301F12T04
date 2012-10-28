@@ -4,5 +4,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
+    <string-array name="taskview_options">
+        <item>MyTasks</item>
+        <item>My Shared</item>
+        <item>Unanswered</item>
+        <item>Other User\'s Tasks</item>
+    </string-array>
 
 </resources>
