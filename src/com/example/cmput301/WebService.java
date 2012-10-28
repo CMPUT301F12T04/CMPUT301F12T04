@@ -18,7 +18,9 @@ public class WebService
 {
 	// public methods
 	/**
-	 * Adds a task to the web server.  
+	 * Adds a task to the web server. If it's a new task then it will 
+         * generate an id and return the task with that id.
+         * 
 	 * @param task Task to be added
 	 * @return The task received from web server with id included
 	 */
@@ -129,7 +131,7 @@ public class WebService
 		return null;
 	}
 
-	public void postResponse(Response response) throws Exception
+	public void postResponse(String id, Response response) throws Exception
 	{
 		throw new Exception("Not implemented");
 	}
