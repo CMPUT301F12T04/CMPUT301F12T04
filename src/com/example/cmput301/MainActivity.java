@@ -5,9 +5,15 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
+import android.app.Dialog;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 @TargetApi(11)
@@ -53,4 +59,43 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
+    
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	
+    	//NEED TO ADD ALL OHER COMPONENTS OF DIALOG
+    	if(item.getItemId() == R.id.menu_add) {
+    		
+    		//Defining dialog style and setting it up
+    		final Dialog dialog = new Dialog(this,R.style.dialogStyle);
+    		dialog.setContentView(R.layout.add_task_view);
+    		
+    		
+    		//Defining accept button
+    		Button acceptButton = (Button) dialog.findViewById(R.id.dialogButtonAccept);
+    		acceptButton.setOnClickListener(new OnClickListener() {
+
+    			public void onClick(View v) {
+    				dialog.dismiss();
+    			}
+    		});
+    		
+    		
+    		//Defining cancel button
+    		Button cancelButton = (Button) dialog.findViewById(R.id.dialogButtonCancel);
+    		cancelButton.setOnClickListener(new OnClickListener() {
+
+    			public void onClick(View v) {
+    				dialog.dismiss();
+    			}
+    		});
+ 
+			dialog.show();
+    		dialog.setTitle("Adding a Task");
+          Toast.makeText(this, "Add was clicked", Toast.LENGTH_SHORT).show();
+    	}
+    	return true;
+    }
+   
+    
+    
 }
