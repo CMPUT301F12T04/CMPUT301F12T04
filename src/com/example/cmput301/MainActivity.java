@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,8 +64,8 @@ public class MainActivity extends Activity {
     
     public boolean onOptionsItemSelected(MenuItem item) {
     	
-    	//NEED TO ADD ALL OHER COMPONENTS OF DIALOG
-    	if(item.getItemId() == R.id.menu_add) {
+    	
+    	if(item.getItemId() == R.id.menu_add) {   		
     		
     		//Defining dialog style and setting it up
     		final Dialog dialog = new Dialog(this,R.style.dialogStyle);
@@ -75,10 +77,41 @@ public class MainActivity extends Activity {
     		acceptButton.setOnClickListener(new OnClickListener() {
 
     			public void onClick(View v) {
+    				
+    				String titleInput;
+    	    		String descInput;
+    				 				
+    				//Get the title input
+    	    		EditText titleText = (EditText) dialog.findViewById(R.id.title_Input);
+    	    		titleInput = titleText.getText().toString();
+    	    		
+    	    		//Get the description input
+    	    		EditText descText = (EditText) dialog.findViewById(R.id.des_Input);
+    	    		descInput = descText.getText().toString();
+    				
+    	    		//Check which radio button was selected
+    	    		RadioButton rPhoto = (RadioButton) dialog.findViewById(R.id.radioPhoto);
+    	    		RadioButton rText = (RadioButton) dialog.findViewById(R.id.radioText);
+    	    		RadioButton rAudio = (RadioButton) dialog.findViewById(R.id.radioAudio);
+    	    		
+    	    		if(rPhoto.isChecked())
+    	    		{
+    	    			//type of Task is photo
+    	    		}
+    	    		else if (rText.isChecked())
+    	    		{
+    	    			//type of Task is text
+    	    		}
+    	    		else if(rAudio.isChecked())
+    	    		{
+    	    			//type of Task is audio
+    	    		}
+    	    		
+    	    		//Create new task here and add to database etc.
+    				
     				dialog.dismiss();
     			}
-    		});
-    		
+    		});   		
     		
     		//Defining cancel button
     		Button cancelButton = (Button) dialog.findViewById(R.id.dialogButtonCancel);
@@ -88,10 +121,9 @@ public class MainActivity extends Activity {
     				dialog.dismiss();
     			}
     		});
- 
+    		
 			dialog.show();
     		dialog.setTitle("Adding a Task");
-          Toast.makeText(this, "Add was clicked", Toast.LENGTH_SHORT).show();
     	}
     	return true;
     }
