@@ -129,7 +129,7 @@ public class WebService
 		return null;
 	}
 	/**
-	 * Updates a task on the web server.
+	 * Updates a task on the web server, used when response needs to be added.
 	 * @param task to be updated
 	 * @return updated task.
 	 */
