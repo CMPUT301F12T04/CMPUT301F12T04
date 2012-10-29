@@ -26,12 +26,14 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
 		
         super.onCreate(savedInstanceState);
+        
         setContentView(R.layout.activity_main);
         
         //Setting up the action bar
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         actionBar.setDisplayShowTitleEnabled(false);
+        
         
         //Defining OnNavigationListener
         OnNavigationListener mOnNavigationListener;
