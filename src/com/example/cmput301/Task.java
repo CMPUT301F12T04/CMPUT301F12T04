@@ -28,9 +28,14 @@ public class Task
 		this.id = id;
 		responses = new ArrayList<Response>();
 	}
+
 	public void addResponse(Response response)
 	{
-		throw new UnsupportedOperationException("Not implemented yet");
+		this.responses.add(response);
+	}
+	public void addResponse(TextResponse response)
+	{
+		this.responses.add(response);
 	}
 	
 	public void Update()

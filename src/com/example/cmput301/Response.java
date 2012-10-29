@@ -4,13 +4,23 @@ import java.util.Date;
 
 public abstract class Response
 {
-	Date timestamp;
-	String annotation;
+	private Date timestamp;
+	private String annotation;
+	private Object content;
 	
 	public Response(String annotation, Date timestamp)
 	{
 		this.annotation = annotation;
 		this.timestamp = timestamp;
+	}
+	
+	public Object getContent()
+	{
+		return this.content;
+	}
+	public void setContent(Object content)
+	{
+		this.content = content;
 	}
 	public String getAnnotation()
 	{

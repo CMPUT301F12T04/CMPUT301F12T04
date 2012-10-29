@@ -4,16 +4,20 @@ import java.util.Date;
 
 public class TextResponse extends Response
 {
-	String text;
+	String content;
 
-	public TextResponse(String text, Date timestamp)
+	public TextResponse(String content, Date timestamp)
 	{
 		super(null,timestamp);
-		this.text = text;
+		this.content = content;
 	}
 	
-	public String getText()
+	public String getContent()
 	{
-		return this.text;
+		return this.content;
+	}
+	public void setContent(String content)
+	{
+		this.content = content;
 	}
 }
