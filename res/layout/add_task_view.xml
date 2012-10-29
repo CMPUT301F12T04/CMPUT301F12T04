@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    
+        
+         <EditText
+             
+            android:id="@+id/title_Input"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:hint="@string/Title" >
+        </EditText>
+        
+        <EditText
+            android:id="@+id/des_Input"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/Description"
+            android:layout_below="@id/title_Input" >
+        </EditText>
+
+   
+     <LinearLayout
+        android:id="@+id/RadioButtonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:layout_below="@id/des_Input" >
+    
+     <RadioGroup
+        android:id="@+id/ResponseType"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+        
+         <RadioButton
+            android:id="@+id/radioText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Text" 
+            android:layout_weight="1"
+            android:checked="true" />
+ 
+        <RadioButton
+            android:id="@+id/radioAudio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Audio" />
+         
+        <RadioButton
+            android:id="@+id/radioPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Photo" />
+                
+    </RadioGroup>
+    
+    </LinearLayout>
+    
+   
+    <LinearLayout
+        android:id="@+id/BotButtonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below ="@id/RadioButtonLayout"
+        android:weightSum="2" >
+
+         <Button
+            android:id="@+id/dialogButtonAccept"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Accept" >
+        </Button>
+        
+        <Button
+            android:id="@+id/dialogButtonCancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Cancel" >
+        </Button>
+
+       
+    </LinearLayout>
+ 
+ 
+</RelativeLayout>
+    
