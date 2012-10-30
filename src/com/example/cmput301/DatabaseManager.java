@@ -71,11 +71,5 @@ public class DatabaseManager {
         
     }
 
-    /**
-     * Post a response to a task with the given id in the database.
-     *
-     * @param response
-     */
-    public void postResponse(String id, Response response) {
-    }
+   
 }

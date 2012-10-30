@@ -53,6 +53,24 @@ public class TaskManager {
 
         return true;
     }
+    
+     /**
+     * Post a response to a task with the given id in the database.
+     *
+     * @param response
+     * @param task
+     */
+    public void postResponse(Task task, Response response) {
+        
+        //If its private dont update the webservice first.
+        if(task.getStatus() == Task.STATUS_PRIVATE) {
+            task.addResponse(response);
+            DatabaseManager.updateTask(task);
+        } else {
+            Task updatedTask = WebService.postResponse(task, response);
+            DatabaseManager.updateTask(updatedTask);
+        }
+    }
 
     
 }

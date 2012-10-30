@@ -231,7 +231,7 @@ public class WebService
 		return responsesJSON; 
 	}
 
-	public static Task postResponse(Task task, Response response) throws Exception
+	public static Task postResponse(Task task, Response response)
 	{
 		Task serverTask = getTask(task.getId());
 		serverTask.addResponse(response);
