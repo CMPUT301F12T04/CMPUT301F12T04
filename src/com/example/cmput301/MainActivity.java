@@ -1,22 +1,27 @@
 package com.example.cmput301;
 
+import java.util.ArrayList;
 import android.os.Bundle;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 @TargetApi(11)
 public class MainActivity extends Activity {
@@ -56,6 +61,32 @@ public class MainActivity extends Activity {
         	  }
         	};
         	actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
+        	
+        	
+        	//fake tasks for now
+        	ArrayList<String> tasks = new ArrayList<String>();
+        	tasks.add("Task1");
+        	tasks.add("Task2");
+        	tasks.add("Task3");
+        	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        			R.layout.task_entry, tasks);
+        	
+        	  ListView taskview;
+        	  taskview = (ListView) findViewById(R.id.mainActivityList);
+              taskview.setAdapter(adapter);
+              taskview.setOnItemClickListener(new OnItemClickListener() {
+              	
+              	//When item is clicked individual task view is opened for now
+                  public void onItemClick(AdapterView<?> adp, View view,
+                      int pos, long id) {
+                     Intent in = new Intent(MainActivity.this,IndividualTaskView.class);
+                      startActivity(in);
+                  }
+
+              });
+        	
+        	
+        	
     }
 
     @Override
