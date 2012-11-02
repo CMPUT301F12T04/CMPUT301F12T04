@@ -11,7 +11,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.json.JSONArray;
@@ -22,64 +22,72 @@ import android.util.Log;
 public class WebService
 {
 	// public methods
+
 	/**
 	 * Adds a task to the web server.  
 	 * @param task to be added
 	 * @return The task received from web server with id included
 	 */
-	public static Task post(Task task)
+	public static Task put(Task task)
 	{
-		try 
-		{
-			//Construct data string
-			String data =  constructData(task);
+		try
+		{	
+			//get data string
+			String dataString = getDataString(toJson(task), "post");
 
 			//setup connection
 			HttpURLConnection conn = setupConnections();
-
-			//send data and get response
-			JSONObject nTask = getHttpResponse(conn, data);
-
-			return new Task(nTask.getString("summary"), nTask.getString("description"), nTask.getString("id"));
-
-		} 
-		catch (IOException e)
-		{
-			Log.d("IOException", e.getMessage());
+		
+			// Send data and get response
+			String httpResponse = getHttpResponse(conn, dataString);
+			
+			// convert string response to json object
+			JSONObject jsonObject = toJsonTask(httpResponse);
+			
+			// convert json object to task and return
+			return toTask(jsonObject);
 		}
 		catch (JSONException e)
 		{
-			Log.d("JSONException", e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
+		catch (UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	/**
 	 * Deletes a task from the web server.
-	 * @param id of task to be deleted.
+	 * @param task to be deleted.
+	 * @return true if deleted, false if not
 	 */
-	public static void deleteTask(String id)
+	public static boolean delete(String id)
 	{
 		try
 		{
-			//Construct data string 
-			String data =  constructData("remove", id);
+			//get data string
+			String dataString = getDataString(id, "remove");
 
 			//setup connection
-			HttpURLConnection conn = setupConnections(); 
+			HttpURLConnection conn = setupConnections();
 
 			//send data and get response
-			JSONObject nTask = getHttpResponse(conn, data);
-
-			if(nTask.getString("message").equals("removed"))
-			{
-				System.out.println("Task removed");
-			}
-			else
-			{
-				throw new NoSuchElementException("Task not found");
-			}
+			String httpResponse = getHttpResponse(conn, dataString);
+			
+			//convert response to json object
+			JSONObject jsonObject = new JSONObject(httpResponse);
+			
+			//return true if task was deleted, false if otherwise
+			return jsonObject.getString("message").equals("removes") ? true : false;
 		}
 		catch (IOException e)
 		{
@@ -89,34 +97,32 @@ public class WebService
 		{
 			Log.d("JSONException", e.getMessage());
 		}
+		return false;
 	}
 
 	/**
 	 * Gets a task (if exists) from the web server.
-	 * @param id of task to search for
+	 * @param id to search for
 	 * @return Task found, if nothing found returns null.
 	 */
-	public static Task getTask(String id)
+	public static Task get(String id)
 	{
 		try
 		{
 			//Construct data string
-			String data =  constructData("get", id);
+			String data =  getDataString(id, "get");
 
 			// Setup Connection
 			HttpURLConnection conn = setupConnections(); 
 
 			// Send data and get response
-			JSONObject nTask = getHttpResponse(conn, data);
+			String httpResponse = getHttpResponse(conn,data);
 
-			if(nTask.isNull("summary")||nTask.isNull("description"))
-			{
-				return null;
-			}
-			else
-			{
-				return new Task(nTask.getString("summary"), nTask.getString("description"), nTask.getString("id"));
-			}
+			// convert string response to json object
+			JSONObject jsonObject = toJsonTask(httpResponse);
+			
+			// convert json object to task and return
+			return toTask(jsonObject);
 		}
 		catch (IOException e)
 		{
@@ -128,44 +134,43 @@ public class WebService
 		}
 		return null;
 	}
+
+
 	/**
-	 * Updates a task on the web server, used when response needs to be added.
+	 * Posts a task on the web server, used when response needs to be added.
 	 * @param task to be updated
 	 * @return updated task.
 	 */
-	public static Task updateResponse(Task task)
+	public static Task post(Task task)
 	{
 		try
-		{
-			//convert responses to JSON
-			JSONArray responsesJSON = convertResponsesToJSON(task.getResponses());
-			
-			//construct data 
-			String data = constructData("update",task.getId());
-			data += "&" + URLEncoder.encode("summary","UTF8")  + "=" + URLEncoder.encode(task.getName(),"UTF8");
-			data += "&" + URLEncoder.encode("description","UTF8")  + "=" + URLEncoder.encode(task.getDescription(),"UTF8");
-			data += "&" + URLEncoder.encode("content","UTF8")  + "=" + URLEncoder.encode(responsesJSON.toString(),"UTF8");
+		{	
+			//get data string
+			String dataString = getDataString(toJson(task), "get");
 
-			// Setup Connection
-			HttpURLConnection conn = setupConnections(); 
+			//setup connection
+			HttpURLConnection conn = setupConnections();
 
-			// Send data and get response
-			JSONObject taskJSON = getHttpResponse(conn, data);
+			//send data and get response
+			String httpResponse = getHttpResponse(conn, dataString);
+
+			// convert string response to json object
+			JSONObject jsonObject = toJsonTask(httpResponse);
 			
-			Task nTask = parseJSONIntoTask(taskJSON);
-			return nTask;
-			
-		}
-		catch (IOException e)
-		{
-			Log.d("IOException", e.getMessage());
+			// convert json object to task and return
+			return toTask(jsonObject);
 		}
 		catch (JSONException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch (ParseException e)
+		catch (UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -173,87 +178,65 @@ public class WebService
 		return null;
 	}
 
-	private static Task parseJSONIntoTask(JSONObject taskJSON) throws JSONException, ParseException
-	{
-		//get list of responses
-		JSONArray nResponses = (JSONArray)taskJSON.get("content");
-		
-		
-		//parse json --> task
-		
 
-		//create new task to eventually return 
-		Task someTask = new Task(taskJSON.getString("summary"), taskJSON.getString("description"), taskJSON.getString("id"));
-		
-		//add all responses to task
-		for(int i = 0; i < nResponses.length(); i++)
+	/**
+	 * Gets all tasks from web server.
+	 * @return List<Task> of all tasks on web server.
+	 */
+	public static List<Task> list()
+	{
+		try
 		{
-			JSONObject obj = (JSONObject) nResponses.get(i);
-			@SuppressWarnings("unchecked")
-			String type = obj.getString("type");
-			Response response;
-			if(type.equals(TextResponse.class.toString()))
-			{
-				response = new TextResponse(obj.getString("content"),
-						new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(obj.getString("timestamp")));
-			}
-			else if(type.equals(PictureResponse.class.toString()))
-			{
-				//wrong
-				response = new TextResponse(obj.getString("content"), (Date)obj.get("timestamp"));
-			}
-			else if(type.equals(AudioResponse.class.toString()))
-			{
-				//wrong
-				response = new TextResponse(obj.getString("content"), (Date)obj.get("timestamp"));
-			}
-			else
-			{
-				throw new IllegalStateException();
-			}
-			someTask.addResponse(response);	
-		}
-		return someTask;
-	}
+			String dataString = getDataString((JSONObject)null, "list");
 
-	private static JSONArray convertResponsesToJSON(List<Response> responses) throws JSONException
-	{
-		JSONArray responsesJSON = new JSONArray();
-		for(Response response: responses)
+			//setup connection
+			HttpURLConnection conn = setupConnections();
+
+			//send data and get response
+			String httpResponse = getHttpResponse(conn, dataString);
+			
+			//convert response to json array
+			JSONArray jsonArray = new JSONArray(httpResponse);
+			
+			return fromJsonArray(jsonArray);
+		}
+		catch (UnsupportedEncodingException e)
 		{
-			JSONObject responseJSON = new JSONObject();
-			responseJSON.accumulate("timestamp", response.getTimestamp().toString());
-			responseJSON.accumulate("annotation", response.getAnnotation());
-			responseJSON.accumulate("content", response.getContent());
-			responseJSON.accumulate("type", response.getClass());
-			responsesJSON.put(responseJSON);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return responsesJSON; 
-	}
-
-	public static Task postResponse(Task task, Response response)
-	{
-		Task serverTask = getTask(task.getId());
-		serverTask.addResponse(response);
+		catch (UnsupportedOperationException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
-	//private methods	
-	/* Constructs a data string to send to the web server.  */
-	private static String constructData(Task task) throws UnsupportedEncodingException
-	{
-		String data =  URLEncoder.encode("action","UTF8")  + "=" + URLEncoder.encode("post","UTF8");
-		data += "&" + URLEncoder.encode("summary","UTF8")  + "=" + URLEncoder.encode(task.getName(),"UTF8");
-		data += "&" + URLEncoder.encode("description","UTF8") + "=" + URLEncoder.encode(task.getDescription(),"UTF8");
-		return data;
-	}
 
-	/*Constructs a data string to send to the web server and returns the data string. */
-	private static String constructData(String action, String id) throws UnsupportedEncodingException
+	//private methods
+
+	/* returns a list of tasks from a jsonArray */
+	private static List<Task> fromJsonArray(JSONArray jsonArray) throws JSONException
 	{
-		String data =  URLEncoder.encode("action","UTF8")  + "=" + URLEncoder.encode(action,"UTF8");
-		data += "&" + URLEncoder.encode("id","UTF8")  + "=" + URLEncoder.encode(id,"UTF8");
-		return data;
+
+		List<Task> tasks = new ArrayList<Task>();
+		for(int i = 0; i < jsonArray.length(); i++)
+		{
+			String id = jsonArray.getJSONObject(i).getString("id");
+			tasks.add(get(id));
+		}
+		return tasks;
 	}
 
 	/* Sets up http connection to the web server and returns the connection.*/
@@ -268,7 +251,7 @@ public class WebService
 	}
 
 	/* Sends data to the web server and returns the response.*/
-	private static JSONObject getHttpResponse(URLConnection conn, String data) throws IOException
+	private static String getHttpResponse(URLConnection conn, String data) throws IOException
 	{
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 		wr.write(data);
@@ -276,19 +259,130 @@ public class WebService
 		wr.close(); 
 
 		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		String line, HTTPresponse = "";
+		String line, HttpResponse = "";
 		while ((line = rd.readLine()) != null) {
 			// Process line...
-			HTTPresponse += line;
+			HttpResponse += line;
 		}
 		rd.close();
-		try
-		{
-			return new JSONObject(HTTPresponse);
-		}
-		catch (JSONException e)
+		return HttpResponse;
+	}
+	
+	/* Converts json string into a task object and returns. */
+	private static Task toTask(JSONObject obj) throws JSONException
+	{
+		if(obj==null)
 		{
 			return null;
 		}
+		else
+		{
+			return new Task(obj.getString("name"), obj.getString("description"), obj.getString("id")
+					,obj.getInt("status"), toResponses(obj));
+		}
 	}
+
+	/* Gets list of responses from jsonObject and returns */
+	private static List<Response> toResponses(JSONObject jsonObject) throws JSONException
+	{
+		try
+		{
+			JSONArray jsonArray = jsonObject.getJSONArray("responses");
+			List<Response> responses = new ArrayList<Response>();
+			String type = jsonObject.getString("type");
+			if(type.equals(TextResponse.class.toString()))
+			{
+				for(int i = 0; i < jsonArray.length(); i++)
+				{
+					responses.add(new TextResponse(jsonArray.getJSONObject(i).getString("content"),
+							new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(jsonArray.getJSONObject(i).getString("timestamp"))));
+				}
+			}
+			else if(type.equals(PictureResponse.class.toString()))
+			{
+				throw new UnsupportedOperationException("Not implemented");
+			}
+			else if(type.equals(AudioResponse.class.toString()))
+			{
+				throw new UnsupportedOperationException("Not implemented");
+			}
+			else
+			{
+				throw new IllegalStateException();
+			}
+
+			return responses;
+		}
+		catch(ParseException e)
+		{
+			System.err.println("Could not parse date");
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/* Constructs a data string to send to the web server.  */
+	private static String getDataString(JSONObject jsonObject, String action) throws UnsupportedEncodingException, JSONException, UnsupportedOperationException
+	{
+		String data =  URLEncoder.encode("action","UTF8")  + "=" + URLEncoder.encode(action,"UTF8");
+		if(action.equals("post"))
+		{
+			if(!jsonObject.isNull("id"))
+			{
+				data += "&" + URLEncoder.encode("id","UTF8")  + "=" + URLEncoder.encode(jsonObject.getString("id"),"UTF8");
+			}
+			data += "&" + URLEncoder.encode("content","UTF8")  + "=" + URLEncoder.encode(jsonObject.toString(),"UTF8");
+			return data;
+		}
+		else if(action.equals("list"))
+		{
+			return data;
+		}
+		else
+		{
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	/* Overload.  For remove and get */
+	private static String getDataString(String id, String action) throws UnsupportedEncodingException
+	{
+		String data =  URLEncoder.encode("action","UTF8")  + "=" + URLEncoder.encode(action,"UTF8");
+		data += "&" + URLEncoder.encode("id","UTF8")  + "=" + URLEncoder.encode(id,"UTF8");
+		return data;
+	}
+	
+	/* Parse task into json object */
+	private static JSONObject toJson(Task task) throws JSONException
+	{
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("name", task.getName());
+		jsonObject.put("description", task.getDescription());
+		jsonObject.put("id", task.getId());
+		jsonObject.put("type", task.getType());
+		jsonObject.put("status", task.getStatus());
+
+		List<Response> responses = task.getResponses();
+		JSONArray arr = new JSONArray();
+		for(Response response : responses)
+		{
+			JSONObject jo = new JSONObject();
+			jo.put("content", response.getContent());
+			jo.put("timestamp", response.getTimestamp());
+			arr.put(jo);
+		}
+		jsonObject.put("responses", arr);
+		return jsonObject;
+	}
+
+	/* converts httpresponse from crowdsourcer into a json task object */
+	private static JSONObject toJsonTask(String httpResponse) throws JSONException
+	{
+		// TODO Auto-generated method stub
+		JSONObject jsonResponse = new JSONObject(httpResponse);
+		JSONObject jsonTask = jsonResponse.getJSONObject("content");
+		jsonTask.put("id", jsonResponse.get("id"));
+		return jsonTask;
+	}
+	
 }

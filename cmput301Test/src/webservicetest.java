@@ -45,4 +45,14 @@ public class webservicetest extends TestCase
 		assertTrue(deletedTask==null);
 	}
 	
+	public void testAddResponse()
+	{
+		Task task = new Task("Task with responses","Description",null);
+		task = WebService.post(task);
+		task.addResponse(new TextResponse("someResponse", new Date()));
+		task.addResponse(new TextResponse("someSecondResponse", newDate()));
+		WebService.updateResponse(task);
+		assertTrue(1==2);
+	}
+	
 }
