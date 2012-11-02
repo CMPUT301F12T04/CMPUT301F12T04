@@ -25,6 +25,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 @TargetApi(11)
 public class MainActivity extends Activity {
+	
+	private MainController mainController;
 
     
 	@Override
@@ -141,13 +143,14 @@ public class MainActivity extends Activity {
     	    		}
     	    		
     	    		//Create new task here and add to database etc.
-    				
+    				mainController.addTask(titleInput, descInput);
     				dialog.dismiss();
     			}
     		});   		
     		
     		//Defining cancel button
     		Button cancelButton = (Button) dialog.findViewById(R.id.dialogButtonCancel);
+    		
     		cancelButton.setOnClickListener(new OnClickListener() {
 
     			public void onClick(View v) {
