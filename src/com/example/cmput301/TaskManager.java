@@ -4,8 +4,13 @@ import java.util.List;
 
 public class TaskManager {
 
+    private DatabaseManager dbman;
     private List<Task> tasks;
 
+    private TaskManager() {
+        this.dbman = new DatabaseManager("database_tables");
+    }
+    
     /**
      * Attaches task to the local database and returns the task which was added
      * along with it's id.
@@ -15,7 +20,7 @@ public class TaskManager {
      */
     public Task addTask(Task task) {
 
-        Task addedTask = DatabaseManager.postLocal(task);
+        Task addedTask = dbman.postLocal(task);
 
         return addedTask;
     }
@@ -28,7 +33,7 @@ public class TaskManager {
     public void shareTask(String id) {
 
         //Get the task from the database.
-        Task localTask = DatabaseManager.getLocalTask(id);
+        Task localTask = dbman.getLocalTask(id);
 
         //Post to the webservice.
         Task remoteTask = WebService.put(localTask);
@@ -39,11 +44,11 @@ public class TaskManager {
         //--
 
         //Remove the local version of the task.
-        DatabaseManager.deleteLocalTask(localTask.getId());
+        dbman.deleteLocalTask(localTask.getId());
 
         //Add the remote version of the task.
         remoteTask.setStatus(Task.STATUS_SHARED);
-        DatabaseManager.postLocal(remoteTask);
+        dbman.postLocal(remoteTask);
 
     }
 
@@ -65,10 +70,10 @@ public class TaskManager {
         //If its private dont update the webservice first.
         if(task.getStatus() == Task.STATUS_PRIVATE) {
             task.addResponse(response);
-            DatabaseManager.updateTask(task);
+            dbman.updateTask(task);
         } else {
             Task updatedTask = WebService.post(task, response);
-            DatabaseManager.updateTask(updatedTask);
+            dbman.updateTask(updatedTask);
         }
     }
 
