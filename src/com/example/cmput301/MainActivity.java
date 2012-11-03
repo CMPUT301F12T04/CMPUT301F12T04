@@ -84,16 +84,17 @@ public class MainActivity extends Activity {
         	  taskview.setAdapter(ca);
         	  taskview.setOnItemClickListener(new OnItemClickListener() {
 
-        		  //When item is clicked individual task view is opened for now
+        		  //When item is clicked individual task view is opened,
+        		  //the task is passed to individualtaskview
         		  public void onItemClick(AdapterView<?> adp, View view,
         				  int pos, long id) {
         			  Intent in = new Intent(MainActivity.this,IndividualTaskView.class);
         			  Bundle bundle = new Bundle();
-        			  bundle.putString("title", tasks.get(pos).getName());
-        			  bundle.putString("description", tasks.get(pos).getDescription());
         			  bundle.putInt("id", pos);
+        			  bundle.putSerializable("task", tasks.get(pos));
         			  in.putExtras(bundle);
         			  startActivity(in);
+       
         		  }
 
         	  });
