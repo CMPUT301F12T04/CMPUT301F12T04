@@ -19,7 +19,7 @@ public class Task implements Comparable {
     private String description;
     private String id;
     private Date timestamp;
-    private Class<Response> type;
+    private String type;
     private int status;
 
     public Task(String name, String description) {
@@ -52,7 +52,26 @@ public class Task implements Comparable {
         this.status = status;
     }
 
-    public void addResponse(Response response) {
+    public Task(String name, String description, String id, int status,
+			List<Response> responses)
+	{
+		this.name = name;
+		this.description = description;
+		this.id = id;
+		this.status = status;
+		this.responses = responses;
+	}
+
+	public Task(String name, String description, String id, String type)
+	{
+		this.name = name;
+		this.description = description;
+		this.id = id;
+		this.type = type;
+		this.responses = new ArrayList<Response>();
+	}
+
+	public void addResponse(Response response) {
         this.responses.add(response);
     }
 
@@ -70,7 +89,7 @@ public class Task implements Comparable {
         this.status = status;
     }
 
-    public Class<Response> getType() {
+    public String getType() {
         return this.type;
     }
 
