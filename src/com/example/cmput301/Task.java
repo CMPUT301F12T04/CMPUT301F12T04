@@ -1,5 +1,6 @@
 package com.example.cmput301;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
  *
  * @author amccann
  */
-public class Task implements Comparable {
+public class Task implements Comparable, Serializable {
     
     //All remote tasks MUST have a shared status.
     public static final int STATUS_PRIVATE = 1;

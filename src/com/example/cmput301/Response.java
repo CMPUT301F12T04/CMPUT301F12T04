@@ -1,8 +1,9 @@
 package com.example.cmput301;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public abstract class Response
+public abstract class Response implements Serializable
 {
 	private Date timestamp;
 	private String annotation;
