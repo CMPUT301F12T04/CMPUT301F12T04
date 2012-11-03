@@ -31,31 +31,32 @@ public class Task implements Comparable, Serializable {
 		this.type = TextResponse.class.toString();
     }
 
-    public Task(String name, String description, String id) {
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        responses = new ArrayList<Response>();
-        this.status = Task.STATUS_PRIVATE;
-		this.type = TextResponse.class.toString();
-    }
+    /* CAN BE DELTED IMO */
+//    public Task(String name, String description, String id) {
+//        this.name = name;
+//        this.description = description;
+//        this.id = id;
+//        responses = new ArrayList<Response>();
+//        this.status = Task.STATUS_PRIVATE;
+//		this.type = TextResponse.class.toString();
+//    }
 
-    public Task(String name, String description, int status) {
-        this.name = name;
-        this.description = description;
-        responses = new ArrayList<Response>();
-        this.status = status;
-		this.type = TextResponse.class.toString();
-    }
-
-    public Task(String name, String description, String id, int status) {
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        responses = new ArrayList<Response>();
-        this.status = status;
-		this.type = TextResponse.class.toString();
-    }
+//    public Task(String name, String description, int status) {
+//        this.name = name;
+//        this.description = description;
+//        responses = new ArrayList<Response>();
+//        this.status = status;
+//		this.type = TextResponse.class.toString();
+//    }
+//
+//    public Task(String name, String description, String id, int status) {
+//        this.name = name;
+//        this.description = description;
+//        this.id = id;
+//        responses = new ArrayList<Response>();
+//        this.status = status;
+//		this.type = TextResponse.class.toString();
+//    }
 
     public Task(String name, String description, String id, int status,
 			List<Response> responses)
