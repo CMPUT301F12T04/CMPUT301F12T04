@@ -137,23 +137,30 @@ public class WebService
 
 
 	/**
-	 * Posts a task on the web server, used when response needs to be added.
+	 * Posts a task on the web server, used when response needs to be added.  
 	 * @param task to be updated
+	 * @param response response to be added
 	 * @return updated task.
 	 */
-	public static Task post(Task task)
+	public static Task post(Task task, Response response)
 	{
 		try
 		{	
-			//get data string
-			String dataString = getDataString(toJson(task), "get");
-
-			//setup connection
+			//get current version of task from webservice
+			Task webTask = get(task.getId());
+			
+			// add new response
+			webTask.addResponse(response);
+			
+			// get data string
+			String dataString = getDataString(toJson(webTask), "post");
+			
+			// setup connection
 			HttpURLConnection conn = setupConnections();
-
-			//send data and get response
+			
+			// send data and get response
 			String httpResponse = getHttpResponse(conn, dataString);
-
+			
 			// convert string response to json object
 			JSONObject jsonObject = toJsonTask(httpResponse);
 			
@@ -223,7 +230,6 @@ public class WebService
 		return null;
 	}
 
-
 	//private methods
 
 	/* returns a list of tasks from a jsonArray */
@@ -259,13 +265,13 @@ public class WebService
 		wr.close(); 
 
 		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		String line, HttpResponse = "";
+		String line, httpResponse = "";
 		while ((line = rd.readLine()) != null) {
 			// Process line...
-			HttpResponse += line;
+			httpResponse += line;
 		}
 		rd.close();
-		return HttpResponse;
+		return httpResponse;
 	}
 	
 	/* Converts json string into a task object and returns. */
