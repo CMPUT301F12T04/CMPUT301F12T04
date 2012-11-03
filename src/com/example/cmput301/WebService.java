@@ -269,7 +269,7 @@ public class WebService
 	}
 	
 	/* Converts json string into a task object and returns. */
-	 private static Task toTask(JSONObject obj) throws JSONException
+	private static Task toTask(JSONObject obj) throws JSONException
 	{
 		if(obj==null)
 		{
@@ -278,7 +278,7 @@ public class WebService
 		else
 		{
 			return new Task(obj.getString("name"), obj.getString("description"), obj.getString("id")
-					,obj.getInt("status")), toResponses(obj));
+					,obj.getInt("status"), toResponses(obj));
 		}
 	}
 
