@@ -20,8 +20,10 @@ import android.util.Log;
 
 public class WebService
 {
-	/* public methods */
+	private static String uri = "http://crowdsourcer.softwareprocess.es/F12/CMPUT301F12T04/";
 
+	/* public methods */
+	
 	/**
 	 * Adds a task to the web server.  
 	 * @param task to be added
@@ -289,7 +291,7 @@ public class WebService
 	private static HttpURLConnection setupConnections() throws IOException
 	{
 		// Send data
-		URL url = new URL("http://crowdsourcer.softwareprocess.es/F12/CMPUT301F12T04/?");
+		URL url = new URL(uri);
 		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 		conn.setDoOutput(true);
 		conn.setDoOutput(true);
