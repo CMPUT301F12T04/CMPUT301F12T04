@@ -13,7 +13,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +20,7 @@ import android.util.Log;
 
 public class WebService
 {
-	// public methods
+	/* public methods */
 
 	/**
 	 * Adds a task to the web server.  
@@ -230,9 +229,14 @@ public class WebService
 		return null;
 	}
 
-	//private methods
+	/* private methods */
 
-	/* returns a list of tasks from a jsonArray */
+	/**
+	 * returns a list of tasks from a jsonArray
+	 * @param jsonArray of task objects
+	 * @return List<Task>
+	 * @throws JSONException
+	 */
 	private static List<Task> fromJsonArray(JSONArray jsonArray) throws JSONException
 	{
 
@@ -245,7 +249,11 @@ public class WebService
 		return tasks;
 	}
 
-	/* Sets up http connection to the web server and returns the connection.*/
+	/**
+	 * Sets up http connection to the web server and returns the connection.
+	 * @return HttpURLConnection
+	 * @throws IOException
+	 */
 	private static HttpURLConnection setupConnections() throws IOException
 	{
 		// Send data
@@ -256,7 +264,13 @@ public class WebService
 		return conn;
 	}
 
-	/* Sends data to the web server and returns the response.*/
+	/**
+	 * Sets up http connection to the web server and returns the connection.
+	 * @param conn URLConnection
+	 * @param data string to send to web service.
+	 * @return String response from web service.
+	 * @throws IOException
+	 */
 	private static String getHttpResponse(URLConnection conn, String data) throws IOException
 	{
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -274,28 +288,38 @@ public class WebService
 		return httpResponse;
 	}
 	
-	/* Converts json string into a task object and returns. */
-	private static Task toTask(JSONObject obj) throws JSONException
+	/**
+	 * Converts json string into a task object and returns.
+	 * @param jsonTask , task object in json format.
+	 * @return Task
+	 * @throws JSONException
+	 */
+	private static Task toTask(JSONObject jsonTask) throws JSONException
 	{
-		if(obj==null)
+		if(jsonTask==null)
 		{
 			return null;
 		}
 		else
 		{
-			return new Task(obj.getString("name"), obj.getString("description"), obj.getString("id")
-					,obj.getInt("status"), toResponses(obj));
+			return new Task(jsonTask.getString("name"), jsonTask.getString("description"), jsonTask.getString("id")
+					,jsonTask.getInt("status"), toResponses(jsonTask));
 		}
 	}
 
-	/* Gets list of responses from jsonObject and returns */
-	private static List<Response> toResponses(JSONObject jsonObject) throws JSONException
+	/**
+	 * Gets list of responses from jsonObject and returns
+	 * @param jsonTask , task object in json format.
+	 * @return List<Response>
+	 * @throws JSONException
+	 */
+	private static List<Response> toResponses(JSONObject jsonTask) throws JSONException
 	{
 		try
 		{
-			JSONArray jsonArray = jsonObject.getJSONArray("responses");
+			JSONArray jsonArray = jsonTask.getJSONArray("responses");
 			List<Response> responses = new ArrayList<Response>();
-			String type = jsonObject.getString("type");
+			String type = jsonTask.getString("type");
 			if(type.equals(TextResponse.class.toString()))
 			{
 				for(int i = 0; i < jsonArray.length(); i++)
@@ -327,17 +351,25 @@ public class WebService
 		return null;
 	}
 
-	/* Constructs a data string to send to the web server.  */
-	private static String getDataString(JSONObject jsonObject, String action) throws UnsupportedEncodingException, JSONException, UnsupportedOperationException
+	/** 
+	 * Constructs a data string to send to the web server.
+	 * @param jsonTask , task object in json format.
+	 * @param action , http request method
+	 * @return URLEncoded request string
+	 * @throws UnsupportedEncodingException
+	 * @throws JSONException
+	 * @throws UnsupportedOperationException
+	 */
+	private static String getDataString(JSONObject jsonTask, String action) throws UnsupportedEncodingException, JSONException, UnsupportedOperationException
 	{
 		String data =  URLEncoder.encode("action","UTF8")  + "=" + URLEncoder.encode(action,"UTF8");
 		if(action.equals("post"))
 		{
-			if(!jsonObject.isNull("id"))
+			if(!jsonTask.isNull("id"))
 			{
-				data += "&" + URLEncoder.encode("id","UTF8")  + "=" + URLEncoder.encode(jsonObject.getString("id"),"UTF8");
+				data += "&" + URLEncoder.encode("id","UTF8")  + "=" + URLEncoder.encode(jsonTask.getString("id"),"UTF8");
 			}
-			data += "&" + URLEncoder.encode("content","UTF8")  + "=" + URLEncoder.encode(jsonObject.toString(),"UTF8");
+			data += "&" + URLEncoder.encode("content","UTF8")  + "=" + URLEncoder.encode(jsonTask.toString(),"UTF8");
 			return data;
 		}
 		else if(action.equals("list"))
@@ -350,15 +382,26 @@ public class WebService
 		}
 	}
 
-	/* Overload.  For remove and get */
+	/**
+	 * Overload, for remove and get
+	 * @param id of task
+	 * @param action http request method
+	 * @return String http request string
+	 * @throws UnsupportedEncodingException
+	 */
 	private static String getDataString(String id, String action) throws UnsupportedEncodingException
 	{
 		String data =  URLEncoder.encode("action","UTF8")  + "=" + URLEncoder.encode(action,"UTF8");
 		data += "&" + URLEncoder.encode("id","UTF8")  + "=" + URLEncoder.encode(id,"UTF8");
 		return data;
 	}
-	
-	/* Parse task into json object */
+
+	/**
+	 * Parse task into json object
+	 * @param task to be converted to json object
+	 * @return JSONObject
+	 * @throws JSONException
+	 */
 	private static JSONObject toJson(Task task) throws JSONException
 	{
 		JSONObject jsonObject = new JSONObject();
@@ -381,7 +424,12 @@ public class WebService
 		return jsonObject;
 	}
 
-	/* converts httpresponse from crowdsourcer into a json task object */
+	/**
+	 * converts Http response from crowdsourcer into a json task object 
+	 * @param httpResponse
+	 * @return JSONObject
+	 * @throws JSONException
+	 */
 	private static JSONObject toJsonTask(String httpResponse) throws JSONException
 	{
 		// TODO Auto-generated method stub
