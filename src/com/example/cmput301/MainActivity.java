@@ -8,10 +8,12 @@ import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,6 +29,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class MainActivity extends Activity {
 	
 	private MainController mainController;
+	ArrayList<Task> tasks = new ArrayList<Task>();
 
     
 	@Override
@@ -61,33 +64,41 @@ public class MainActivity extends Activity {
   						Toast.LENGTH_SHORT).show();
         	   return true;
         	  }
-        	};
-        	actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
+         };
+         actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
+
+
+         //fake tasks for now, please delete when new tasks can be created and stored
+         Task task1 = new Task("Hello","A random sentence to use for testing");
+         tasks.add(task1);
+         Task task2 = new Task("What is this?","A random sentence to use for testing more thigns");
+         tasks.add(task2);
+         Task task3 = new Task("Just another one","A random sentence to use for testing even more and more things");
+         tasks.add(task3);
+
         	
-        	
-        	//fake tasks for now
-        	ArrayList<String> tasks = new ArrayList<String>();
-        	tasks.add("Task1");
-        	tasks.add("Task2");
-        	tasks.add("Task3");
-        	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-        			R.layout.task_entry, tasks);
-        	
+           	//setting up list view and using customAdapter for tasks
         	  ListView taskview;
         	  taskview = (ListView) findViewById(R.id.mainActivityList);
-              taskview.setAdapter(adapter);
-              taskview.setOnItemClickListener(new OnItemClickListener() {
-              	
-              	//When item is clicked individual task view is opened for now
-                  public void onItemClick(AdapterView<?> adp, View view,
-                      int pos, long id) {
-                     Intent in = new Intent(MainActivity.this,IndividualTaskView.class);
-                      startActivity(in);
-                  }
+        	  CustomAdapter ca = new CustomAdapter();
+        	  taskview.setAdapter(ca);
+        	  taskview.setOnItemClickListener(new OnItemClickListener() {
 
-              });
-        	
-        	
+        		  //When item is clicked individual task view is opened for now
+        		  public void onItemClick(AdapterView<?> adp, View view,
+        				  int pos, long id) {
+        			  Intent in = new Intent(MainActivity.this,IndividualTaskView.class);
+        			  Bundle bundle = new Bundle();
+        			  bundle.putString("title", tasks.get(pos).getName());
+        			  bundle.putString("description", tasks.get(pos).getDescription());
+        			  bundle.putInt("id", pos);
+        			  in.putExtras(bundle);
+        			  startActivity(in);
+        		  }
+
+        	  });
+
+
         	
     }
 
@@ -162,6 +173,34 @@ public class MainActivity extends Activity {
     		dialog.setTitle("Adding a Task");
     	}
     	return true;
+    }
+    class CustomAdapter extends ArrayAdapter<Task>
+    {
+    	
+    	CustomAdapter() {
+    		super(MainActivity.this,android.R.layout.simple_list_item_1, tasks);
+    		
+    	}
+    	
+    	public View getView(int position, View convertView, ViewGroup parent)
+    	{
+    		View row = convertView;
+    		
+    		if(row == null) {
+    		 LayoutInflater inflater = getLayoutInflater();
+    		 row = inflater.inflate(R.layout.task_entry, null);
+    		}
+    		
+    		TextView titleView;
+    		titleView = (TextView) row.findViewById(R.id.TaskTitleListEntry);
+    		titleView.setText(tasks.get(position).getName()); 
+    		
+    		TextView descView;
+    		descView = (TextView) row.findViewById(R.id.TaskDescListEntry);
+    		descView.setText(tasks.get(position).getDescription());
+    		
+    		return row;
+    	}
     }
    
     

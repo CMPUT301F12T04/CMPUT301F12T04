@@ -11,6 +11,7 @@
     <string name="Audio">Audio</string>
     <string name="Text">Text</string>
     <string name="Photo">Photo</string>
+    <string name="desc">Task type</string> 
     <string-array name="taskview_options">
         <item>MyTasks</item>
         <item>My Shared</item>

@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:paddingTop="30dp"
         android:paddingBottom="50dp"
-        android:text = "Testing the descirption"
         android:textSize="16dp"/>
     
      <ListView
