@@ -184,6 +184,33 @@ public class WebService
 		return null;
 	}
 
+	public static String nuke(String key)
+	{	
+		try
+		{
+			//Construct data string
+			String data =  URLEncoder.encode("action","UTF8")  + "=" + URLEncoder.encode("nuke","UTF8");
+			data += "&" + URLEncoder.encode("key","UTF8")  + "=" + URLEncoder.encode(key,"UTF8");
+			
+			// Setup Connection
+			HttpURLConnection conn = setupConnections(); 
+
+			// Send data and get response
+			return getHttpResponse(conn,data);
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 
 	/**
 	 * Gets all tasks from web server.
