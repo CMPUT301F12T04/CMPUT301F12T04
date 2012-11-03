@@ -27,6 +27,7 @@ public class Task implements Comparable {
         this.description = description;
         responses = new ArrayList<Response>();
         this.status = Task.STATUS_PRIVATE;
+		this.type = TextResponse.class.toString();
     }
 
     public Task(String name, String description, String id) {
@@ -35,6 +36,7 @@ public class Task implements Comparable {
         this.id = id;
         responses = new ArrayList<Response>();
         this.status = Task.STATUS_PRIVATE;
+		this.type = TextResponse.class.toString();
     }
 
     public Task(String name, String description, int status) {
@@ -42,6 +44,7 @@ public class Task implements Comparable {
         this.description = description;
         responses = new ArrayList<Response>();
         this.status = status;
+		this.type = TextResponse.class.toString();
     }
 
     public Task(String name, String description, String id, int status) {
@@ -50,6 +53,7 @@ public class Task implements Comparable {
         this.id = id;
         responses = new ArrayList<Response>();
         this.status = status;
+		this.type = TextResponse.class.toString();
     }
 
     public Task(String name, String description, String id, int status,
@@ -60,6 +64,7 @@ public class Task implements Comparable {
 		this.id = id;
 		this.status = status;
 		this.responses = responses;
+		this.type = TextResponse.class.toString();
 	}
 
 	public Task(String name, String description, String id, String type)
@@ -69,6 +74,7 @@ public class Task implements Comparable {
 		this.id = id;
 		this.type = type;
 		this.responses = new ArrayList<Response>();
+		this.type = TextResponse.class.toString();
 	}
 
 	public void addResponse(Response response) {
