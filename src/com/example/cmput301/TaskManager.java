@@ -31,7 +31,7 @@ public class TaskManager {
         Task localTask = DatabaseManager.getLocalTask(id);
 
         //Post to the webservice.
-        Task remoteTask = WebService.post(localTask);
+        Task remoteTask = WebService.put(localTask);
 
         //--
         //Since we are replacing the id we need to remove the old task and put in
@@ -49,7 +49,7 @@ public class TaskManager {
 
     public boolean deleteTask(String id) {
 
-        WebService.deleteTask(id);
+        WebService.delete(id);
 
         return true;
     }
@@ -67,7 +67,7 @@ public class TaskManager {
             task.addResponse(response);
             DatabaseManager.updateTask(task);
         } else {
-            Task updatedTask = WebService.postResponse(task, response);
+            Task updatedTask = WebService.post(task, response);
             DatabaseManager.updateTask(updatedTask);
         }
     }
