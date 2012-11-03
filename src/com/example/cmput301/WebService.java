@@ -184,6 +184,11 @@ public class WebService
 		return null;
 	}
 
+	/**
+	 * Erases everything form web service.
+	 * @param key Password
+	 * @return String response
+	 */
 	public static String nuke(String key)
 	{	
 		try
