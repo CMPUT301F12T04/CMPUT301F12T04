@@ -1,5 +1,6 @@
 package com.example.cmput301;
 
+
 import java.util.Date;
 
 public class TextResponse extends Response
@@ -20,4 +21,8 @@ public class TextResponse extends Response
 	{
 		this.content = content;
 	}
+	 public String toString() {
+
+        return getContent() + " " + this.getTimestamp().toString();
+    }
 }

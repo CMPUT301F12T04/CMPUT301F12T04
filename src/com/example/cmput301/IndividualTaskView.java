@@ -1,6 +1,8 @@
 package com.example.cmput301;
 
 
+import java.util.ArrayList;
+import java.util.Date;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -8,7 +10,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 @TargetApi(11)
@@ -23,6 +27,7 @@ public class IndividualTaskView extends Activity {
 		String taskTile;
 		String taskDesc;
 		int taskPos; 
+		Task t;
 		
 		//enable back button on actionbar
 		ActionBar actionBar = getActionBar();
@@ -30,8 +35,9 @@ public class IndividualTaskView extends Activity {
 		
 		//Getting information from bundle passed from MainActivity
 		Bundle bundle = getIntent().getExtras();
-		taskTile = bundle.getString("title");
-		taskDesc = bundle.getString("description");
+		t = (Task) bundle.getSerializable("task");
+		taskTile = t.getName();
+		taskDesc = t.getDescription();
 		taskPos = bundle.getInt("id");
 		
 		//setting the description of the task
@@ -41,8 +47,15 @@ public class IndividualTaskView extends Activity {
 		//setting the title of the task
 		setTitle(taskTile);
 		
+		//A fake response added to the task. Should delete this when real responses can be added
+		//Another custom adapter will be needed later on here.
+        TextResponse tr = new TextResponse("response1", new Date(System.currentTimeMillis()));
+        t.addResponse(tr);
+		ListView responses = (ListView) findViewById(R.id.individual_res_list);
+		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
+    			android.R.layout.simple_list_item_1, (ArrayList) t.getResponses());
+		responses.setAdapter(adapter);
 		
-
 
 
 	}
