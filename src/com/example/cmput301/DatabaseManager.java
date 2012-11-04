@@ -168,6 +168,23 @@ public class DatabaseManager {
     }
 
     /**
+     * Get the local task list.
+     *
+     * @return A list of tasks in the local table of the database
+     */
+    public ArrayList<Task> getLocalTaskList() {
+
+        ArrayList<Task> out = new ArrayList<Task>();
+
+        for (Task task : this.localTable) {
+            out.add(task.clone());
+        }
+
+        return out;
+
+    }
+
+    /**
      * Gets a task (if exists) from the "remote" table of the database.
      *
      * @param id ID of task to search for
@@ -184,6 +201,23 @@ public class DatabaseManager {
         }
 
         return null;
+    }
+
+    /**
+     * Get the remote task list.
+     *
+     * @return A list of tasks in the remote table of the database
+     */
+    public ArrayList<Task> getRemoteTaskList() {
+
+        ArrayList<Task> out = new ArrayList<Task>();
+
+        for (Task task : this.remoteTable) {
+            out.add(task.clone());
+        }
+
+        return out;
+
     }
 
     /**
