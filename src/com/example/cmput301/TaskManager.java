@@ -112,6 +112,18 @@ public class TaskManager {
 
         return unansweredList;
     }
+    
+    public void Refresh() {
+        //Not the best method but will work.
+        this.dbman.nukeRemote();
+        
+        for(Task task : WebService.list()) {
+            //This is inefficient but will have to work for now.
+            this.dbman.updateTask(task);
+            this.dbman.postRemote(task);
+        }
+        
+    }
 
     public ArrayList<Task> getRemoteTasks() {
         return this.dbman.getRemoteTaskList();

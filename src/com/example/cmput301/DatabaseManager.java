@@ -82,7 +82,7 @@ public class DatabaseManager {
         this.localTable.add(task);
         this.saveDatabase();
 
-        return null;
+        return task;
     }
 
     private boolean localIdExists(String id) {
@@ -106,7 +106,7 @@ public class DatabaseManager {
         this.remoteTable.add(task);
         this.saveDatabase();
 
-        return null;
+        return task;
     }
 
     /**
@@ -243,6 +243,23 @@ public class DatabaseManager {
             }
         }
 
+        this.saveDatabase();
+    }
+
+    public void nukeRemote() {
+        this.remoteTable = new ArrayList<Task>();
+        this.saveDatabase();
+    }
+
+    public void nukeAll() {
+        this.remoteTable = new ArrayList<Task>();
+        this.localTable = new ArrayList<Task>();
+        this.saveDatabase();
+
+    }
+
+    public void nukeLocal() {
+        this.localTable = new ArrayList<Task>();
         this.saveDatabase();
     }
 
