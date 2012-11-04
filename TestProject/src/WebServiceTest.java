@@ -51,7 +51,7 @@ public class WebServiceTest extends TestCase {
         
         // delete task and make sure deleted
         WebService.delete(t.getId());
-        assertTrue(WebService.get(t.getId()==true));
+        assertTrue(WebService.get(t.getId()) == null);
     }
 
     public void testAddTaskWithResponses() {

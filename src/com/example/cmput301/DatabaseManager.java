@@ -39,7 +39,6 @@ public class DatabaseManager {
             this.localTable = tables.get(0);
             this.remoteTable = tables.get(1);
 
-            Log.w("TestTag", "File Opened Correctly");
 
         } catch (OptionalDataException ex) {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -55,7 +54,6 @@ public class DatabaseManager {
             this.localTable = new ArrayList<Task>();
             this.remoteTable = new ArrayList<Task>();
             
-            Log.w("TestTag", "New File Created");
         } finally {
 
             try {

@@ -1,6 +1,7 @@
 package com.example.cmput301;
 
 import android.content.Context;
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ public class TaskManager {
 
     private DatabaseManager dbman;
 
-    private TaskManager(Context context) {
+    public TaskManager(Context context) {
         this.dbman = new DatabaseManager("database_tables", context);
     }
 
@@ -31,7 +32,7 @@ public class TaskManager {
      *
      * @param id The id of the task you want shared.
      */
-    public void shareTask(String id) {
+    public Task shareTask(String id) {
 
         //Get the task from the database.
         Task localTask = dbman.getLocalTask(id);
@@ -51,13 +52,34 @@ public class TaskManager {
         remoteTask.setStatus(Task.STATUS_SHARED);
         dbman.postLocal(remoteTask);
 
+        return remoteTask;
+
     }
 
     public boolean deleteTask(String id) {
 
-        WebService.delete(id);
+        Task local = dbman.getLocalTask(id);
+        if (local != null) {
+           
+            WebService.delete(id);
 
-        return true;
+            dbman.deleteLocalTask(id);
+
+            this.Refresh();
+
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public Task getLocalTask(String id) {
+        return dbman.getLocalTask(id);
+    }
+
+    public Task getRemoteTask(String id) {
+        return dbman.getRemoteTask(id);
     }
 
     /**
@@ -78,6 +100,10 @@ public class TaskManager {
         }
     }
 
+    public ArrayList<Task> getLocalTasks() {
+        return this.dbman.getLocalTaskList();
+    }
+    
     public ArrayList<Task> getPrivateTasks() {
         ArrayList<Task> privateList = new ArrayList<Task>();
 
@@ -128,5 +154,13 @@ public class TaskManager {
 
     public ArrayList<Task> getRemoteTasks() {
         return this.dbman.getRemoteTaskList();
+    }
+
+    public void nukeLocal() {
+        this.dbman.nukeAll();
+    }
+
+    public void nukeRemote() {
+        WebService.nuke("judgedredd");
     }
 }
