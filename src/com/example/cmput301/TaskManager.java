@@ -1,5 +1,6 @@
 package com.example.cmput301;
 
+import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +8,8 @@ public class TaskManager {
 
     private DatabaseManager dbman;
 
-    private TaskManager() {
-        this.dbman = new DatabaseManager("database_tables");
+    private TaskManager(Context context) {
+        this.dbman = new DatabaseManager("database_tables", context);
     }
 
     /**
@@ -112,17 +113,17 @@ public class TaskManager {
 
         return unansweredList;
     }
-    
+
     public void Refresh() {
         //Not the best method but will work.
         this.dbman.nukeRemote();
-        
-        for(Task task : WebService.list()) {
+
+        for (Task task : WebService.list()) {
             //This is inefficient but will have to work for now.
             this.dbman.updateTask(task);
             this.dbman.postRemote(task);
         }
-        
+
     }
 
     public ArrayList<Task> getRemoteTasks() {

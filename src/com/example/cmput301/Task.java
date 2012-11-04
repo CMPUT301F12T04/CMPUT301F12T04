@@ -57,6 +57,17 @@ public class Task implements Comparable, Serializable, Cloneable {
         this.type = TextResponse.class.toString();
     }
 
+    public Task(String name, String description, String id, String type) {
+
+        this.name = name;
+        this.description = description;
+        this.id = id;
+        this.type = type;
+        this.responses = new ArrayList<Response>();
+        this.type = TextResponse.class.toString();
+
+    }
+
     /**
      * Add a new response to the list of responses.
      *
@@ -106,9 +117,13 @@ public class Task implements Comparable, Serializable, Cloneable {
 
     @Override
     public Task clone() {
-        Task clone = new Task(this.name.substring(0), this.description.substring(0), this.id.substring(0), this.status, new ArrayList<Response>());
+        String cloneid = null;
+        if (this.id != null) {
+            cloneid = this.id.substring(0);
+        }
+        Task clone = new Task(this.name.substring(0), this.description.substring(0), cloneid, this.status, new ArrayList<Response>());
         //Fill in the clone with the response clones.
-        for(Response resp : this.responses) {
+        for (Response resp : this.responses) {
             clone.addResponse(resp.clone());
         }
 

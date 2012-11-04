@@ -24,7 +24,7 @@ public class TextResponse extends Response {
 
     @Override
     public Response clone() {
-        Response clone = new TextResponse((String) this.content, this.timestamp);
+        Response clone = new TextResponse(((String) this.content).substring(0), (Date) this.timestamp.clone());
         clone.setAnnotation(this.annotation);
 
         return clone;

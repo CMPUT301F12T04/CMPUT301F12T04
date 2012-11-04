@@ -1,5 +1,7 @@
 package com.example.cmput301;
 
+import android.content.Context;
+import android.util.Log;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,47 +19,56 @@ public class DatabaseManager {
     private ArrayList<Task> localTable;
     private ArrayList<Task> remoteTable;
     private String filename;
+    private Context context;
 
     /**
      * Create a new database manager with the "database" being saved to a file.
      *
      * @param filename
      */
-    public DatabaseManager(String filename) {
+    public DatabaseManager(String filename, Context ctxt) {
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         this.filename = filename;
+        this.context = ctxt;
         try {
-            fis = new FileInputStream(filename);
+            fis = this.context.openFileInput(filename);
             ois = new ObjectInputStream(fis);
             ArrayList<ArrayList<Task>> tables;
             tables = (ArrayList<ArrayList<Task>>) ois.readObject();
             this.localTable = tables.get(0);
             this.remoteTable = tables.get(1);
 
-            ois.close();
-            fis.close();
+            Log.w("TestTag", "File Opened Correctly");
 
         } catch (OptionalDataException ex) {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (StreamCorruptedException ex) {
-            //Handled in finally
-        } catch (IOException ex) {
-            //Handled in finally
-        } finally {
 
+        } catch (StreamCorruptedException ex) {
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+
+        } catch (IOException ex) {
+            
             this.localTable = new ArrayList<Task>();
             this.remoteTable = new ArrayList<Task>();
+            
+            Log.w("TestTag", "New File Created");
+        } finally {
 
             try {
-                fis.close();
+                if (fis != null) {
+                    fis.close();
+                }
             } catch (IOException ex) {
                 Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
-                ois.close();
+                if (ois != null) {
+                    ois.close();
+                }
             } catch (IOException ex) {
                 Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -267,7 +278,7 @@ public class DatabaseManager {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
-            fos = new FileOutputStream(this.filename);
+            fos = this.context.openFileOutput(this.filename, Context.MODE_PRIVATE);
             oos = new ObjectOutputStream(fos);
 
             ArrayList<ArrayList<Task>> tables = new ArrayList<ArrayList<Task>>();
@@ -281,12 +292,16 @@ public class DatabaseManager {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                fos.close();
+                if (fos != null) {
+                    fos.close();
+                }
             } catch (IOException ex) {
                 Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
-                oos.close();
+                if (oos != null) {
+                    oos.close();
+                }
             } catch (IOException ex) {
                 Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -96,8 +96,8 @@ public class TestTask extends TestCase {
         assertEquals(anotherTask.getName(), name);
         assertEquals(anotherTask.getDescription(), desc);
         assertEquals(anotherTask.getId(), null);
-        assertEquals(task.getStatus(), Task.STATUS_PRIVATE);
-        assertEquals(task.getResponses().size(), 0);
+        assertEquals(anotherTask.getStatus(), Task.STATUS_PRIVATE);
+        assertEquals(anotherTask.getResponses().size(), 0);
 
     }
 }
