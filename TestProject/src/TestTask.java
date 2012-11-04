@@ -60,6 +60,8 @@ public class TestTask extends TestCase {
             //Show they are not equal to eachother.
             assertTrue(!list.get(0).equals(list.get(1)));
         }
+        //May also want to check if there are any side effects on other fields.
+        //but I don't want to =D.
 
     }
 

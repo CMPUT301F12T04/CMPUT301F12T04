@@ -22,14 +22,14 @@ public class Task implements Comparable, Serializable {
     private int status;
 
     /**
-     * Constructor for a new task object with the following properties.
-     * Type is automatically set to TextResponse type.
-     * 
+     * Constructor for a new task object with the following properties. Type is
+     * automatically set to TextResponse type.
+     *
      * @param name
      * @param description
      * @param id
      * @param status
-     * @param responses 
+     * @param responses
      */
     public Task(String name, String description, String id, int status,
             List<Response> responses) {
@@ -42,12 +42,12 @@ public class Task implements Comparable, Serializable {
     }
 
     /**
-     * Constructor for a new task object with the following properties. Id is 
-     * set to null, status is Task.STATUS_PRIVATE, type is TextResponse, and 
+     * Constructor for a new task object with the following properties. Id is
+     * set to null, status is Task.STATUS_PRIVATE, type is TextResponse, and
      * responses is an empty list.
-     * 
+     *
      * @param name
-     * @param description 
+     * @param description
      */
     public Task(String name, String description) {
         this.name = name;
@@ -59,8 +59,8 @@ public class Task implements Comparable, Serializable {
 
     /**
      * Add a new response to the list of responses.
-     * 
-     * @param response 
+     *
+     * @param response
      */
     public void addResponse(Response response) {
         this.responses.add(response);
@@ -94,11 +94,16 @@ public class Task implements Comparable, Serializable {
     public int getStatus() {
         return this.status;
     }
-    
+
     public List<Response> getResponses() {
         return this.responses;
     }
-    
+
+    @Override
+    public boolean equals(Object another) {
+        return this.compareTo(another) == 0;
+    }
+
     public int compareTo(Object another) {
         if (!(another instanceof Task)) {
             return -1;
