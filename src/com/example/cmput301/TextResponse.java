@@ -4,15 +4,13 @@ import java.util.Date;
 
 public class TextResponse extends Response {
 
-    String content;
-
     public TextResponse(String content, Date timestamp) {
         super(null, timestamp);
         this.content = content;
     }
 
     public String getContent() {
-        return this.content;
+        return (String) this.content;
     }
 
     public void setContent(String content) {
@@ -23,6 +21,12 @@ public class TextResponse extends Response {
 
         return getContent() + " " + this.getTimestamp().toString();
     }
-    
-    
+
+    @Override
+    public Response clone() {
+        Response clone = new TextResponse((String) this.content, this.timestamp);
+        clone.setAnnotation(this.annotation);
+
+        return clone;
+    }
 }

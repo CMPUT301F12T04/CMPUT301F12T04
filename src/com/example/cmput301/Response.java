@@ -3,11 +3,11 @@ package com.example.cmput301;
 import java.io.Serializable;
 import java.util.Date;
 
-public abstract class Response implements Serializable {
+public abstract class Response implements Serializable, Cloneable {
 
-    private Date timestamp;
-    private String annotation;
-    private Object content;
+    protected Date timestamp;
+    protected String annotation;
+    protected Object content;
 
     public Response(String annotation, Date timestamp) {
         this.annotation = annotation;
@@ -43,11 +43,14 @@ public abstract class Response implements Serializable {
 
         if (another instanceof Response) {
             Response anotherResp = (Response) another;
-            
+
             return anotherResp.getContent().equals(this.getContent());
         } else {
             return false;
         }
 
     }
+    
+    @Override
+    public abstract Response clone();
 }

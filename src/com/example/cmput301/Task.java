@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author amccann
  */
-public class Task implements Comparable, Serializable {
+public class Task implements Comparable, Serializable, Cloneable {
 
     //All remote tasks MUST have a shared status.
     public static final int STATUS_PRIVATE = 1;
@@ -102,6 +102,18 @@ public class Task implements Comparable, Serializable {
     @Override
     public boolean equals(Object another) {
         return this.compareTo(another) == 0;
+    }
+
+    @Override
+    public Task clone() {
+        Task clone = new Task(this.name.substring(0), this.description.substring(0), this.id.substring(0), this.status, new ArrayList<Response>());
+        //Fill in the clone with the response clones.
+        for(Response resp : this.responses) {
+            clone.addResponse(resp.clone());
+        }
+
+        return clone;
+
     }
 
     public int compareTo(Object another) {
