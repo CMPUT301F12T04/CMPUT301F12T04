@@ -9,16 +9,28 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-@TargetApi(11)
+
+/**
+ * This class is responsible for displaying the selected task that was selected
+ * via MainActivity. The task title and description is displayed along with it's
+ * responses (which is in a list form). There is an option to share the task and
+ * to add a response to the task. An option to go back to MainActivity is
+ * also available.
+ *   
+ * @author dyu2
+ */
+@TargetApi(15)
 public class IndividualTaskView extends Activity {
 
 
+	/**
+	 * Sets the main view of the selected task, the task is passed in 
+	 * and it's content is displayed on the screen
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,10 +38,10 @@ public class IndividualTaskView extends Activity {
 		
 		String taskTile;
 		String taskDesc;
-		int taskPos; 
+		int taskPos; //maybe useful for figuring out position of task in the list
 		Task t;
 		
-		//enable back button on actionbar
+		//enable back button on action bar
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
@@ -44,9 +56,10 @@ public class IndividualTaskView extends Activity {
 		TextView title = (TextView) findViewById(R.id.indvidual_des_view);
 		title.setText(taskDesc);
 		
-		//setting the title of the task
+		//setting the title of the task to be the activity title
 		setTitle(taskTile);
 		
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//A fake response added to the task. Should delete this when real responses can be added
 		//Another custom adapter will be needed later on here.
         TextResponse tr = new TextResponse("response1", new Date(System.currentTimeMillis()));
@@ -55,16 +68,25 @@ public class IndividualTaskView extends Activity {
 		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
     			android.R.layout.simple_list_item_1, (ArrayList) t.getResponses());
 		responses.setAdapter(adapter);
-		
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 	}
 
+	/**
+	 * Using custom options in action bar
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.individual_task_view, menu);
 		return true;
 	}
+	/**
+	 * Method used to handle various user selected commands.
+	 * These commands include uploading a task, responding to a task and
+	 * Going back to the previous screen.
+	 */
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
         //do upload, currently set to just kill activity
@@ -74,8 +96,7 @@ public class IndividualTaskView extends Activity {
 		if(item.getItemId() == R.id.menu_respond )
 		{
 			//Should launch the respond to a task activity here. 
-			finish();
-			
+			finish();		
 		}
 		
 		//go back, kills activity
