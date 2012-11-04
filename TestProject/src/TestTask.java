@@ -65,6 +65,9 @@ public class TestTask extends TestCase {
 
     }
 
+    /**
+     * Tests all the constructors
+     */
     public void testConstructors() {
         String name = "aName";
         String desc = "aDescription";
