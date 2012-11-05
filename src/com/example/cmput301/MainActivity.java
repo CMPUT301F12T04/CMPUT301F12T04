@@ -112,6 +112,9 @@ public class MainActivity extends Activity {
     public void onResume() {
         super.onResume();
         mainController = new MainController(this.getApplicationContext(), this);
+        ListView taskview;
+        taskview = (ListView) findViewById(R.id.mainActivityList);
+        taskview.setAdapter(mainController.getListAdapter());
     }
 
     /**
