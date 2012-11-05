@@ -1,31 +1,83 @@
-/*
- * 
-	Copyright 2012 Daniel Sopel
-	This file is part of Foobar.
-
-    Foobar is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Foobar is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.example.cmput301;
 
-public class MainController {
-	private TaskManager taskManager;
-	
-	public void mainController(TaskManager taskManager) {
-		this.taskManager = taskManager;
-	}
-	
-	public void addTask (String titleInput, String descInput) {
-		 new Task(titleInput, descInput);
-	}
+import android.content.Context;
+import java.util.ArrayList;
+
+class MainController {
+
+    private TaskManager taskManager;
+    private ArrayList<Task> tasks;
+
+    public MainController(Context context) {
+        taskManager = new TaskManager(context);
+        tasks = taskManager.getPrivateTasks();
+    }
+
+    public void addTask(String name, String description, String type) {
+        Task task = new Task(name, description);
+
+        taskManager.addTask(task);
+        tasks = taskManager.getPrivateTasks();
+    }
+
+    public void addResponse(Task task, Response resp) {
+        taskManager.postResponse(task, resp);
+    }
+
+    public void shareTask(String taskid) {
+        taskManager.shareTask(taskid);
+        tasks = taskManager.getSharedTasks();
+
+    }
+
+    public void deleteTask(String taskid) {
+        taskManager.deleteTask(taskid);
+        tasks = taskManager.getPrivateTasks();
+    }
+
+    public ArrayList<Task> getList() {
+        return tasks;
+    }
+
+    public void checkoutPrivate() {
+        tasks = taskManager.getPrivateTasks();
+    }
+
+    public void checkoutShared() {
+        tasks = taskManager.getSharedTasks();
+    }
+
+    public void checkoutUnanswered() {
+        tasks = taskManager.getUnansweredTasks();
+    }
+
+    public void checkoutRemote() {
+        tasks = taskManager.getRemoteTasks();
+    }
+
+    public ArrayList<Task> search(String searchParams) {
+        ArrayList<Task> filtered = new ArrayList<Task>();
+
+        //Assuming search parameters are seperated by a space.
+        String[] parameters = searchParams.split(" ");
+
+        for (Task task : filtered) {
+            boolean matched = false;
+
+            for (String param : parameters) {
+                if (task.getName().indexOf(param) != -1
+                        || task.getDescription().indexOf(param) != -1) {
+                    matched = true;
+                    break;
+                }
+            }
+
+            if (matched) {
+                filtered.add(task);
+            }
+        }
+
+        return filtered;
+
+    }
 }
