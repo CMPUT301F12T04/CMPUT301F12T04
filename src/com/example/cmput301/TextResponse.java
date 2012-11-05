@@ -7,8 +7,9 @@ import java.util.Date;
  * required this type of response.
  */
 public class TextResponse extends Response {
+	private static final long serialVersionUID = 1L;
 
-    /**
+	/**
      * The basic constructor for a textResponse
      *
      * @param content //Content for this type of response is a string.
