@@ -22,7 +22,9 @@ class MainController {
         tasks = taskManager.getPrivateTasks();
         this.activity = activity;
         adapter = new TaskListAdapter(activity);
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void addTask(String name, String description, String type) {
@@ -30,7 +32,9 @@ class MainController {
 
         taskManager.addTask(task);
         tasks = taskManager.getPrivateTasks();
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void addResponse(Task task, Response resp) {
@@ -40,13 +44,26 @@ class MainController {
     public void shareTask(String taskid) {
         taskManager.shareTask(taskid);
         tasks = taskManager.getSharedTasks();
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void deleteTask(String taskid) {
         taskManager.deleteTask(taskid);
         tasks = taskManager.getPrivateTasks();
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public Task getTask(String taskid) {
+
+        Task task = taskManager.getLocalTask(taskid);
+        if (task == null) {
+            task = taskManager.getRemoteTask(taskid);
+        }
+        return task;
     }
 
     public void setActivity(Activity activity) {
@@ -59,22 +76,30 @@ class MainController {
 
     public void checkoutPrivate() {
         tasks = taskManager.getPrivateTasks();
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void checkoutShared() {
         tasks = taskManager.getSharedTasks();
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void checkoutUnanswered() {
         tasks = taskManager.getUnansweredTasks();
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void checkoutRemote() {
         tasks = taskManager.getRemoteTasks();
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public ArrayList<Task> filter(String searchParams) {

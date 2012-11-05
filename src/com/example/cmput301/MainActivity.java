@@ -118,6 +118,12 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainController = new MainController(this.getApplicationContext(), this);
+    }
+
     /**
      * Overrided method, that checks if the add option was click. If so a dialog
      * box will appear and the task can be defined. The database will be updated
