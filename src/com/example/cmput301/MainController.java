@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ class MainController {
     private TaskManager taskManager;
     private ArrayList<Task> tasks;
     private TaskListAdapter adapter;
-    private Activity activity;
 
     /**
      * Basic constructor for the main controller.
@@ -34,7 +32,6 @@ class MainController {
     public MainController(Context context, Activity activity) {
         taskManager = new TaskManager(context);
         tasks = taskManager.getPrivateTasks();
-        this.activity = activity;
         adapter = new TaskListAdapter(activity);
         if (adapter != null) {
             adapter.notifyDataSetChanged();
@@ -116,14 +113,6 @@ class MainController {
     }
 
     /**
-     * Set the activity for the controller.
-     * @param activity The Android activity that is currently active.
-     */
-    public void setActivity(Activity activity) {
-        this.activity = activity;
-    }
-
-    /**
      * Get list of all tasks that are currently being shown.
      * 
      * @return 
@@ -197,12 +186,10 @@ class MainController {
                     break;
                 }
             }
-
             if (matched) {
                 filtered.add(task);
             }
         }
-
         return filtered;
     }
 
@@ -218,9 +205,7 @@ class MainController {
      * Hacky private class that represents the list item adapter.
      */
     class TaskListAdapter extends BaseAdapter {
-
         private Context context;
-
         TaskListAdapter(Context context) {
             this.context = context;
         }
@@ -248,7 +233,6 @@ class MainController {
             TextView descView;
             descView = (TextView) row.findViewById(R.id.TaskDescListEntry);
             descView.setText(tasks.get(position).getDescription());
-
             return row;
         }
 
