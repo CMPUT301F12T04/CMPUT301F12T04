@@ -20,6 +20,10 @@ class MainController {
         tasks = taskManager.getPrivateTasks();
     }
 
+    public void addResponse(Task task, Response resp) {
+        taskManager.postResponse(task, resp);
+    }
+
     public void shareTask(String taskid) {
         taskManager.shareTask(taskid);
         tasks = taskManager.getSharedTasks();
