@@ -74,6 +74,7 @@ public class TextResponseView extends ResponseView {
 				responseString = responseInput.getText().toString();
 				TextResponse resp = new TextResponse(responseString, new Date());
 				mainController.addResponse(t, resp);
+				responseInput.setText("");
 
 				//setting list of responses for task
 				ListView responses = (ListView) findViewById(R.id.text_response_list);
