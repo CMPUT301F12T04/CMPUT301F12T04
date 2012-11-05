@@ -100,6 +100,12 @@ class MainController {
         }
     }
 
+    /**
+     * Get a task with the given task id from the database.
+     * 
+     * @param taskid
+     * @return 
+     */
     public Task getTask(String taskid) {
 
         Task task = taskManager.getLocalTask(taskid);
@@ -109,14 +115,26 @@ class MainController {
         return task;
     }
 
+    /**
+     * Set the activity for the controller.
+     * @param activity The Android activity that is currently active.
+     */
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
 
+    /**
+     * Get list of all tasks that are currently being shown.
+     * 
+     * @return 
+     */
     public ArrayList<Task> getList() {
         return tasks;
     }
 
+    /**
+     * Checkout the private task list.
+     */
     public void checkoutPrivate() {
         tasks = taskManager.getPrivateTasks();
         if (adapter != null) {
@@ -124,6 +142,9 @@ class MainController {
         }
     }
 
+    /**
+     * Checkout the shared task list.
+     */
     public void checkoutShared() {
         tasks = taskManager.getSharedTasks();
         if (adapter != null) {
@@ -131,6 +152,9 @@ class MainController {
         }
     }
 
+    /**
+     * Checkout the unanswered task list.
+     */
     public void checkoutUnanswered() {
         tasks = taskManager.getUnansweredTasks();
         if (adapter != null) {
@@ -138,6 +162,9 @@ class MainController {
         }
     }
 
+    /**
+     * Checkout the remote task list.
+     */
     public void checkoutRemote() {
         tasks = taskManager.getRemoteTasks();
         if (adapter != null) {
@@ -145,6 +172,15 @@ class MainController {
         }
     }
 
+    /**
+     * Apply a filter to the task list being viewed and return the result.
+     * 
+     * If any task has one or more keywords from the search parameters in it's
+     * title or description then it will be included in the list.
+     * 
+     * @param searchParams A string with keywords seperated by spaces.
+     * @return 
+     */
     public ArrayList<Task> filter(String searchParams) {
         ArrayList<Task> filtered = new ArrayList<Task>();
 
@@ -170,10 +206,17 @@ class MainController {
         return filtered;
     }
 
+    /**
+     * Returns the listitem adapter
+     * @return 
+     */
     public TaskListAdapter getListAdapter() {
         return adapter;
     }
 
+    /**
+     * Hacky private class that represents the list item adapter.
+     */
     class TaskListAdapter extends BaseAdapter {
 
         private Context context;
