@@ -1,7 +1,7 @@
 package com.example.cmput301;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -42,8 +42,6 @@ public class IndividualTaskView extends Activity {
 
         String taskTile;
         String taskDesc;
-        //maybe useful for figuring out position of task in the list
-
 
         //enable back button on action bar
         ActionBar actionBar = getActionBar();
@@ -64,11 +62,13 @@ public class IndividualTaskView extends Activity {
         setTitle(taskTile);
 
         ListView responses = (ListView) findViewById(R.id.individual_res_list);
-        ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
-                android.R.layout.simple_list_item_1, (ArrayList) mainController.getTask(t.getId()).getResponses());
+   
+        List<Response> r = mainController.getTask(t.getId()).getResponses();
+        
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
+                android.R.layout.simple_list_item_1, (ArrayList)r);
         responses.setAdapter(adapter);
-
-
     }
 
     /**
@@ -87,7 +87,8 @@ public class IndividualTaskView extends Activity {
         //Refreshes mainController
         mainController = new MainController(this.getApplicationContext(), this);
         ListView responses = (ListView) findViewById(R.id.individual_res_list);
-        ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
                 android.R.layout.simple_list_item_1, (ArrayList) mainController.getTask(t.getId()).getResponses());
         responses.setAdapter(adapter);
     }
