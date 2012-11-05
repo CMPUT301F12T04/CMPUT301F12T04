@@ -1,9 +1,7 @@
 package com.example.cmput301;
 
 import android.content.Context;
-import android.util.Log;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class is the entry point for the model of this application. It handles 
