@@ -1,7 +1,6 @@
 package com.example.cmput301;
 
 import android.content.Context;
-import android.util.Log;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,7 +25,8 @@ public class DatabaseManager {
      *
      * @param filename
      */
-    public DatabaseManager(String filename, Context ctxt) {
+    @SuppressWarnings("unchecked")
+	public DatabaseManager(String filename, Context ctxt) {
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         this.filename = filename;
@@ -142,7 +142,8 @@ public class DatabaseManager {
      *
      * @param id The id of the task to be deleted.
      */
-    private void deleteRemoteTask(String id) {
+    @SuppressWarnings("unused")
+	private void deleteRemoteTask(String id) {
         for (int i = 0; i < this.remoteTable.size(); i++) {
 
             String taskId = this.remoteTable.get(i).getId();
