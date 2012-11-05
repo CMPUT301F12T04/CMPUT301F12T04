@@ -6,10 +6,9 @@ import java.util.Date;
  * This is the basic model for the responses which represent the responses given
  * to a posted "Task" There are multiple types of responses that can be added.
  */
-@SuppressWarnings("serial")
 public abstract class Response implements Serializable, Cloneable {
-
-    protected Date timestamp;
+	private static final long serialVersionUID = 1L;
+	protected Date timestamp;
     protected String annotation;
     protected Object content;
 
