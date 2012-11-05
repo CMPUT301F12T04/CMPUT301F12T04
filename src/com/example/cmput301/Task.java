@@ -6,12 +6,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
- * @author amccann
+ * This is the model of a basic "Task" which the user wanted fulfilled. 
  */
 public class Task implements Comparable, Serializable, Cloneable {
 
-    //All remote tasks MUST have a shared status.
+ 
     public static final int STATUS_PRIVATE = 1;
     public static final int STATUS_SHARED = 2;
     private List<Response> responses;

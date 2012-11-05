@@ -10,6 +10,14 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
 
+/**
+ * This is a go between method for the View and Model components for this
+ * application. It was written in a very hacky way because the original author
+ * decided to tell us two days before it was due he couldn't handle this.
+ *
+ * Note: In future versions this will be broken into multiple controllers
+ * depending on the view.
+ */
 class MainController {
 
     private TaskManager taskManager;
@@ -17,6 +25,12 @@ class MainController {
     private TaskListAdapter adapter;
     private Activity activity;
 
+    /**
+     * Basic constructor for the main controller.
+     *
+     * @param context The context we want data saved to.
+     * @param activity The active activity.
+     */
     public MainController(Context context, Activity activity) {
         taskManager = new TaskManager(context);
         tasks = taskManager.getPrivateTasks();
@@ -27,28 +41,57 @@ class MainController {
         }
     }
 
+    /**
+     * Adds a task to the local database as a private task.
+     *
+     * Refreshes the view.
+     *
+     * @param name
+     * @param description
+     * @param type The type of response that this task will require.
+     */
     public void addTask(String name, String description, String type) {
         Task task = new Task(name, description);
 
         taskManager.addTask(task);
+
+        //Set the view to show private tasks when a task is added.
         tasks = taskManager.getPrivateTasks();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
     }
 
+    /**
+     * Add a response to the given task in the database.
+     *
+     * @param task The task you want a response added to
+     * @param resp The response.
+     */
     public void addResponse(Task task, Response resp) {
         taskManager.postResponse(task, resp);
     }
 
+    /**
+     * Convert a task from private to shared which has the given task id.
+     *
+     * Refreshes the view.
+     *
+     * @param taskid
+     */
     public void shareTask(String taskid) {
         taskManager.shareTask(taskid);
-        tasks = taskManager.getSharedTasks();
+        tasks = taskManager.getPrivateTasks();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
     }
 
+    /**
+     * Delete a task with the given id.
+     * Note: This only works if it is a local task.
+     * @param taskid 
+     */
     public void deleteTask(String taskid) {
         taskManager.deleteTask(taskid);
         tasks = taskManager.getPrivateTasks();

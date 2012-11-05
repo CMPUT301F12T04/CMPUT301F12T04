@@ -5,10 +5,21 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is the entry point for the model of this application. It handles 
+ * all the data storage on local and remote databases as well as the addition of
+ * responses to tasks, and allows you to grab tasks which meet certain criteria
+ */
 public class TaskManager {
 
     private DatabaseManager dbman;
 
+    /**
+     * Constructor for the Task manager.
+     *
+     * @param context The android context that we will be saving the database
+     * in.
+     */
     public TaskManager(Context context) {
         this.dbman = new DatabaseManager("database_tables", context);
     }
@@ -56,11 +67,19 @@ public class TaskManager {
 
     }
 
+    /**
+     * Delete the task with the given id deletes from local tables only. You
+     * cannot delete a remote user's task you can only delete you own.
+     *
+     * @param id The id of the task you want deleted
+     * @return Whether or not the task existed and was deleted
+     */
     public boolean deleteTask(String id) {
 
+        //Check if the task is local
         Task local = dbman.getLocalTask(id);
         if (local != null) {
-           
+
             WebService.delete(id);
 
             dbman.deleteLocalTask(id);
@@ -74,19 +93,11 @@ public class TaskManager {
 
     }
 
-    public Task getLocalTask(String id) {
-        return dbman.getLocalTask(id);
-    }
-
-    public Task getRemoteTask(String id) {
-        return dbman.getRemoteTask(id);
-    }
-
     /**
      * Post a response to a task with the given id in the database.
      *
-     * @param response
-     * @param task
+     * @param response The response you want to add
+     * @param task The task you want the response added to.
      */
     public void postResponse(Task task, Response response) {
 
@@ -100,10 +111,41 @@ public class TaskManager {
         }
     }
 
+    /**
+     * Get a task from the local table of the database.
+     *
+     * @param id The id of the task you are requesting
+     * @return The task you requested
+     */
+    public Task getLocalTask(String id) {
+        return dbman.getLocalTask(id);
+    }
+
+    /**
+     * Get a task from the remote table of the database.
+     *
+     * @param id The id of the task you are requesting
+     * @return The task you requested
+     */
+    public Task getRemoteTask(String id) {
+        return dbman.getRemoteTask(id);
+    }
+
+    /**
+     * Get a list of all tasks in the local table of the database.
+     *
+     * @return
+     */
     public ArrayList<Task> getLocalTasks() {
         return this.dbman.getLocalTaskList();
     }
-    
+
+    /**
+     * Get a list of all tasks in the local table of the database which have the
+     * status STATUS_PRIVATE
+     *
+     * @return
+     */
     public ArrayList<Task> getPrivateTasks() {
         ArrayList<Task> privateList = new ArrayList<Task>();
 
@@ -116,6 +158,12 @@ public class TaskManager {
         return privateList;
     }
 
+    /**
+     * Get a list of all tasks in the local table of the database which have the
+     * status STATUS_SHARED
+     *
+     * @return
+     */
     public ArrayList<Task> getSharedTasks() {
         ArrayList<Task> sharedList = new ArrayList<Task>();
 
@@ -128,6 +176,12 @@ public class TaskManager {
         return sharedList;
     }
 
+    /**
+     * Get a list of all tasks in the remote table of the database which have no
+     * responses
+     *
+     * @return
+     */
     public ArrayList<Task> getUnansweredTasks() {
         ArrayList<Task> unansweredList = new ArrayList<Task>();
 
@@ -140,6 +194,19 @@ public class TaskManager {
         return unansweredList;
     }
 
+    /**
+     * Get a list of all tasks in the remote table of the database which have no
+     * responses
+     *
+     * @return
+     */
+    public ArrayList<Task> getRemoteTasks() {
+        return this.dbman.getRemoteTaskList();
+    }
+
+    /**
+     * Look up the tasks on the webservice and update the database with the changes
+     */
     public void Refresh() {
         //Not the best method but will work.
         this.dbman.nukeRemote();
@@ -152,14 +219,16 @@ public class TaskManager {
 
     }
 
-    public ArrayList<Task> getRemoteTasks() {
-        return this.dbman.getRemoteTaskList();
-    }
-
+    /**
+     * Nuke the databse.
+     */
     public void nukeLocal() {
         this.dbman.nukeAll();
     }
 
+    /**
+     * Nuke the webservice's database.
+     */
     public void nukeRemote() {
         WebService.nuke("judgedredd");
     }

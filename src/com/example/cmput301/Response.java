@@ -2,18 +2,27 @@ package com.example.cmput301;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/**
+ * This is the basic model for the responses which represent the responses given
+ * to a posted "Task" There are multiple types of responses that can be added.
+ */
 public abstract class Response implements Serializable, Cloneable {
 
     protected Date timestamp;
     protected String annotation;
     protected Object content;
 
+    /**
+     * Basic Constructor for the response classes.
+     * @param annotation    A Text annotation that will be added to the response
+     * @param timestamp     A timestamp which should be added to the response.
+     */
     public Response(String annotation, Date timestamp) {
         this.annotation = annotation;
         this.timestamp = timestamp;
     }
-
+    
+    // ---- Getters / Setters ---- //
     public Object getContent() {
         return this.content;
     }
