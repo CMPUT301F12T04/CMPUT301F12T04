@@ -12,6 +12,9 @@ public class TestTaskManager extends AndroidTestCase {
 
     private static final String FILENAME = "database_tables";
 
+    /**
+     * Test the add task method of the Task Manager Class.
+     */
     public void testAddTask() {
 
         TaskManager tman = new TaskManager(getContext());
@@ -41,6 +44,9 @@ public class TestTaskManager extends AndroidTestCase {
         assertEquals(t1, tman.getPrivateTasks().get(0));
     }
 
+    /**
+     * Tests the share task method of the task manager class.
+     */
     public void testShareTask() {
         TaskManager tman = new TaskManager(getContext());
         //Start clean.
@@ -78,6 +84,9 @@ public class TestTaskManager extends AndroidTestCase {
 
     }
 
+    /**
+     * Tets the deleteTask method of the TaskManager class
+     */
     public void testdeleteTask() {
         Task t1 = new Task("dsa", "dsa");
         Task t2 = new Task("dfasfas", "dfasfsad");
@@ -138,6 +147,9 @@ public class TestTaskManager extends AndroidTestCase {
 
     }
 
+    /**
+     * Tests the post response method of the TaskManager class.
+     */
     public void testPostResponse() {
 
         TaskManager tman = new TaskManager(getContext());
