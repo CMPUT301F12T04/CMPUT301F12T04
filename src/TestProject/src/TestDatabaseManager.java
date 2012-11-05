@@ -1,3 +1,4 @@
+package TestProject.src;
 
 import android.content.Context;
 import android.test.AndroidTestCase;

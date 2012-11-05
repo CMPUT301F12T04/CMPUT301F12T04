@@ -1,4 +1,4 @@
-
+package TestProject.src;
 import com.example.cmput301.TextResponse;
 import java.util.Date;
 import junit.framework.TestCase;

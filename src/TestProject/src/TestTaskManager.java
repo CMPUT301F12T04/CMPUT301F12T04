@@ -1,4 +1,4 @@
-
+package TestProject.src;
 import android.test.AndroidTestCase;
 import android.util.Log;
 import com.example.cmput301.DatabaseManager;
