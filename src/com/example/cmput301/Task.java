@@ -2,13 +2,13 @@ package com.example.cmput301;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
  * This is the model of a basic "Task" which the user wanted fulfilled. 
  */
-public class Task implements Comparable, Serializable, Cloneable {
+@SuppressWarnings("serial")
+public class Task implements Comparable<Object>, Serializable, Cloneable {
 
  
     public static final int STATUS_PRIVATE = 1;
@@ -57,19 +57,16 @@ public class Task implements Comparable, Serializable, Cloneable {
     }
 
     public Task(String name, String description, String id, String type) {
-
         this.name = name;
         this.description = description;
         this.id = id;
         this.type = type;
         this.responses = new ArrayList<Response>();
         this.type = TextResponse.class.toString();
-
     }
 
     /**
      * Add a new response to the list of responses.
-     *
      * @param response
      */
     public void addResponse(Response response) {
@@ -141,6 +138,5 @@ public class Task implements Comparable, Serializable, Cloneable {
 
         //Return the string comparison of their ids.
         return anotherTask.getId().compareTo(this.getId());
-
     }
 }
