@@ -5,8 +5,8 @@ import java.util.Date;
 import android.graphics.Picture;
 
 public class PictureResponse extends Response {
-
-    private Picture picture;
+	private static final long serialVersionUID = 1L;
+	private Picture picture;
 
     public PictureResponse(Picture picture, String annotation, Date timestamp) {
         super(annotation, timestamp);
