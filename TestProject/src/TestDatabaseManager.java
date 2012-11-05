@@ -104,6 +104,9 @@ public class TestDatabaseManager extends AndroidTestCase {
         dbman.nukeAll();
     }
 
+    /**
+     * Tests the updateTask method.
+     */
     public void testUpdateMethod() {
         //Make sure that a new database starts empty.
         DatabaseManager dbman = new DatabaseManager(FILENAME, getContext());
@@ -158,6 +161,9 @@ public class TestDatabaseManager extends AndroidTestCase {
 
     }
 
+    /**
+     * Tests the Database manager constructors.
+     */
     public void testConstructor() {
         //Make sure that a new database starts empty.
         Context ctxt = getContext();
