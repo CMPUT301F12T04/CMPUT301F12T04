@@ -12,6 +12,7 @@
     <string name="Text">Text</string>
     <string name="Photo">Photo</string>
     <string name="desc">Task type</string> 
+    <string name="Post">Post</string> 
     <string-array name="taskview_options">
         <item>MyTasks</item>
         <item>My Shared</item>

@@ -6,6 +6,7 @@ import java.util.Date;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +27,8 @@ import android.widget.TextView;
 @TargetApi(15)
 public class IndividualTaskView extends Activity {
 
-
+	Task t;
+	int taskPos;
 	/**
 	 * Sets the main view of the selected task, the task is passed in 
 	 * and it's content is displayed on the screen
@@ -38,8 +40,8 @@ public class IndividualTaskView extends Activity {
 		
 		String taskTile;
 		String taskDesc;
-		int taskPos; //maybe useful for figuring out position of task in the list
-		Task t;
+		 //maybe useful for figuring out position of task in the list
+		
 		
 		//enable back button on action bar
 		ActionBar actionBar = getActionBar();
@@ -96,7 +98,12 @@ public class IndividualTaskView extends Activity {
 		if(item.getItemId() == R.id.menu_respond )
 		{
 			//Should launch the respond to a task activity here. 
-			finish();		
+			Intent in = new Intent(IndividualTaskView.this,TextResponseView.class);
+			Bundle bundle = new Bundle();
+			bundle.putInt("id", taskPos);
+			bundle.putSerializable("task",t);
+			in.putExtras(bundle);
+			startActivity(in);	
 		}
 		
 		//go back, kills activity
