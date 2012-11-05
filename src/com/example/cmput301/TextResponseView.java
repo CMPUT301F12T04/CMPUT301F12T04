@@ -33,16 +33,12 @@ public class TextResponseView extends ResponseView {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mainController = new MainController(this.getApplicationContext(), this);
-
         String taskTile;
-        int taskPos; //maybe useful for figuring out position of task in the list
-
-
+        
         //Getting information from bundle passed from MainActivity
         Bundle bundle = getIntent().getExtras();
         t = (Task) bundle.getSerializable("task");
         taskTile = t.getName();
-        taskPos = bundle.getInt("id");
 
         //setting the title of the task to be the activity title
         setTitle(taskTile);
@@ -69,7 +65,8 @@ public class TextResponseView extends ResponseView {
 
                 //setting list of responses for task
                 ListView responses = (ListView) findViewById(R.id.text_response_list);
-                ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(that,
+                @SuppressWarnings({ "rawtypes", "unchecked" })
+				ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(that,
                         android.R.layout.simple_list_item_1, (ArrayList) t.getResponses());
                 responses.setAdapter(adapter);
             }
@@ -77,7 +74,8 @@ public class TextResponseView extends ResponseView {
 
         //setting list of responses for task
         ListView responses = (ListView) findViewById(R.id.text_response_list);
-        ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
                 android.R.layout.simple_list_item_1, (ArrayList) t.getResponses());
         responses.setAdapter(adapter);
     }
