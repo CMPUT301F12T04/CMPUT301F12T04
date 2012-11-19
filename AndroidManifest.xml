@@ -52,6 +52,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.cmput301.MainActivity" />
         </activity>
+        <activity
+            android:name=".PhotoResponseView"
+            android:label="PhotoResponesView" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cmput301.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
