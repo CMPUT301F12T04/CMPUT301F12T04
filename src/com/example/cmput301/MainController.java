@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
 
@@ -244,6 +245,12 @@ class MainController {
             TextView descView;
             descView = (TextView) row.findViewById(R.id.TaskDescListEntry);
             descView.setText(tasks.get(position).getDescription());
+            
+            //Sets the image for the task, all tasks are currently set for TEXT only
+            ImageView taskTypeImg = (ImageView) row.findViewById(R.id.TasktypePic);
+            taskTypeImg.setImageResource(android.R.drawable.ic_menu_edit);
+            
+            
             return row;
         }
 
