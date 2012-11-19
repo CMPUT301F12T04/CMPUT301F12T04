@@ -30,6 +30,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	private String id;
 	private String type;
 	private int status;
+	private int votes;
 
 	/**
 	 * Constructor for a new task object with the following properties. Type is
@@ -50,6 +51,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 		this.status = status;
 		this.responses = responses;
 		this.type = TextResponse.class.toString();
+		this.votes = 5;
 	}
 
 	/**
@@ -67,7 +69,8 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 		responses = new ArrayList<Response>();
 		this.status = Task.STATUS_PRIVATE;
 		this.type = TextResponse.class.toString();
-	}
+		this.votes = 0;
+}
 
 	public Task(String name, String description, String id, String type)
 	{
@@ -77,6 +80,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 		this.type = type;
 		this.responses = new ArrayList<Response>();
 		this.type = TextResponse.class.toString();
+		this.votes = 0;
 	}
 
 	/**
@@ -98,6 +102,11 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	public void setStatus(int status)
 	{
 		this.status = status;
+	}
+	
+	public void increaseVotes()
+	{
+		this.votes++;
 	}
 
 	public String getType()
@@ -123,6 +132,11 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	public int getStatus()
 	{
 		return this.status;
+	}
+	
+	public int getVotes()
+	{
+		return this.votes;
 	}
 
 	public List<Response> getResponses()

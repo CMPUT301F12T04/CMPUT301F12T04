@@ -123,6 +123,15 @@ class MainController {
         }
         return task;
     }
+    
+    /**
+     * Adds one vote to the task.
+     *
+     * @param task
+     */
+    public void voteTask(Task task) {
+        taskManager.voteTask(task);
+    }
 
     /**
      * Get list of all tasks that are currently being shown.
