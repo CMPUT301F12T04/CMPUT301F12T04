@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 /**
@@ -171,9 +172,17 @@ public class MainActivity extends Activity {
                         //set type of Task to be audio
                     }
 
-                    //Create new task here and add to database etc.
-                    mainController.addTask(titleInput, descInput, "Dont Care right now");
-                    dialog.dismiss();
+                    if(titleInput.equals(""))
+                    {
+                    	Toast.makeText(getApplicationContext(), 
+                    			"New task requires a title!", Toast.LENGTH_SHORT).show();                	
+                    }
+                    else
+                    {
+                    	//Create new task here and add to database etc.
+                    	mainController.addTask(titleInput, descInput, "Dont Care right now");
+                    	dialog.dismiss();
+                    }
                 }
             });
 
