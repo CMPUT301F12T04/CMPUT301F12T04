@@ -53,7 +53,7 @@ public class IndividualTaskView extends Activity {
 
         String taskTile;
         String taskDesc;
-        int votes;
+
 
         //enable back button on action bar
         ActionBar actionBar = getActionBar();
@@ -128,7 +128,11 @@ public class IndividualTaskView extends Activity {
             startActivity(in);
         }
         if (item.getItemId() == R.id.menu_vote) {
-        	mainController.voteTask(t);
+        	mainController.voteTask(t, this);
+        	 TextView title = (TextView) findViewById(R.id.indvidual_des_view);
+             title.setText("Votes: " + t.getVotes() + "\n\n" + t.getDescription());
+
+   
         }
 
         //go back, kills activity
