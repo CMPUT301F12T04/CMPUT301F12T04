@@ -64,7 +64,7 @@ class MainController {
 
         taskManager.addTask(task);
 
-        //Set the view to show private tasks when a task is added.
+       // Set the view to show private tasks when a task is added.
         tasks = taskManager.getPrivateTasks();
         if (adapter != null) {
             adapter.notifyDataSetChanged();

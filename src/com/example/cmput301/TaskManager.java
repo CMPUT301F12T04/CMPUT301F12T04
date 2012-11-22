@@ -82,8 +82,8 @@ public class TaskManager {
      * @param id The task you want one vote added to.
      */
     public void voteTask(Task task) {
-    	// System.out.println(task.getVotes()); // for LogCat debugging
     	task.increaseVotes();
+    	dbman.updateTask(task);
     }
 
     /**

@@ -128,7 +128,7 @@ public class IndividualTaskView extends Activity {
             startActivity(in);
         }
         if (item.getItemId() == R.id.menu_vote) {
-        	mainController.voteTask(t, this);
+        	mainController.voteTask(t);
         	 TextView title = (TextView) findViewById(R.id.indvidual_des_view);
              title.setText("Votes: " + t.getVotes() + "\n\n" + t.getDescription());
 
