@@ -23,6 +23,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import java.util.Date;
 
 /**
@@ -84,9 +86,17 @@ public class TextResponseView extends ResponseView {
 				//Can now add response to the task using this string
 				responseString = responseInput.getText().toString();
 				TextResponse resp = new TextResponse(responseString, new Date());
-				mainController.addResponse(t, resp);
-				responseInput.setText("");
-
+				
+				if(responseString.equals(""))
+				{
+					Toast.makeText(getApplicationContext(), 
+							"Text input is required!", Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					mainController.addResponse(t, resp);
+					responseInput.setText("");
+				}
 				//setting list of responses for task
 				ListView responses = (ListView) findViewById(R.id.text_response_list);
 				@SuppressWarnings({ "rawtypes", "unchecked" })

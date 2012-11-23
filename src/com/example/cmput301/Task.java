@@ -30,6 +30,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	private String id;
 	private String type;
 	private int status;
+	private int votes = 0;
 
 	/**
 	 * Constructor for a new task object with the following properties. Type is
@@ -42,7 +43,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	 * @param responses
 	 */
 	public Task(String name, String description, String id, int status,
-			List<Response> responses)
+			List<Response> responses, int votes)
 	{
 		this.name = name;
 		this.description = description;
@@ -50,6 +51,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 		this.status = status;
 		this.responses = responses;
 		this.type = TextResponse.class.toString();
+		this.votes = votes;
 	}
 
 	/**
@@ -67,7 +69,8 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 		responses = new ArrayList<Response>();
 		this.status = Task.STATUS_PRIVATE;
 		this.type = TextResponse.class.toString();
-	}
+		this.votes = 0;
+}
 
 	public Task(String name, String description, String id, String type)
 	{
@@ -77,6 +80,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 		this.type = type;
 		this.responses = new ArrayList<Response>();
 		this.type = TextResponse.class.toString();
+		this.votes = 0;
 	}
 
 	/**
@@ -98,6 +102,11 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	public void setStatus(int status)
 	{
 		this.status = status;
+	}
+	
+	public void increaseVotes()
+	{
+		this.votes++;
 	}
 
 	public String getType()
@@ -124,6 +133,11 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	{
 		return this.status;
 	}
+	
+	public int getVotes()
+	{
+		return this.votes;
+	}
 
 	public List<Response> getResponses()
 	{
@@ -139,6 +153,8 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	@Override
 	public Task clone()
 	{
+
+		
 		String cloneid = null;
 		if (this.id != null)
 		{
@@ -146,7 +162,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 		}
 		Task clone = new Task(this.name.substring(0),
 				this.description.substring(0), cloneid, this.status,
-				new ArrayList<Response>());
+				new ArrayList<Response>(), this.votes);
 		// Fill in the clone with the response clones.
 		for (Response resp : this.responses)
 		{

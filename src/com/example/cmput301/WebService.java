@@ -361,7 +361,7 @@ public class WebService
 		else
 		{
 			return new Task(jsonTask.getString("name"), jsonTask.getString("description"), jsonTask.getString("id")
-					,jsonTask.getInt("status"), toResponses(jsonTask));
+					,jsonTask.getInt("status"), toResponses(jsonTask),jsonTask.getInt("votes"));
 		}
 	}
 

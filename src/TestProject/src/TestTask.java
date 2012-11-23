@@ -29,12 +29,13 @@ public class TestTask extends TestCase {
         String descBefore = "aDescription";
         String idBefore = "anId";
         int statusBefore = Task.STATUS_PRIVATE;
+        int votesBefore = 0;
         ArrayList<Response> responsesBefore = new ArrayList<Response>();
         Response respBefore = new TextResponse("aString", new Date());
         responsesBefore.add(respBefore);
 
 
-        Task task = new Task(nameBefore, descBefore, idBefore, statusBefore, responsesBefore);
+        Task task = new Task(nameBefore, descBefore, idBefore, statusBefore, responsesBefore, votesBefore);
 
         //Make sure constructor worked.
         assertEquals(task.getName(), nameBefore);
@@ -84,12 +85,13 @@ public class TestTask extends TestCase {
         String desc = "aDescription";
         String id = "anId";
         int status = Task.STATUS_PRIVATE;
+        int votes = 5;
         ArrayList<Response> responses = new ArrayList<Response>();
         Response resp = new TextResponse("aString", new Date());
         responses.add(resp);
 
         //Test the robust constructor
-        Task task = new Task(name, desc, id, status, responses);
+        Task task = new Task(name, desc, id, status, responses, votes);
         assertEquals(task.getName(), name);
         assertEquals(task.getDescription(), desc);
         assertEquals(task.getId(), id);

@@ -54,6 +54,7 @@ public class IndividualTaskView extends Activity {
         String taskTile;
         String taskDesc;
 
+
         //enable back button on action bar
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -67,7 +68,7 @@ public class IndividualTaskView extends Activity {
 
         //setting the description of the task
         TextView title = (TextView) findViewById(R.id.indvidual_des_view);
-        title.setText(taskDesc);
+        title.setText("Votes: " + t.getVotes() + "\n\n" + taskDesc);
 
         //setting the title of the task to be the activity title
         setTitle(taskTile);
@@ -125,6 +126,13 @@ public class IndividualTaskView extends Activity {
             bundle.putSerializable("task", t);
             in.putExtras(bundle);
             startActivity(in);
+        }
+        if (item.getItemId() == R.id.menu_vote) {
+        	mainController.voteTask(t);
+        	 TextView title = (TextView) findViewById(R.id.indvidual_des_view);
+             title.setText("Votes: " + t.getVotes() + "\n\n" + t.getDescription());
+
+   
         }
 
         //go back, kills activity

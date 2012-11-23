@@ -96,6 +96,16 @@ public class TaskManager {
         return remoteTask;
 
     }
+    
+    /**
+     * Vote for a given task.
+     *
+     * @param id The task you want one vote added to.
+     */
+    public void voteTask(Task task) {
+    	task.increaseVotes();
+    	dbman.updateTask(task);
+    }
 
     /**
      * Delete the task with the given id deletes from local tables only. You
