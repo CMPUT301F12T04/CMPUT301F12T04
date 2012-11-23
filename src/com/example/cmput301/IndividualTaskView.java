@@ -114,7 +114,7 @@ public class IndividualTaskView extends Activity {
 
         //do upload, currently set to just kill activity
         if (item.getItemId() == R.id.menu_upload) {
-//            mainController.shareTask(t.getId());
+            mainController.shareTask(t.getId());
             finish();
         }
         if (item.getItemId() == R.id.menu_respond) {
