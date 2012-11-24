@@ -13,6 +13,8 @@ package com.example.cmput301;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,13 +91,36 @@ class MainController {
      * @param taskid
      */
     public void shareTask(String taskid) {
-        taskManager.shareTask(taskid);
-        tasks = taskManager.getPrivateTasks();
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
+    	new ShareTask().execute(taskid);
     }
 
+    private class ShareTask extends AsyncTask<String,Void,Task>{
+
+		String taskid;
+
+		@Override
+		protected Task doInBackground(String... args)
+		{
+			if(args.length > 0)
+			{
+				taskid = args[0];
+				Task result = taskManager.shareTask(taskid);
+				return result;
+			}
+			return null;
+		}
+		protected void onPostExecute(Task result)
+		{
+			if(result!=null)
+			{
+		        tasks = taskManager.getPrivateTasks();
+		        if (adapter != null) {
+		            adapter.notifyDataSetChanged();
+		            Log.d("TASKSHARING","REFRESHED");
+		        }
+			}
+		}
+	}
     /**
      * Delete a task with the given id.
      * Note: This only works if it is a local task.
