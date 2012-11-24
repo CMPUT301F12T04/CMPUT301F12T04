@@ -26,295 +26,299 @@ import java.util.logging.Logger;
 
 public class DatabaseManager {
 
-    private ArrayList<Task> localTable;
-    private ArrayList<Task> remoteTable;
-    private String filename;
-    private Context context;
+	private ArrayList<Task> localTable;
+	private ArrayList<Task> remoteTable;
+	private String filename;
+	private Context context;
 
-    /**
-     * Create a new database manager with the "database" being saved to a file.
-     *
-     * @param filename
-     */
-    @SuppressWarnings("unchecked")
+	/**
+	 * Create a new database manager with the "database" being saved to a file.
+	 *
+	 * @param filename
+	 */
+	@SuppressWarnings("unchecked")
 	public DatabaseManager(String filename, Context ctxt) {
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
-        this.filename = filename;
-        this.context = ctxt;
-        try {
-            fis = this.context.openFileInput(filename);
-            ois = new ObjectInputStream(fis);
-            ArrayList<ArrayList<Task>> tables;
-            tables = (ArrayList<ArrayList<Task>>) ois.readObject();
-            this.localTable = tables.get(0);
-            this.remoteTable = tables.get(1);
+		FileInputStream fis = null;
+		ObjectInputStream ois = null;
+		this.filename = filename;
+		this.context = ctxt;
+		try {
+			fis = this.context.openFileInput(filename);
+			ois = new ObjectInputStream(fis);
+			ArrayList<ArrayList<Task>> tables;
+			tables = (ArrayList<ArrayList<Task>>) ois.readObject();
+			this.localTable = tables.get(0);
+			this.remoteTable = tables.get(1);
 
 
-        } catch (OptionalDataException ex) {
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (OptionalDataException ex) {
+			Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
 
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
 
-        } catch (StreamCorruptedException ex) {
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (StreamCorruptedException ex) {
+			Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
 
-        } catch (IOException ex) {
-            
-            this.localTable = new ArrayList<Task>();
-            this.remoteTable = new ArrayList<Task>();
-            
-        } finally {
+		} catch (IOException ex) {
 
-            try {
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                if (ois != null) {
-                    ois.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
+			this.localTable = new ArrayList<Task>();
+			this.remoteTable = new ArrayList<Task>();
 
-    /**
-     * Post a task to the "local" table of the database.
-     *
-     * @param task The task to be added.
-     * @return The task that was added along with it's id.
-     */
-    public Task postLocal(Task task) {
+		} finally {
 
-        String id;
-        do {
-            id = "local@" + UUID.randomUUID().toString();
-        } while (this.localIdExists(id));
+			try {
+				if (fis != null) {
+					fis.close();
+				}
+			} catch (IOException ex) {
+				Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			try {
+				if (ois != null) {
+					ois.close();
+				}
+			} catch (IOException ex) {
+				Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
 
-        task.setId(id);
+	/**
+	 * Post a task to the "local" table of the database.
+	 *
+	 * @param task The task to be added.
+	 * @return The task that was added along with it's id.
+	 */
+	public Task postLocal(Task task) {
 
-        this.localTable.add(task);
-        this.saveDatabase();
+		//needs to check for null
+		if(task.getId()==null)
+		{
+			String id;
 
-        return task;
-    }
+			do {
+				id = "local@" + UUID.randomUUID().toString();
+			} while (this.localIdExists(id));
+			task.setId(id);
+		}
 
-    private boolean localIdExists(String id) {
-        for (Task localTask : this.localTable) {
-            if (localTask.getId().equals(id)) {
-                return true;
-            }
-        }
-        return false;
+		this.localTable.add(task);
+		this.saveDatabase();
 
-    }
+		return task;
+	}
 
-    /**
-     * Post a task to the "remote" table of the database.
-     *
-     * @param task The task to be added.
-     * @return The task that was added along with it's id.
-     */
-    public Task postRemote(Task task) {
+	private boolean localIdExists(String id) {
+		for (Task localTask : this.localTable) {
+			if (localTask.getId().equals(id)) {
+				return true;
+			}
+		}
+		return false;
 
-        this.remoteTable.add(task);
-        this.saveDatabase();
+	}
 
-        return task;
-    }
+	/**
+	 * Post a task to the "remote" table of the database.
+	 *
+	 * @param task The task to be added.
+	 * @return The task that was added along with it's id.
+	 */
+	public Task postRemote(Task task) {
 
-    /**
-     * Deletes a task from the "local" table of the database.
-     *
-     * @param id The id of the task to be deleted.
-     */
-    public void deleteLocalTask(String id) {
-        for (int i = 0; i < this.localTable.size(); i++) {
+		this.remoteTable.add(task);
+		this.saveDatabase();
 
-            String taskId = this.localTable.get(i).getId();
+		return task;
+	}
 
-            if (taskId.equals(id)) {
-                this.localTable.remove(i);
-                break;
-            }
-        }
+	/**
+	 * Deletes a task from the "local" table of the database.
+	 *
+	 * @param id The id of the task to be deleted.
+	 */
+	public void deleteLocalTask(String id) {
+		for (int i = 0; i < this.localTable.size(); i++) {
 
-        this.saveDatabase();
-    }
+			String taskId = this.localTable.get(i).getId();
 
-    /**
-     * Deletes a task from the "local" table of the database.
-     *
-     * @param id The id of the task to be deleted.
-     */
-    @SuppressWarnings("unused")
+			if (taskId.equals(id)) {
+				this.localTable.remove(i);
+				break;
+			}
+		}
+
+		this.saveDatabase();
+	}
+
+	/**
+	 * Deletes a task from the "local" table of the database.
+	 *
+	 * @param id The id of the task to be deleted.
+	 */
+	@SuppressWarnings("unused")
 	private void deleteRemoteTask(String id) {
-        for (int i = 0; i < this.remoteTable.size(); i++) {
+		for (int i = 0; i < this.remoteTable.size(); i++) {
 
-            String taskId = this.remoteTable.get(i).getId();
+			String taskId = this.remoteTable.get(i).getId();
 
-            if (taskId.equals(id)) {
-                this.remoteTable.remove(i);
-                break;
-            }
-        }
+			if (taskId.equals(id)) {
+				this.remoteTable.remove(i);
+				break;
+			}
+		}
 
-        this.saveDatabase();
-    }
+		this.saveDatabase();
+	}
 
-    /**
-     * Gets a task (if exists) from the "local" table of the database.
-     *
-     * @param id ID of task to search for
-     * @return Task found, if nothing found returns null.
-     */
-    public Task getLocalTask(String id) {
+	/**
+	 * Gets a task (if exists) from the "local" table of the database.
+	 *
+	 * @param id ID of task to search for
+	 * @return Task found, if nothing found returns null.
+	 */
+	public Task getLocalTask(String id) {
 
-        for (int i = 0; i < this.localTable.size(); i++) {
+		for (int i = 0; i < this.localTable.size(); i++) {
 
-            String taskId = this.localTable.get(i).getId();
+			String taskId = this.localTable.get(i).getId();
 
-            if (taskId.equals(id)) {
-                return this.localTable.get(i);
-            }
-        }
+			if (taskId.equals(id)) {
+				return this.localTable.get(i);
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Get the local task list.
-     *
-     * @return A list of tasks in the local table of the database
-     */
-    public ArrayList<Task> getLocalTaskList() {
+	/**
+	 * Get the local task list.
+	 *
+	 * @return A list of tasks in the local table of the database
+	 */
+	public ArrayList<Task> getLocalTaskList() {
 
-        ArrayList<Task> out = new ArrayList<Task>();
+		ArrayList<Task> out = new ArrayList<Task>();
 
-        for (Task task : this.localTable) {
-            out.add(task.clone());
-        }
+		for (Task task : this.localTable) {
+			out.add(task.clone());
+		}
 
-        return out;
+		return out;
 
-    }
+	}
 
-    /**
-     * Gets a task (if exists) from the "remote" table of the database.
-     *
-     * @param id ID of task to search for
-     * @return Task found, if nothing found returns null.
-     */
-    public Task getRemoteTask(String id) {
-        for (int i = 0; i < this.remoteTable.size(); i++) {
+	/**
+	 * Gets a task (if exists) from the "remote" table of the database.
+	 *
+	 * @param id ID of task to search for
+	 * @return Task found, if nothing found returns null.
+	 */
+	public Task getRemoteTask(String id) {
+		for (int i = 0; i < this.remoteTable.size(); i++) {
 
-            String taskId = this.remoteTable.get(i).getId();
+			String taskId = this.remoteTable.get(i).getId();
 
-            if (taskId.equals(id)) {
-                return this.remoteTable.get(i);
-            }
-        }
+			if (taskId.equals(id)) {
+				return this.remoteTable.get(i);
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Get the remote task list.
-     *
-     * @return A list of tasks in the remote table of the database
-     */
-    public ArrayList<Task> getRemoteTaskList() {
+	/**
+	 * Get the remote task list.
+	 *
+	 * @return A list of tasks in the remote table of the database
+	 */
+	public ArrayList<Task> getRemoteTaskList() {
 
-        ArrayList<Task> out = new ArrayList<Task>();
+		ArrayList<Task> out = new ArrayList<Task>();
 
-        for (Task task : this.remoteTable) {
-            out.add(task.clone());
-        }
+		for (Task task : this.remoteTable) {
+			out.add(task.clone());
+		}
 
-        return out;
+		return out;
 
-    }
+	}
 
-    /**
-     * Updates the database with the passed in task based on the id.
-     *
-     * Looks through both local and remote tables for a matching task.
-     *
-     * @param task The task that you want changed
-     * @return
-     */
-    public void updateTask(Task task) {
-        for (int i = 0; i < this.remoteTable.size(); i++) {
+	/**
+	 * Updates the database with the passed in task based on the id.
+	 *
+	 * Looks through both local and remote tables for a matching task.
+	 *
+	 * @param task The task that you want changed
+	 * @return
+	 */
+	public void updateTask(Task task) {
+		for (int i = 0; i < this.remoteTable.size(); i++) {
 
-            if (this.remoteTable.get(i).equals(task)) {
-                this.remoteTable.set(i, task);
-            }
-        }
+			if (this.remoteTable.get(i).equals(task)) {
+				this.remoteTable.set(i, task);
+			}
+		}
 
-        for (int i = 0; i < this.localTable.size(); i++) {
+		for (int i = 0; i < this.localTable.size(); i++) {
 
-            if (this.localTable.get(i).equals(task)) {
-                this.localTable.set(i, task);
-            }
-        }
+			if (this.localTable.get(i).equals(task)) {
+				this.localTable.set(i, task);
+			}
+		}
 
-        this.saveDatabase();
-    }
+		this.saveDatabase();
+	}
 
-    public void nukeRemote() {
-        this.remoteTable = new ArrayList<Task>();
-        this.saveDatabase();
-    }
+	public void nukeRemote() {
+		this.remoteTable = new ArrayList<Task>();
+		this.saveDatabase();
+	}
 
-    public void nukeAll() {
-        this.remoteTable = new ArrayList<Task>();
-        this.localTable = new ArrayList<Task>();
-        this.saveDatabase();
+	public void nukeAll() {
+		this.remoteTable = new ArrayList<Task>();
+		this.localTable = new ArrayList<Task>();
+		this.saveDatabase();
 
-    }
+	}
 
-    public void nukeLocal() {
-        this.localTable = new ArrayList<Task>();
-        this.saveDatabase();
-    }
+	public void nukeLocal() {
+		this.localTable = new ArrayList<Task>();
+		this.saveDatabase();
+	}
 
-    private synchronized void saveDatabase() {
-        FileOutputStream fos = null;
-        ObjectOutputStream oos = null;
-        try {
-            fos = this.context.openFileOutput(this.filename, Context.MODE_PRIVATE);
-            oos = new ObjectOutputStream(fos);
+	private synchronized void saveDatabase() {
+		FileOutputStream fos = null;
+		ObjectOutputStream oos = null;
+		try {
+			fos = this.context.openFileOutput(this.filename, Context.MODE_PRIVATE);
+			oos = new ObjectOutputStream(fos);
 
-            ArrayList<ArrayList<Task>> tables = new ArrayList<ArrayList<Task>>();
+			ArrayList<ArrayList<Task>> tables = new ArrayList<ArrayList<Task>>();
 
-            tables.add(this.localTable);
-            tables.add(this.remoteTable);
+			tables.add(this.localTable);
+			tables.add(this.remoteTable);
 
-            oos.writeObject(tables);
+			oos.writeObject(tables);
 
-        } catch (IOException ex) {
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                if (oos != null) {
-                    oos.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
+		} catch (IOException ex) {
+			Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException ex) {
+				Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			try {
+				if (oos != null) {
+					oos.close();
+				}
+			} catch (IOException ex) {
+				Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
 }
