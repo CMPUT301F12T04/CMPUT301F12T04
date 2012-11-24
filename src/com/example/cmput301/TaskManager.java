@@ -14,6 +14,7 @@ package com.example.cmput301;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -135,6 +136,7 @@ public class TaskManager {
             task.addResponse(response);
             dbman.updateTask(task);
         } else {
+        	Log.d("RESPONSE",(String)response.getContent());
             Task updatedTask = WebService.post(task, response);
             dbman.updateTask(updatedTask);
         }
