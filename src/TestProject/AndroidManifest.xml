@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <!-- package name must be unique so suffix with "tests" so package loader doesn't ignore us -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,3 +20,26 @@
                      android:targetPackage="com.example.cmput301"
                      android:label="Tests for com.example.cmput301"/>
 </manifest>
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<!-- package name must be unique so suffix with "tests" so package loader doesn't ignore us -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.example.cmput301.tests"
+          android:versionCode="1"
+          android:versionName="1.0">
+    <!-- We add an application tag here just so that we can indicate that
+         this package needs to link against the android.test library,
+         which is needed when building test cases. -->
+    <application>
+        <uses-library android:name="android.test.runner" />
+    </application>
+    <!--
+    This declares that this application uses the instrumentation test runner targeting
+    the package of com.example.cmput301.  To run the tests use the command:
+    "adb shell am instrument -w com.example.cmput301.tests/android.test.InstrumentationTestRunner"
+    -->
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+                     android:targetPackage="com.example.cmput301"
+                     android:label="Tests for com.example.cmput301"/>
+</manifest>
+>>>>>>> This version crashed until I deleted my old AVD and added a new one with AVD manager. Split package into model view and controller packages.

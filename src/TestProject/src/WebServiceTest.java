@@ -11,10 +11,10 @@
  ******************************************************************************/
 package TestProject.src;
 import android.util.Log;
-import com.example.cmput301.Response;
-import com.example.cmput301.Task;
-import com.example.cmput301.TextResponse;
-import com.example.cmput301.WebService;
+import com.example.cmput301.model.Response;
+import com.example.cmput301.model.Task;
+import com.example.cmput301.model.TextResponse;
+import com.example.cmput301.model.WebService;
 import java.util.Date;
 import java.util.List;
 import junit.framework.TestCase;

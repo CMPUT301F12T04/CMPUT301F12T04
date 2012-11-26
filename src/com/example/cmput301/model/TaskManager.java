@@ -9,7 +9,7 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package com.example.cmput301;
+package com.example.cmput301.model;
 
 import android.content.Context;
 import android.util.Log;
