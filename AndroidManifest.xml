@@ -30,7 +30,7 @@
         android:theme="@android:style/Theme.Holo" >
         <uses-library android:name="android.test.runner" />
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,25 +39,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".IndividualTaskView"
+            android:name=".view.IndividualTaskView"
             android:label="Task View" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.cmput301.MainActivity" />
+                android:value="com.example.cmput301.view.MainActivity" />
         </activity>
         <activity
-            android:name=".TextResponseView"
+            android:name=".view.TextResponseView"
             android:label="TextResponesView" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.cmput301.MainActivity" />
+                android:value="com.example.cmput301.view.MainActivity" />
         </activity>
         <activity
-            android:name=".PhotoResponseView"
+            android:name=".view.PhotoResponseView"
             android:label="PhotoResponesView" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.cmput301.MainActivity" />
+                android:value="com.example.cmput301.view.MainActivity" />
         </activity>
     </application>
 

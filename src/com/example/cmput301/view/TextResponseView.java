@@ -9,7 +9,7 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package com.example.cmput301;
+package com.example.cmput301.view;
 
 import java.util.ArrayList;
 
@@ -24,6 +24,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.example.cmput301.model.*;
+import com.example.cmput301.controller.*;
+import com.example.cmput301.R;
+
+
 
 import java.util.Date;
 

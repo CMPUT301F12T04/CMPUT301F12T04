@@ -9,7 +9,7 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package com.example.cmput301;
+package com.example.cmput301.view;
 
 import android.os.Bundle;
 import android.annotation.TargetApi;
@@ -31,6 +31,10 @@ import android.widget.RadioButton;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import com.example.cmput301.controller.*;
+import com.example.cmput301.R;
+
+
 
 /**
  * The main screen of our application, which consists mainly of a list of tasks.
