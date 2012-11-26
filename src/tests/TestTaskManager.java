@@ -9,14 +9,14 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package TestProject.src;
+package tests;
 import android.test.AndroidTestCase;
 import android.util.Log;
-import com.example.cmput301.DatabaseManager;
-import com.example.cmput301.Task;
-import com.example.cmput301.TaskManager;
-import com.example.cmput301.TextResponse;
-import com.example.cmput301.WebService;
+import com.example.cmput301.model.DatabaseManager;
+import com.example.cmput301.model.Task;
+import com.example.cmput301.model.TaskManager;
+import com.example.cmput301.model.TextResponse;
+import com.example.cmput301.model.WebService;
 import java.util.Date;
 
 public class TestTaskManager extends AndroidTestCase {

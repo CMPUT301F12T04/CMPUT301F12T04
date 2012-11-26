@@ -9,8 +9,8 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package TestProject.src;
-import com.example.cmput301.TextResponse;
+package tests;
+import com.example.cmput301.model.TextResponse;
 import java.util.Date;
 import junit.framework.TestCase;
 
