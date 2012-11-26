@@ -11,25 +11,35 @@
  ******************************************************************************/
 package com.example.cmput301;
 
+import android.content.ContentValues;
 import android.content.Context;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
-import java.io.StreamCorruptedException;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.example.cmput301.DatabaseOpenHelper;
+
+
 
 public class DatabaseManager {
 
-	private ArrayList<Task> localTable;
-	private ArrayList<Task> remoteTable;
-	private String filename;
-	private Context context;
+	//	private ArrayList<Task> localTable;
+	//	private ArrayList<Task> remoteTable;
+	private SQLiteDatabase db; // new
+	String local_task_table = "local_task_table"; // new
+	String remote_task_table = "remote_task_table";// new
+	String col_id = "id";// new
+	String col_content = "content";// new
 
 	/**
 	 * Create a new database manager with the "database" being saved to a file.
@@ -37,51 +47,9 @@ public class DatabaseManager {
 	 * @param filename
 	 */
 	@SuppressWarnings("unchecked")
-	public DatabaseManager(String filename, Context ctxt) {
-		FileInputStream fis = null;
-		ObjectInputStream ois = null;
-		this.filename = filename;
-		this.context = ctxt;
-		try {
-			fis = this.context.openFileInput(filename);
-			ois = new ObjectInputStream(fis);
-			ArrayList<ArrayList<Task>> tables;
-			tables = (ArrayList<ArrayList<Task>>) ois.readObject();
-			this.localTable = tables.get(0);
-			this.remoteTable = tables.get(1);
-
-
-		} catch (OptionalDataException ex) {
-			Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-
-		} catch (ClassNotFoundException ex) {
-			Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-
-		} catch (StreamCorruptedException ex) {
-			Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-
-		} catch (IOException ex) {
-
-			this.localTable = new ArrayList<Task>();
-			this.remoteTable = new ArrayList<Task>();
-
-		} finally {
-
-			try {
-				if (fis != null) {
-					fis.close();
-				}
-			} catch (IOException ex) {
-				Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			try {
-				if (ois != null) {
-					ois.close();
-				}
-			} catch (IOException ex) {
-				Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
+	public DatabaseManager(Context context) {
+		DatabaseSingleton ds = DatabaseSingleton.getInstance(context);
+		db = ds.getDB();
 	}
 
 	/**
@@ -90,9 +58,14 @@ public class DatabaseManager {
 	 * @param task The task to be added.
 	 * @return The task that was added along with it's id.
 	 */
+	//fixed
 	public Task postLocal(Task task) {
 
-		//needs to check for null
+		if(task.getStatus()==2)
+		{
+			Log.d("REMOTE","SHARED " + task.getName());
+
+		}
 		if(task.getId()==null)
 		{
 			String id;
@@ -100,23 +73,39 @@ public class DatabaseManager {
 			do {
 				id = "local@" + UUID.randomUUID().toString();
 			} while (this.localIdExists(id));
-			task.setId(id);
+			task.setId(id);			
 		}
+		this.addTask_LocaleTable(task);
 
-		this.localTable.add(task);
-		this.saveDatabase();
-
+		Log.d("DATABASE",task.getId());
 		return task;
+
+	}
+	// fixed
+	private void addTask_LocaleTable(Task task)
+	{
+		ContentValues cv = new ContentValues();
+		cv.put(col_id, task.getId());
+		try
+		{
+			Log.d("DATABASE",toJson(task).toString());
+			cv.put(col_content, toJson(task).toString() );
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		db.insert(local_task_table, this.col_id, cv);
 	}
 
 	private boolean localIdExists(String id) {
-		for (Task localTask : this.localTable) {
-			if (localTask.getId().equals(id)) {
-				return true;
-			}
+		Cursor c = db.rawQuery("SELECT * FROM "+local_task_table+" WHERE "+col_id+"=?", new String[]{id,});
+		if(c==null||c.getCount()==0)
+		{
+			return false;
 		}
-		return false;
-
+		return true;
 	}
 
 	/**
@@ -126,11 +115,45 @@ public class DatabaseManager {
 	 * @return The task that was added along with it's id.
 	 */
 	public Task postRemote(Task task) {
-
-		this.remoteTable.add(task);
-		this.saveDatabase();
-
+		ContentValues cv = new ContentValues();
+		cv.put(col_id, task.getId());
+		try
+		{
+			cv.put(col_content, toJson(task).toString());
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		db.insert(remote_task_table, col_id, cv);
 		return task;
+	}
+
+	private JSONObject toJson(Task task) throws JSONException
+	{
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("name", task.getName());
+		jsonObject.put("description", task.getDescription());
+
+
+		jsonObject.put("id", task.getId());
+		Log.d("RESPONSE","ID:===" + task.getId());
+
+		jsonObject.put("type", task.getType());
+		jsonObject.put("status", task.getStatus());
+
+		List<Response> responses = task.getResponses();
+		JSONArray arr = new JSONArray();
+		for(Response response : responses)
+		{
+			JSONObject jo = new JSONObject();
+			jo.put("content", response.getContent());
+			jo.put("timestamp", response.getTimestamp());
+			arr.put(jo);
+		}
+		jsonObject.put("responses", arr);
+		return jsonObject;
 	}
 
 	/**
@@ -138,18 +161,10 @@ public class DatabaseManager {
 	 *
 	 * @param id The id of the task to be deleted.
 	 */
+	// fixed
 	public void deleteLocalTask(String id) {
-		for (int i = 0; i < this.localTable.size(); i++) {
 
-			String taskId = this.localTable.get(i).getId();
-
-			if (taskId.equals(id)) {
-				this.localTable.remove(i);
-				break;
-			}
-		}
-
-		this.saveDatabase();
+		db.delete(local_task_table, col_id + " =?", new String[]{id,});
 	}
 
 	/**
@@ -158,18 +173,9 @@ public class DatabaseManager {
 	 * @param id The id of the task to be deleted.
 	 */
 	@SuppressWarnings("unused")
+	// fixed
 	private void deleteRemoteTask(String id) {
-		for (int i = 0; i < this.remoteTable.size(); i++) {
-
-			String taskId = this.remoteTable.get(i).getId();
-
-			if (taskId.equals(id)) {
-				this.remoteTable.remove(i);
-				break;
-			}
-		}
-
-		this.saveDatabase();
+		db.delete(remote_task_table, col_id + " =?", new String[]{id,});
 	}
 
 	/**
@@ -177,36 +183,138 @@ public class DatabaseManager {
 	 *
 	 * @param id ID of task to search for
 	 * @return Task found, if nothing found returns null.
+	 * @throws JSONException 
 	 */
+	//  fixed
 	public Task getLocalTask(String id) {
 
-		for (int i = 0; i < this.localTable.size(); i++) {
+		try
+		{
+			Cursor c = db.rawQuery("SELECT * FROM " + local_task_table + " WHERE "+col_id+"=?", new String[]{id,});
+			if(c==null||c.getCount()==0)
+			{ 
+				return null;
+			}
+			else
+			{
+				c.moveToFirst();
+				String taskContent = c.getString(c.getColumnIndex(this.col_content));
+				JSONObject jsonTask;
 
-			String taskId = this.localTable.get(i).getId();
+				jsonTask = toJsonTask(taskContent);
 
-			if (taskId.equals(id)) {
-				return this.localTable.get(i);
+				return toTask(jsonTask);
 			}
 		}
-
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
+
+	}
+
+	/**
+	 * Converts json string into a task object and returns.
+	 * @param jsonTask , task object in json format.
+	 * @return Task
+	 * @throws JSONException
+	 */
+	private static Task toTask(JSONObject jsonTask) throws JSONException
+	{
+		if(jsonTask==null)
+		{
+			return null;
+		}
+		else
+		{
+			return new Task(jsonTask.getString("name"), jsonTask.getString("description"), jsonTask.getString("id")
+					,jsonTask.getInt("status"), toResponses(jsonTask),0);
+		}
+	}
+
+	/**
+	 * Gets list of responses from jsonObject and returns
+	 * @param jsonTask , task object in json format.
+	 * @return List<Response>
+	 * @throws JSONException
+	 */
+	private static List<Response> toResponses(JSONObject jsonTask) throws JSONException
+	{
+		try
+		{
+			JSONArray jsonArray = jsonTask.getJSONArray("responses");
+			List<Response> responses = new ArrayList<Response>();
+			String type = jsonTask.getString("type");
+			if(type.equals(TextResponse.class.toString()))
+			{
+				for(int i = 0; i < jsonArray.length(); i++)
+				{
+					responses.add(new TextResponse(jsonArray.getJSONObject(i).getString("content"),
+							new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(jsonArray.getJSONObject(i).getString("timestamp"))));
+				}
+			}
+			else if(type.equals(PictureResponse.class.toString()))
+			{
+				throw new UnsupportedOperationException("Not implemented");
+			}
+			else if(type.equals(AudioResponse.class.toString()))
+			{
+				throw new UnsupportedOperationException("Not implemented");
+			}
+			else
+			{
+				throw new IllegalStateException();
+			}
+
+			return responses;
+		}
+		catch(ParseException e)
+		{
+			System.err.println("Could not parse date");
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private JSONObject toJsonTask(String taskContent) throws JSONException
+	{
+		JSONObject jsonTask = new JSONObject(taskContent);
+		return jsonTask;
 	}
 
 	/**
 	 * Get the local task list.
 	 *
 	 * @return A list of tasks in the local table of the database
+	 * @throws JSONException 
 	 */
-	public ArrayList<Task> getLocalTaskList() {
+	//fixed
+	public ArrayList<Task> getLocalTaskList()  {
 
-		ArrayList<Task> out = new ArrayList<Task>();
+		try
+		{
+			ArrayList<Task> out = new ArrayList<Task>();
 
-		for (Task task : this.localTable) {
-			out.add(task.clone());
+			Cursor c = db.rawQuery("SELECT * FROM "+local_task_table, new String[]{});
+			if(c.moveToFirst())
+			{
+				while(c.isAfterLast()==false)
+				{
+					Log.d("DATABASE",c.getString(c.getColumnIndex(col_content)));
+					JSONObject obj = toJsonTask(c.getString(c.getColumnIndex(col_content)));
+					out.add(toTask(obj));
+					c.moveToNext();
+				}
+				return out;
+			}
 		}
-
-		return out;
-
+		catch(JSONException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -214,17 +322,30 @@ public class DatabaseManager {
 	 *
 	 * @param id ID of task to search for
 	 * @return Task found, if nothing found returns null.
+	 * @throws JSONException 
 	 */
-	public Task getRemoteTask(String id) {
-		for (int i = 0; i < this.remoteTable.size(); i++) {
+	// fixed
+	public Task getRemoteTask(String id)  {
 
-			String taskId = this.remoteTable.get(i).getId();
-
-			if (taskId.equals(id)) {
-				return this.remoteTable.get(i);
+		try
+		{
+			Cursor c = db.rawQuery("SELECT * FROM " + remote_task_table, new String[]{id,});
+			c.moveToFirst();
+			if(c==null||c.getCount()==0)
+			{ 
+				return null;
+			}
+			else
+			{
+				String taskContent = c.getString(c.getColumnIndex(this.col_content));
+				JSONObject jsonTask = toJsonTask(taskContent);
+				return toTask(jsonTask);
 			}
 		}
-
+		catch(JSONException e)
+		{
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -232,16 +353,34 @@ public class DatabaseManager {
 	 * Get the remote task list.
 	 *
 	 * @return A list of tasks in the remote table of the database
+	 * @throws JSONException 
 	 */
-	public ArrayList<Task> getRemoteTaskList() {
+	//fixed
+	public ArrayList<Task> getRemoteTaskList()  {
 
-		ArrayList<Task> out = new ArrayList<Task>();
+		try
+		{
+			Log.d("REMOTE","STARTING REMOTE TASK LIST");
+			ArrayList<Task> out = new ArrayList<Task>();
 
-		for (Task task : this.remoteTable) {
-			out.add(task.clone());
+			Cursor c = db.rawQuery("SELECT * FROM "+remote_task_table, new String[]{});
+			if(c.moveToFirst())
+			{
+				while(c.isAfterLast()==false)
+				{
+					JSONObject obj = toJsonTask(c.getString(c.getColumnIndex(col_content)));
+					out.add(toTask(obj));
+				}
+				return out;
+			}
+
+		}
+		catch(JSONException e)
+		{
+			e.printStackTrace();
 		}
 
-		return out;
+		return null;
 
 	}
 
@@ -253,72 +392,79 @@ public class DatabaseManager {
 	 * @param task The task that you want changed
 	 * @return
 	 */
-	public void updateTask(Task task) {
-		for (int i = 0; i < this.remoteTable.size(); i++) {
+	//not fixed
+	public void updateTask(Task task)
+	{
 
-			if (this.remoteTable.get(i).equals(task)) {
-				this.remoteTable.set(i, task);
-			}
-		}
-
-		for (int i = 0; i < this.localTable.size(); i++) {
-
-			if (this.localTable.get(i).equals(task)) {
-				this.localTable.set(i, task);
-			}
-		}
-
-		this.saveDatabase();
 	}
+	//	public void updateTask(Task task) {
+	//		Cursor c = db.rawQuery( "SELECT * " +
+	//								"FROM "+remote_task_table+" " +
+	//								"WHERE "+col_id+"=?", new String[]{task.getId()});
+	//		
+	//		if(c==null||c.getCount()<=0)
+	//		{
+	//			return;
+	//		}
+	//		
+	//		JSONObject obj = toJson(task);
+	//		
+	//		
+	//		for (int i = 0; i < this.remoteTable.size(); i++) {
+	//
+	//			if (this.remoteTable.get(i).equals(task)) {
+	//				this.remoteTable.set(i, task);
+	//			}
+	//		}
+	//
+	//		for (int i = 0; i < this.localTable.size(); i++) {
+	//
+	//			if (this.localTable.get(i).equals(task)) {
+	//				this.localTable.set(i, task);
+	//			}
+	//		}
+	//	}
 
+	//fixed
 	public void nukeRemote() {
-		this.remoteTable = new ArrayList<Task>();
-		this.saveDatabase();
+		db.delete(remote_task_table, null, null);
 	}
 
+	//fixed
 	public void nukeAll() {
-		this.remoteTable = new ArrayList<Task>();
-		this.localTable = new ArrayList<Task>();
-		this.saveDatabase();
-
+		db.delete(local_task_table, null, null);
+		db.delete(remote_task_table, null, null);
 	}
 
+	//fixed
 	public void nukeLocal() {
-		this.localTable = new ArrayList<Task>();
-		this.saveDatabase();
+		db.delete(local_task_table, null, null);
 	}
 
-	private synchronized void saveDatabase() {
-		FileOutputStream fos = null;
-		ObjectOutputStream oos = null;
-		try {
-			fos = this.context.openFileOutput(this.filename, Context.MODE_PRIVATE);
-			oos = new ObjectOutputStream(fos);
+	public void close()
+	{
+		// TODO Auto-generated method stub
+		db.close();
 
-			ArrayList<ArrayList<Task>> tables = new ArrayList<ArrayList<Task>>();
+	}
 
-			tables.add(this.localTable);
-			tables.add(this.remoteTable);
-
-			oos.writeObject(tables);
-
-		} catch (IOException ex) {
-			Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-		} finally {
-			try {
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException ex) {
-				Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			try {
-				if (oos != null) {
-					oos.close();
-				}
-			} catch (IOException ex) {
-				Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-			}
+	public void hideTask(String taskid)
+	{
+		Task task = this.getLocalTask(taskid);
+		task.setStatus(5);
+		ContentValues cv = new ContentValues();
+		cv.put(col_id, task.getId());
+		try
+		{
+			cv.put(col_content, this.toJson(task).toString());
+			db.delete(local_task_table, col_id+"=?", new String[]{taskid,});
+			db.insert(local_task_table, col_id, cv);
+			
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

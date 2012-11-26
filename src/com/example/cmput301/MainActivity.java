@@ -18,6 +18,7 @@ import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,10 +44,11 @@ import android.widget.AdapterView.OnItemClickListener;
  *
  */
 @TargetApi(15)
-public class MainActivity extends Activity {
+public class MainActivity extends Activity  {
 
     private MainController mainController;
-
+    //setting up list view and using customAdapter for tasks
+    ListView taskview;
     /**
      * Method is responsible for the creation of the view of the activity,
      * Things such as the actionbar and the list of tasks are set here.
@@ -54,11 +56,13 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        setContentView(R.layout.activity_main);  
+        
         //Setup the main controller
         mainController = new MainController(this.getApplicationContext(), this);
 
+        MainController.callBack = (MyCallback) new Callback();
+        
         //Setting up the action bar
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -90,8 +94,7 @@ public class MainActivity extends Activity {
         };
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
 
-        //setting up list view and using customAdapter for tasks
-        ListView taskview;
+  
         taskview = (ListView) findViewById(R.id.mainActivityList);
         taskview.setAdapter(mainController.getListAdapter());
         taskview.setOnItemClickListener(new OnItemClickListener() {
@@ -100,18 +103,18 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> adp, View view,
                     int pos, long id) {
                 Intent in = new Intent(MainActivity.this, IndividualTaskView.class);
-
                 //passing task to individual task view
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", pos);
                 bundle.putSerializable("task", mainController.getList().get(pos));
                 in.putExtras(bundle);
                 startActivity(in);
+  
             }
         });
     }
 
-    /**
+	/**
      * Using own custom menu
      */
     @Override
@@ -123,10 +126,7 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        mainController = new MainController(this.getApplicationContext(), this);
-        ListView taskview;
-        taskview = (ListView) findViewById(R.id.mainActivityList);
-        taskview.setAdapter(mainController.getListAdapter());
+        mainController.checkoutPrivate();
     }
 
     /**
@@ -198,4 +198,12 @@ public class MainActivity extends Activity {
         }
         return true;
     }
+
+    class Callback implements MyCallback {
+    	   public void callbackCall() {
+    	      Log.d("TEST","WORKED");
+    	      onResume();
+    	   }
+    	}
 }
+

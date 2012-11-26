@@ -13,7 +13,10 @@ package com.example.cmput301;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +39,8 @@ class MainController {
 	private TaskManager taskManager;
 	private ArrayList<Task> tasks;
 	private TaskListAdapter adapter;
-
+	public static MyCallback callBack;
+	
 	/**
 	 * Basic constructor for the main controller.
 	 *
@@ -44,12 +48,14 @@ class MainController {
 	 * @param activity The active activity.
 	 */
 	public MainController(Context context, Activity activity) {
+
+		Log.d("RESPONSE","CREATED NEW MAIN CONTROLLER");
 		taskManager = new TaskManager(context);
 		tasks = taskManager.getPrivateTasks();
 		adapter = new TaskListAdapter(activity);
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();
-		}
+		}	
 		
 	}
 
@@ -118,11 +124,13 @@ class MainController {
 	 * @param taskid
 	 */
 	public void shareTask(String taskid) {
+//		taskManager.hide(taskid);
 		new ShareTask().execute("share", taskid);
+		checkoutPrivate();
 	}
 
-
-	private class ShareTask extends AsyncTask<String,Void,Task>{
+	private class ShareTask extends AsyncTask<String,Void,Task>
+	{
 
 		@Override
 		protected Task doInBackground(String... args)
@@ -138,11 +146,11 @@ class MainController {
 
 		protected void onPostExecute(Task result)
 		{
-			if(result!=null)
-			{
-				tasks = taskManager.getPrivateTasks();
-				checkoutPrivate();   
-			}
+			tasks = taskManager.getPrivateTasks();
+			checkoutPrivate();   
+			Log.d("REMOTE","REFRESHED");
+			
+			callBack.callbackCall();
 		}
 	}
 	/**
@@ -268,6 +276,7 @@ class MainController {
 	 * @return 
 	 */
 	public TaskListAdapter getListAdapter() {
+		Log.d("RESPONSE","NEW LIST ADAPTER");
 		return adapter;
 	}
 
@@ -308,7 +317,6 @@ class MainController {
 			ImageView taskTypeImg = (ImageView) row.findViewById(R.id.TasktypePic);
 			taskTypeImg.setImageResource(android.R.drawable.ic_menu_edit);
 
-
 			return row;
 		}
 
@@ -325,3 +333,5 @@ class MainController {
 		}
 	}
 }
+
+

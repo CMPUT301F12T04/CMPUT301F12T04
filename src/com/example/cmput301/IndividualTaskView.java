@@ -18,10 +18,12 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -36,6 +38,7 @@ import android.widget.TextView;
 @TargetApi(15)
 public class IndividualTaskView extends Activity {
 
+	ProgressBar progressBar;
     private MainController mainController;
     Task t;
     int taskPos;
@@ -48,12 +51,11 @@ public class IndividualTaskView extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.individual_task_view);
-
+        
         mainController = new MainController(this.getApplicationContext(), this);
 
         String taskTile;
         String taskDesc;
-
 
         //enable back button on action bar
         ActionBar actionBar = getActionBar();
@@ -96,14 +98,14 @@ public class IndividualTaskView extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        //Refreshes mainController
-        mainController = new MainController(this.getApplicationContext(), this);
-        ListView responses = (ListView) findViewById(R.id.individual_res_list);
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
-                android.R.layout.simple_list_item_1, (ArrayList) mainController.getTask(t.getId()).getResponses());
-        responses.setAdapter(adapter);
     }
+    @Override
+    public void onDestroy()
+    {
+    	Log.d("REMOTE", "INDV TASK VIEW ENDING");
+    	super.onDestroy();
+    }
+    
 
     /**
      * Method used to handle various user selected commands. These commands
@@ -116,6 +118,7 @@ public class IndividualTaskView extends Activity {
         //do upload, currently set to just kill activity
         if (item.getItemId() == R.id.menu_upload) {
             mainController.shareTask(t.getId());
+            
             finish();
         }
         if (item.getItemId() == R.id.menu_respond) {
@@ -131,8 +134,6 @@ public class IndividualTaskView extends Activity {
         	mainController.voteTask(t);
         	 TextView title = (TextView) findViewById(R.id.indvidual_des_view);
              title.setText("Votes: " + t.getVotes() + "\n\n" + t.getDescription());
-
-   
         }
 
         //go back, kills activity
