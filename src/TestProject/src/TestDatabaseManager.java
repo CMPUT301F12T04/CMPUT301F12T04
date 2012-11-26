@@ -9,12 +9,12 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package tests;
+package TestProject.src;
 
 import android.content.Context;
 import android.test.AndroidTestCase;
-import com.example.cmput301.model.DatabaseManager;
-import com.example.cmput301.model.Task;
+import com.example.cmput301.DatabaseManager;
+import com.example.cmput301.Task;
 import java.io.File;
 
 public class TestDatabaseManager extends AndroidTestCase {

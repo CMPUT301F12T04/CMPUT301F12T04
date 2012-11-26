@@ -9,7 +9,7 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package com.example.cmput301.model;
+package com.example.cmput301;
 
 import java.util.Date;
 

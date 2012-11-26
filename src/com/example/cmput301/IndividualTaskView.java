@@ -9,7 +9,7 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package com.example.cmput301.view;
+package com.example.cmput301;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +23,6 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.example.cmput301.model.*;
-import com.example.cmput301.controller.*;
-import com.example.cmput301.R;
-
-
 
 /**
  * This class is responsible for displaying the selected task that was selected

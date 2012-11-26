@@ -9,7 +9,7 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package com.example.cmput301.view;
+package com.example.cmput301;
 
 
 
@@ -17,7 +17,6 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.MenuItem;
-import com.example.cmput301.R;
 
 
 @TargetApi(15)

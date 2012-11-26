@@ -9,7 +9,7 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package com.example.cmput301.controller;
+package com.example.cmput301;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,9 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
-import com.example.cmput301.model.*;
 
-import com.example.cmput301.R;
 /**
  * This is a go between method for the View and Model components for this
  * application. It was written in a very hacky way because the original author
@@ -33,7 +31,7 @@ import com.example.cmput301.R;
  * Note: In future versions this will be broken into multiple controllers
  * depending on the view.
  */
-public class MainController {
+class MainController {
 
 	private TaskManager taskManager;
 	private ArrayList<Task> tasks;
