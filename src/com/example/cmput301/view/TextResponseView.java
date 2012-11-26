@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,7 +47,6 @@ public class TextResponseView extends ResponseView {
 	Task t;
 	String responseString;
 	Activity that;
-	private SQLiteDatabase db;
 
 	/**
 	 * Overrided method that sets the view of the activity.
@@ -68,7 +66,6 @@ public class TextResponseView extends ResponseView {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		openDatabase();
 		mainController = new MainController(this.getApplicationContext(), this);
 		String taskTile;
 
@@ -122,13 +119,7 @@ public class TextResponseView extends ResponseView {
 				android.R.layout.simple_list_item_1, (ArrayList) t.getResponses());
 		responses.setAdapter(adapter);
 	}
-	
-    private void openDatabase()
-	{
-		// TODO Auto-generated method stub
-    	this.db = new DatabaseOpenHelper(getApplicationContext()).getWritableDatabase();
-		
-	}
+
 
 	/**
      * Overrided method that just enables the back button to kill the activity

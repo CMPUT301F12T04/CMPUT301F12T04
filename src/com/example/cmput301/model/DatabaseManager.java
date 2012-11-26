@@ -27,9 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.cmput301.DatabaseOpenHelper;
-
-
+import com.example.cmput301.application.*;
 
 public class DatabaseManager {
 
@@ -46,7 +44,6 @@ public class DatabaseManager {
 	 *
 	 * @param filename
 	 */
-	@SuppressWarnings("unchecked")
 	public DatabaseManager(Context context) {
 		DatabaseSingleton ds = DatabaseSingleton.getInstance(context);
 		db = ds.getDB();

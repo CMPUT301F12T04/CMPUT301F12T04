@@ -1,4 +1,4 @@
-package com.example.cmput301;
+package com.example.cmput301.application;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

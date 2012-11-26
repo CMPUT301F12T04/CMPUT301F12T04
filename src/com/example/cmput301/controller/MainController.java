@@ -13,10 +13,7 @@ package com.example.cmput301.controller;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
 import com.example.cmput301.model.*;
+import com.example.cmput301.application.*;
 
 import com.example.cmput301.R;
 /**
