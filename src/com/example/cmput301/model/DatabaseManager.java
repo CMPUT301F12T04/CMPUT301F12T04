@@ -28,7 +28,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.cmput301.application.*;
-import com.example.cmput301.model.response.AudioResponse;
 import com.example.cmput301.model.response.PictureResponse;
 import com.example.cmput301.model.response.Response;
 import com.example.cmput301.model.response.TextResponse;
@@ -190,7 +189,6 @@ public class DatabaseManager {
 	 */
 	//  fixed
 	public Task getLocalTask(String id) {
-
 		try
 		{
 			Cursor c = db.rawQuery("SELECT * FROM " + local_task_table + " WHERE "+col_id+"=?", new String[]{id,});
@@ -266,9 +264,10 @@ public class DatabaseManager {
 
 				Response resp = respFactory.createResponse(null /*Annotation goes here when it's implemented.*/, jsonArray.getJSONObject(i).getString("content"));
 				resp.setTimestamp(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(jsonArray.getJSONObject(i).getString("timestamp")));
-
+				responses.add(resp);
+				
 			}
-
+			
 			return responses;
 		}
 		catch(ParseException e)
@@ -391,10 +390,28 @@ public class DatabaseManager {
 	 * @param task The task that you want changed
 	 * @return
 	 */
-	//not fixed
 	public void updateTask(Task task)
-	{
+	{	
+		ContentValues cv = new ContentValues();
+		try {
+			Cursor c = db.rawQuery("SELECT * FROM " + local_task_table + " WHERE " + this.col_id + "='" + task.getId() + "'",  new String[]{});
+			c.moveToFirst();
+			
+			Log.d("TEST", "" +  toJson(task).toString());
+			Log.d("TEST!B", c.getString(c.getColumnIndex(this.col_content)));
 
+			cv.put(this.col_content, toJson(task).toString());
+			
+			db.update(local_task_table, cv, this.col_id + "='" + task.getId() + "'",  new String[]{});
+			db.update(remote_task_table, cv, this.col_id + "='" + task.getId() + "'",  new String[]{});
+			
+			Cursor c2 = db.rawQuery("SELECT * FROM " + local_task_table + " WHERE " + this.col_id + "='" + task.getId() + "'",  new String[]{});
+			c2.moveToFirst();
+			Log.d("TEST!A", c2.getString(c.getColumnIndex(this.col_content)));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	//fixed

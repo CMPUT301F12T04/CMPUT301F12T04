@@ -410,6 +410,7 @@ public class WebService
 
 				Response resp = respFactory.createResponse(null /*Annotation goes here when it's implemented.*/, jsonArray.getJSONObject(i).getString("content"));
 				resp.setTimestamp(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(jsonArray.getJSONObject(i).getString("timestamp")));
+				responses.add(resp);
 
 			}
 

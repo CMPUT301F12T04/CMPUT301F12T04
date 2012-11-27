@@ -25,8 +25,9 @@ import com.example.cmput301.model.response.Response;
  */
 public class TaskManager {
 
-    private DatabaseManager dbman;
-
+    private static DatabaseManager dbman;
+    
+    
     /**
      * Constructor for the Task manager.
      *
@@ -34,9 +35,8 @@ public class TaskManager {
      * in.
      */
     public TaskManager(Context context) {
-    	if(this.dbman!=null)
-    		dbman.close();
-        this.dbman = new DatabaseManager(context);
+    	if(dbman==null)
+            dbman = new DatabaseManager(context);
     }
 
     /**
@@ -161,7 +161,7 @@ public class TaskManager {
      * @return
      */
     public ArrayList<Task> getLocalTasks() {
-        return this.dbman.getLocalTaskList();
+        return dbman.getLocalTaskList();
     }
 
     /**
@@ -173,10 +173,10 @@ public class TaskManager {
     public ArrayList<Task> getPrivateTasks() {
         ArrayList<Task> privateList = new ArrayList<Task>();
 
-        ArrayList<Task> tasks = this.dbman.getLocalTaskList();
+        ArrayList<Task> tasks = dbman.getLocalTaskList();
         if(tasks!=null)
         {
-        	for (Task task : this.dbman.getLocalTaskList()) {
+        	for (Task task : dbman.getLocalTaskList()) {
                 if (task.getStatus() == Task.STATUS_PRIVATE) {
                     privateList.add(task);
                 }
@@ -194,7 +194,7 @@ public class TaskManager {
     public ArrayList<Task> getSharedTasks() {
         ArrayList<Task> sharedList = new ArrayList<Task>();
 
-        for (Task task : this.dbman.getLocalTaskList()) {
+        for (Task task : dbman.getLocalTaskList()) {
             if (task.getStatus() == Task.STATUS_SHARED) {
                 sharedList.add(task);
             }

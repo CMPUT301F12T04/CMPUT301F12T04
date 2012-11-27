@@ -31,122 +31,134 @@ import com.example.cmput301.model.response.TextResponse;
 import com.example.cmput301.controller.*;
 import com.example.cmput301.R;
 
-
-
 /**
  * This class is responsible for displaying the selected task that was selected
  * via MainActivity. The task title and description is displayed along with it's
  * responses (which is in a list form). There is an option to share the task and
  * to add a response to the task. An option to go back to MainActivity is also
  * available.
- *
+ * 
  * @author dyu2
  */
 @TargetApi(15)
 public class IndividualTaskView extends Activity {
 
 	ProgressBar progressBar;
-    private MainController mainController;
-    Task t;
-    int taskPos;
+	private MainController mainController;
+	Task t;
+	int taskPos;
 
-    /**
-     * Sets the main view of the selected task, the task is passed in and it's
-     * content is displayed on the screen
-     */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.individual_task_view);
-        
-        mainController = new MainController(this.getApplicationContext(), this);
+	/**
+	 * Sets the main view of the selected task, the task is passed in and it's
+	 * content is displayed on the screen
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.individual_task_view);
 
-        String taskTile;
-        String taskDesc;
+		mainController = new MainController(this.getApplicationContext(), this);
 
-        //enable back button on action bar
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+		String taskTile;
+		String taskDesc;
 
-        //Getting information from bundle passed from MainActivity
-        Bundle bundle = getIntent().getExtras();
-        t = (Task) bundle.getSerializable("task");
-        taskTile = t.getName();
-        taskDesc = t.getDescription();
-        taskPos = bundle.getInt("id");
+		// enable back button on action bar
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //setting the description of the task
-        TextView title = (TextView) findViewById(R.id.indvidual_des_view);
-        title.setText("Votes: " + t.getVotes() + "\n\n" + taskDesc);
+		// Getting information from bundle passed from MainActivity
+		Bundle bundle = getIntent().getExtras();
+		t = (Task) bundle.getSerializable("task");
+		taskTile = t.getName();
+		taskDesc = t.getDescription();
+		taskPos = bundle.getInt("id");
 
-        //setting the title of the task to be the activity title
-        setTitle(taskTile);
+		// setting the description of the task
+		TextView title = (TextView) findViewById(R.id.indvidual_des_view);
+		title.setText("Votes: " + t.getVotes() + "\n\n" + taskDesc);
 
-        ListView responses = (ListView) findViewById(R.id.individual_res_list);
-   
-        List<Response> r = mainController.getTask(t.getId()).getResponses();
-        
+		// setting the title of the task to be the activity title
+		setTitle(taskTile);
+
+		ListView responses = (ListView) findViewById(R.id.individual_res_list);
+
+		List<Response> r = mainController.getTask(t.getId()).getResponses();
+
 		@SuppressWarnings({ "rawtypes", "unchecked" })
-		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
-                android.R.layout.simple_list_item_1, (ArrayList)r);
-        responses.setAdapter(adapter);
-    }
+		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(
+				this, android.R.layout.simple_list_item_1, (ArrayList) r);
+		Log.d("RESPONSELIST", "" + r.size());
 
-    /**
-     * Using custom options in action bar
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+		responses.setAdapter(adapter);
+	}
 
-        getMenuInflater().inflate(R.menu.individual_task_view, menu);
-        return true;
-    }
+	/**
+	 * Using custom options in action bar
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-    @Override
-    public void onDestroy()
-    {
-    	Log.d("REMOTE", "INDV TASK VIEW ENDING");
-    	super.onDestroy();
-    }
-    
+		getMenuInflater().inflate(R.menu.individual_task_view, menu);
+		return true;
+	}
 
-    /**
-     * Method used to handle various user selected commands. These commands
-     * include uploading a task, responding to a task and Going back to the
-     * previous screen.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+	@Override
+	public void onResume() {
+		super.onResume();
 
-        //do upload, currently set to just kill activity
-        if (item.getItemId() == R.id.menu_upload) {
-            mainController.shareTask(t.getId());
-            
-            finish();
-        }
-        if (item.getItemId() == R.id.menu_respond) {
-            //Should launch the respond to a task activity here. 
-            Intent in = new Intent(IndividualTaskView.this, TextResponseView.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("id", taskPos);
-            bundle.putSerializable("task", t);
-            in.putExtras(bundle);
-            startActivity(in);
-        }
-        if (item.getItemId() == R.id.menu_vote) {
-        	mainController.voteTask(t);
-        	 TextView title = (TextView) findViewById(R.id.indvidual_des_view);
-             title.setText("Votes: " + t.getVotes() + "\n\n" + t.getDescription());
-        }
+		t = mainController.getTask(t.getId());
+		List<Response> r = t.getResponses();
 
-        //go back, kills activity
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return true;
-    }
+		ListView responses = (ListView) findViewById(R.id.individual_res_list);
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(
+				this, android.R.layout.simple_list_item_1,
+				(ArrayList) r);
+		responses.setAdapter(adapter);
+
+	}
+
+	@Override
+	public void onDestroy() {
+		Log.d("REMOTE", "INDV TASK VIEW ENDING");
+		super.onDestroy();
+	}
+
+	/**
+	 * Method used to handle various user selected commands. These commands
+	 * include uploading a task, responding to a task and Going back to the
+	 * previous screen.
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		// do upload, currently set to just kill activity
+		if (item.getItemId() == R.id.menu_upload) {
+			mainController.shareTask(t.getId());
+
+			finish();
+		}
+		if (item.getItemId() == R.id.menu_respond) {
+			// Should launch the respond to a task activity here.
+			Intent in = new Intent(IndividualTaskView.this,
+					TextResponseView.class);
+			Bundle bundle = new Bundle();
+			bundle.putInt("id", taskPos);
+			bundle.putSerializable("task", t);
+			in.putExtras(bundle);
+			startActivity(in);
+		}
+		if (item.getItemId() == R.id.menu_vote) {
+			mainController.voteTask(t);
+			TextView title = (TextView) findViewById(R.id.indvidual_des_view);
+			title.setText("Votes: " + t.getVotes() + "\n\n"
+					+ t.getDescription());
+		}
+
+		// go back, kills activity
+		if (item.getItemId() == android.R.id.home) {
+			finish();
+		}
+		return true;
+	}
 }

@@ -80,7 +80,7 @@ public class MainController {
 			adapter.notifyDataSetChanged();
 		}
 	}
-
+	
 	/**
 	 * Add a response to the given task in the database.
 	 *
