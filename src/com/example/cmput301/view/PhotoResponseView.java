@@ -15,7 +15,9 @@ package com.example.cmput301.view;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import com.example.cmput301.R;
 
@@ -34,6 +36,10 @@ public class PhotoResponseView extends ResponseView {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
 	}
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.photo_response_view, menu);
+		return true;
+	}
 	
     /**
      * Overrided method that just enables the back button to kill the activity
@@ -44,6 +50,10 @@ public class PhotoResponseView extends ResponseView {
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 		}
-		return true;
-	}
+		if (item.getItemId() == R.id.menu_camera) {
+			 Intent in = new Intent(PhotoResponseView.this, PictureSelectionView.class);
+	          startActivity(in);
+		}
+			return true;
+		}
 }

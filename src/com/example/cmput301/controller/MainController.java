@@ -69,7 +69,7 @@ public class MainController {
 	 * @param type The type of response that this task will require.
 	 */
 	public void addTask(String name, String description, String type) {
-		Task task = new Task(name, description);
+		Task task = new Task(name, description, type);
 
 		taskManager.addTask(task);
 

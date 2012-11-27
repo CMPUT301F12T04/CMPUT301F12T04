@@ -6,6 +6,7 @@
         android:layout_height="wrap_content"
         android:icon="@android:drawable/ic_menu_camera"
         android:showAsAction="always"
-        android:orderInCategory="1"/>  
+        android:orderInCategory="1"/>
+      
 
 </menu>

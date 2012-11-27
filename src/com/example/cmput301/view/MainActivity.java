@@ -115,6 +115,15 @@ public class MainActivity extends Activity  {
                 bundle.putSerializable("task", mainController.getList().get(pos));
                 in.putExtras(bundle);
                 startActivity(in);
+                
+                //testing Code
+                /*Intent in = new Intent(MainActivity.this, PhotoResponseView.class);
+                //passing task to individual task view
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", pos);
+                bundle.putSerializable("task", mainController.getList().get(pos));
+                in.putExtras(bundle);
+                startActivity(in);*/ 
   
             }
         });

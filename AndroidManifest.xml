@@ -59,6 +59,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.cmput301.view.MainActivity" />
         </activity>
+        <activity
+            android:name=".view.PictureSelectionView"
+            android:label="Picture Selection" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cmput301.view.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

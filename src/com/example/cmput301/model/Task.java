@@ -71,6 +71,15 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 		this.type = TextResponse.class.toString();
 		this.votes = 0;
 }
+	public Task(String name, String description,String type)
+	{
+		this.name = name;
+		this.description = description;
+		responses = new ArrayList<Response>();
+		this.status = Task.STATUS_PRIVATE;
+		this.type = TextResponse.class.toString();
+		this.votes = 0;
+}
 
 	public Task(String name, String description, String id, String type)
 	{
