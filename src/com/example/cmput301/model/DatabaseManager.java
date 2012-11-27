@@ -28,6 +28,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.cmput301.application.*;
+import com.example.cmput301.model.response.AudioResponse;
+import com.example.cmput301.model.response.PictureResponse;
+import com.example.cmput301.model.response.Response;
+import com.example.cmput301.model.response.TextResponse;
+import com.example.cmput301.model.response.factory.PictureResponseFactory;
+import com.example.cmput301.model.response.factory.ResponseFactory;
+import com.example.cmput301.model.response.factory.TextResponseFactory;
 
 public class DatabaseManager {
 
@@ -243,30 +250,23 @@ public class DatabaseManager {
 			JSONArray jsonArray = jsonTask.getJSONArray("responses");
 			List<Response> responses = new ArrayList<Response>();
 			String type = jsonTask.getString("type");
-			if(type.equals(TextResponse.class.toString()))
-			{
-				for(int i = 0; i < jsonArray.length(); i++)
-				{
-					responses.add(new TextResponse(jsonArray.getJSONObject(i).getString("content"),
-							new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(jsonArray.getJSONObject(i).getString("timestamp"))));
-				}
+			
+			ResponseFactory respFactory;
+			
+			if(type.equals(TextResponse.class.toString())){
+				respFactory = new TextResponseFactory();
+			} else if (type.equals(PictureResponse.class.toString())) {
+				respFactory = new PictureResponseFactory();
+			} else {
+				throw new UnsupportedOperationException("Not implemented");
 			}
-			else if(type.equals(PictureResponse.class.toString()))
+			
+			for(int i = 0; i < jsonArray.length(); i++)
 			{
-				for(int i = 0; i < jsonArray.length(); i++)
-				{
-					responses.add(new PictureResponse(null, jsonArray.getJSONObject(i).getString("content"),
-							new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(jsonArray.getJSONObject(i).getString("timestamp"))));
-					Log.d("TYPE","ADDED");
-				}
-			}
-			else if(type.equals(AudioResponse.class.toString()))
-			{
-				throw new UnsupportedOperationException("Audio response Not implemented");
-			}
-			else
-			{
-				throw new IllegalStateException();
+
+				Response resp = respFactory.createResponse(null /*Annotation goes here when it's implemented.*/, jsonArray.getJSONObject(i).getString("content"));
+				resp.setTimestamp(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(jsonArray.getJSONObject(i).getString("timestamp")));
+
 			}
 
 			return responses;

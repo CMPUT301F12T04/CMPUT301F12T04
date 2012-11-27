@@ -33,9 +33,9 @@ import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import com.example.cmput301.controller.*;
-import com.example.cmput301.model.AudioResponse;
-import com.example.cmput301.model.PictureResponse;
-import com.example.cmput301.model.TextResponse;
+import com.example.cmput301.model.response.AudioResponse;
+import com.example.cmput301.model.response.PictureResponse;
+import com.example.cmput301.model.response.TextResponse;
 import com.example.cmput301.R;
 import com.example.cmput301.application.*;
 

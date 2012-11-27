@@ -15,6 +15,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.cmput301.model.response.Response;
+
 /**
  * This is the model of a basic "Task" which the user wanted fulfilled.
  */

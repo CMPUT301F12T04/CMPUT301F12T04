@@ -16,6 +16,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import com.example.cmput301.model.response.Response;
+
 /**
  * This class is the entry point for the model of this application. It handles 
  * all the data storage on local and remote databases as well as the addition of

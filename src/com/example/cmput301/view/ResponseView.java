@@ -11,8 +11,10 @@
  ******************************************************************************/
 package com.example.cmput301.view;
 
+import com.example.cmput301.model.response.factory.ResponseFactory;
+
 import android.app.Activity;
 
 public class ResponseView extends Activity {
-
+	protected ResponseFactory respFactory;
 }

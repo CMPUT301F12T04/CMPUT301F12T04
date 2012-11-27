@@ -25,6 +25,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.example.cmput301.model.*;
+import com.example.cmput301.model.response.TextResponse;
+import com.example.cmput301.model.response.factory.PictureResponseFactory;
+import com.example.cmput301.model.response.factory.TextResponseFactory;
 import com.example.cmput301.controller.*;
 import com.example.cmput301.R;
 
@@ -58,6 +61,9 @@ public class TextResponseView extends ResponseView {
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
+		respFactory = new TextResponseFactory();
+		
 		that = this;
 
 		super.onCreate(savedInstanceState);
@@ -91,7 +97,7 @@ public class TextResponseView extends ResponseView {
 
 				//Can now add response to the task using this string
 				responseString = responseInput.getText().toString();
-				TextResponse resp = new TextResponse(responseString, new Date());
+				TextResponse resp = (TextResponse) respFactory.createResponse(responseString, responseString);
 				
 				if(responseString.equals(""))
 				{

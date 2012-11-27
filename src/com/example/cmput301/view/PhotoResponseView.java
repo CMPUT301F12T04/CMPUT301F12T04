@@ -32,8 +32,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.cmput301.R;
-import com.example.cmput301.model.PictureResponse;
 import com.example.cmput301.model.Task;
+import com.example.cmput301.model.response.PictureResponse;
+import com.example.cmput301.model.response.factory.PictureResponseFactory;
 
 
 @TargetApi(15)
@@ -44,6 +45,7 @@ public class PhotoResponseView extends ResponseView {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {	
 
+		respFactory = new PictureResponseFactory();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.photo_response_view);
 
@@ -53,7 +55,7 @@ public class PhotoResponseView extends ResponseView {
 		
 		//fake task and responses
 		t1 = new Task("df","dsf",PictureResponse.class.toString());
-		PictureResponse pR = new PictureResponse(null,"sdlf",new Date());
+		PictureResponse pR = (PictureResponse) respFactory.createResponse("fdsa", null);
 		t1.addResponse(pR);
 		
 		//set up the listview to use custom adapter

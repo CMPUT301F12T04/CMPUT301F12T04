@@ -26,6 +26,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.cmput301.model.*;
+import com.example.cmput301.model.response.Response;
+import com.example.cmput301.model.response.TextResponse;
 import com.example.cmput301.controller.*;
 import com.example.cmput301.R;
 

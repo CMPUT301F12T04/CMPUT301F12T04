@@ -9,7 +9,7 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package com.example.cmput301.model;
+package com.example.cmput301.model.response;
 
 import java.util.Date;
 
@@ -26,9 +26,8 @@ public class TextResponse extends Response {
      * @param content //Content for this type of response is a string.
      * @param timestamp
      */
-    public TextResponse(String content, Date timestamp) {
-        super(null, timestamp);
-        this.content = content;
+    public TextResponse(String annotation, Date timestamp, String content) {
+        super(annotation, timestamp, content);
     }
 
     // ---- Getters / Setters ---- //
@@ -46,9 +45,8 @@ public class TextResponse extends Response {
     }
 
     @Override
-    public Response clone() {
-        Response clone = new TextResponse(((String) this.content).substring(0), (Date) this.timestamp.clone());
-        clone.setAnnotation(this.annotation);
+    public TextResponse clone() {
+        TextResponse clone = new TextResponse(this.annotation, (Date) this.timestamp, (String) this.content);
 
         return clone;
     }

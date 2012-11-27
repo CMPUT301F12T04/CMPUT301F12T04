@@ -17,8 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.example.cmput301.R;
-import com.example.cmput301.model.PictureResponse;
-import com.example.cmput301.model.Response;
+import com.example.cmput301.model.response.PictureResponse;
+import com.example.cmput301.model.response.Response;
+import com.example.cmput301.model.response.factory.PictureResponseFactory;
+import com.example.cmput301.model.response.factory.ResponseFactory;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -49,13 +51,16 @@ public class PictureSelectionView extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {	
 
+		ResponseFactory respFactory = new PictureResponseFactory();
+
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pic_select_view);
 
 		//fake task, with fake picture response
-		PictureResponse pR = new PictureResponse(null,"hello",new Date());
-		PictureResponse pR1 = new PictureResponse(null,"hello1",new Date());
-		PictureResponse pR2 = new PictureResponse(null,"hello2",new Date());
+		PictureResponse pR = (PictureResponse) respFactory.createResponse("hello", null);
+		PictureResponse pR1 = (PictureResponse) respFactory.createResponse("hello1", null);
+		PictureResponse pR2 = (PictureResponse) respFactory.createResponse("hello2", null);
 		pResponses.add(pR);
 		pResponses.add(pR1);
 		pResponses.add(pR2);

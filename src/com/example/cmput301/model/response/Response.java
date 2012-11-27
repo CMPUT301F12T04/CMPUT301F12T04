@@ -9,7 +9,7 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package com.example.cmput301.model;
+package com.example.cmput301.model.response;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -28,9 +28,10 @@ public abstract class Response implements Serializable, Cloneable {
      * @param annotation    A Text annotation that will be added to the response
      * @param timestamp     A timestamp which should be added to the response.
      */
-    public Response(String annotation, Date timestamp) {
+    public Response(String annotation, Date timestamp, Object content) {
         this.annotation = annotation;
         this.timestamp = timestamp;
+        this.content = content;
     }
     
     // ---- Getters / Setters ---- //
@@ -62,7 +63,7 @@ public abstract class Response implements Serializable, Cloneable {
     public boolean equals(Object another) {
 
         if (another instanceof Response) {
-            Response anotherResp = (Response) another;
+			Response anotherResp = (Response) another;
 
             return anotherResp.getContent().equals(this.getContent());
         } else {

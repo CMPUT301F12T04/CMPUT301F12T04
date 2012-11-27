@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
 import com.example.cmput301.model.*;
+import com.example.cmput301.model.response.Response;
 import com.example.cmput301.application.*;
 
 import com.example.cmput301.R;

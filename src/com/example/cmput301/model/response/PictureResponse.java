@@ -9,26 +9,21 @@
  *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
  *     implementation
  ******************************************************************************/
-package com.example.cmput301.model;
+package com.example.cmput301.model.response;
 
 import java.util.Date;
 
-import android.provider.MediaStore.Audio;
+import android.graphics.Picture;
 
-public class AudioResponse extends Response {
+public class PictureResponse extends Response {
 	private static final long serialVersionUID = 1L;
-	private Audio audio;
 
-    public AudioResponse(Audio audio, String annotation, Date timestamp) {
-        super(annotation, timestamp);
-        this.audio = audio;
+    public PictureResponse(String annotation, Date timestamp, Picture picture) {
+        super(annotation, timestamp, picture);
     }
 
-    public Audio getAudio() {
-        return this.audio;
-    }
-
-    public Response clone() {
+    public PictureResponse clone() {
         return null;
+
     }
 }
