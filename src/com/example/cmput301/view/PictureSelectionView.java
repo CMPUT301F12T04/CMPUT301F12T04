@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Jason Reddekopp, Andrew McCann, Daniel Sopel, David Yu - initial API and                              
+ *     implementation
+ ******************************************************************************/
 package com.example.cmput301.view;
 
 import java.util.ArrayList;
@@ -31,7 +42,6 @@ import android.widget.Toast;
 public class PictureSelectionView extends Activity {
 
 
-	//Task t1;
 	MyArrayAdapter myArrayAdapter;
 	private ArrayList<PictureResponse> pResponses = new ArrayList<PictureResponse>();
 
@@ -43,7 +53,6 @@ public class PictureSelectionView extends Activity {
 		setContentView(R.layout.pic_select_view);
 
 		//fake task, with fake picture response
-		//t1 = new Task("dfdsf","ddfds");
 		PictureResponse pR = new PictureResponse(null,"hello",new Date());
 		PictureResponse pR1 = new PictureResponse(null,"hello1",new Date());
 		PictureResponse pR2 = new PictureResponse(null,"hello2",new Date());
