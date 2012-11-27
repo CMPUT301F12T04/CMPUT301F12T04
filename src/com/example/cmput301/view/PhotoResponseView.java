@@ -15,10 +15,19 @@ package com.example.cmput301.view;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.example.cmput301.R;
 
 
@@ -56,4 +65,5 @@ public class PhotoResponseView extends ResponseView {
 		}
 			return true;
 		}
+
 }
