@@ -33,6 +33,9 @@ import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import com.example.cmput301.controller.*;
+import com.example.cmput301.model.AudioResponse;
+import com.example.cmput301.model.PictureResponse;
+import com.example.cmput301.model.TextResponse;
 import com.example.cmput301.R;
 import com.example.cmput301.application.*;
 
@@ -179,12 +182,20 @@ public class MainActivity extends Activity  {
                     RadioButton rText = (RadioButton) dialog.findViewById(R.id.radioText);
                     RadioButton rAudio = (RadioButton) dialog.findViewById(R.id.radioAudio);
 
+                    String type;
                     if (rPhoto.isChecked()) {
                         //set type of Task to be photo
+                    	type = PictureResponse.class.toString(); 
                     } else if (rText.isChecked()) {
                         //set type of Task to be text
+                    	type = TextResponse.class.toString();
                     } else if (rAudio.isChecked()) {
                         //set type of Task to be audio
+                    	type = AudioResponse.class.toString();
+                    }
+                    else
+                    {
+                    	throw new IllegalStateException();
                     }
 
                     if(titleInput.equals(""))
@@ -195,7 +206,7 @@ public class MainActivity extends Activity  {
                     else
                     {
                     	//Create new task here and add to database etc.
-                    	mainController.addTask(titleInput, descInput, "Dont Care right now");
+                    	mainController.addTask(titleInput, descInput, type);
                     	dialog.dismiss();
                     }
                 }

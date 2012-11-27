@@ -45,7 +45,7 @@ public class TaskManager {
      * @return The task which was added with the local task id attached.
      */
     public Task addTask(Task task) {
-
+    	Log.d("TYPE",task.getType());
         Task addedTask = dbman.postLocal(task);
 
         return addedTask;

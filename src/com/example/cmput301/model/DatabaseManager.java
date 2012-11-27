@@ -133,11 +133,11 @@ public class DatabaseManager {
 		jsonObject.put("name", task.getName());
 		jsonObject.put("description", task.getDescription());
 
-
 		jsonObject.put("id", task.getId());
 		Log.d("RESPONSE","ID:===" + task.getId());
 
 		jsonObject.put("type", task.getType());
+		Log.d("TYPE",task.getType());
 		jsonObject.put("status", task.getStatus());
 
 		List<Response> responses = task.getResponses();
@@ -160,7 +160,6 @@ public class DatabaseManager {
 	 */
 	// fixed
 	public void deleteLocalTask(String id) {
-
 		db.delete(local_task_table, col_id + " =?", new String[]{id,});
 	}
 
@@ -227,7 +226,7 @@ public class DatabaseManager {
 		else
 		{
 			return new Task(jsonTask.getString("name"), jsonTask.getString("description"), jsonTask.getString("id")
-					,jsonTask.getInt("status"), toResponses(jsonTask),0);
+					,jsonTask.getInt("status"), toResponses(jsonTask),jsonTask.getString("type"),0);
 		}
 	}
 
@@ -254,11 +253,16 @@ public class DatabaseManager {
 			}
 			else if(type.equals(PictureResponse.class.toString()))
 			{
-				throw new UnsupportedOperationException("Not implemented");
+				for(int i = 0; i < jsonArray.length(); i++)
+				{
+					responses.add(new PictureResponse(null, jsonArray.getJSONObject(i).getString("content"),
+							new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(jsonArray.getJSONObject(i).getString("timestamp"))));
+					Log.d("TYPE","ADDED");
+				}
 			}
 			else if(type.equals(AudioResponse.class.toString()))
 			{
-				throw new UnsupportedOperationException("Not implemented");
+				throw new UnsupportedOperationException("Audio response Not implemented");
 			}
 			else
 			{
@@ -376,9 +380,7 @@ public class DatabaseManager {
 		{
 			e.printStackTrace();
 		}
-
 		return null;
-
 	}
 
 	/**
@@ -394,33 +396,6 @@ public class DatabaseManager {
 	{
 
 	}
-	//	public void updateTask(Task task) {
-	//		Cursor c = db.rawQuery( "SELECT * " +
-	//								"FROM "+remote_task_table+" " +
-	//								"WHERE "+col_id+"=?", new String[]{task.getId()});
-	//		
-	//		if(c==null||c.getCount()<=0)
-	//		{
-	//			return;
-	//		}
-	//		
-	//		JSONObject obj = toJson(task);
-	//		
-	//		
-	//		for (int i = 0; i < this.remoteTable.size(); i++) {
-	//
-	//			if (this.remoteTable.get(i).equals(task)) {
-	//				this.remoteTable.set(i, task);
-	//			}
-	//		}
-	//
-	//		for (int i = 0; i < this.localTable.size(); i++) {
-	//
-	//			if (this.localTable.get(i).equals(task)) {
-	//				this.localTable.set(i, task);
-	//			}
-	//		}
-	//	}
 
 	//fixed
 	public void nukeRemote() {
@@ -442,7 +417,6 @@ public class DatabaseManager {
 	{
 		// TODO Auto-generated method stub
 		db.close();
-
 	}
 
 	public void hideTask(String taskid)
@@ -455,8 +429,7 @@ public class DatabaseManager {
 		{
 			cv.put(col_content, this.toJson(task).toString());
 			db.delete(local_task_table, col_id+"=?", new String[]{taskid,});
-			db.insert(local_task_table, col_id, cv);
-			
+			db.insert(local_task_table, col_id, cv);			
 		}
 		catch (JSONException e)
 		{

@@ -52,7 +52,7 @@ public class PhotoResponseView extends ResponseView {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		//fake task and responses
-		t1 = new Task("df","dsf");
+		t1 = new Task("df","dsf",PictureResponse.class.toString());
 		PictureResponse pR = new PictureResponse(null,"sdlf",new Date());
 		t1.addResponse(pR);
 		

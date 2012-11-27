@@ -368,7 +368,7 @@ public class WebService
 		else
 		{
 			return new Task(jsonTask.getString("name"), jsonTask.getString("description"), jsonTask.getString("id")
-					,jsonTask.getInt("status"), toResponses(jsonTask),0);
+					,jsonTask.getInt("status"), toResponses(jsonTask),jsonTask.getString("type"),0);
 		}
 	}
 
@@ -395,7 +395,11 @@ public class WebService
 			}
 			else if(type.equals(PictureResponse.class.toString()))
 			{
-				throw new UnsupportedOperationException("Not implemented");
+				for(int i = 0; i < jsonArray.length(); i++)
+				{
+					responses.add(new PictureResponse(null, jsonArray.getJSONObject(i).getString("content"),
+							new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(jsonArray.getJSONObject(i).getString("timestamp"))));
+				}
 			}
 			else if(type.equals(AudioResponse.class.toString()))
 			{
@@ -479,6 +483,7 @@ public class WebService
 			Log.d("RESPONSE","ID:===" + task.getId());
 		}
 		jsonObject.put("type", task.getType());
+		Log.d("TYPE","WEBSERVICE TASK TYPE + " + task.getType());
 		jsonObject.put("status", task.getStatus());
 
 		List<Response> responses = task.getResponses();

@@ -43,14 +43,14 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	 * @param responses
 	 */
 	public Task(String name, String description, String id, int status,
-			List<Response> responses, int votes)
+			List<Response> responses, String type, int votes)
 	{
 		this.name = name;
 		this.description = description;
 		this.id = id;
 		this.status = status;
 		this.responses = responses;
-		this.type = TextResponse.class.toString();
+		this.type = type;
 		this.votes = votes;
 	}
 
@@ -62,24 +62,24 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	 * @param name
 	 * @param description
 	 */
-	public Task(String name, String description)
-	{
-		this.name = name;
-		this.description = description;
-		responses = new ArrayList<Response>();
-		this.status = Task.STATUS_PRIVATE;
-		this.type = TextResponse.class.toString();
-		this.votes = 0;
-}
+//	public Task(String name, String description)
+//	{
+//		this.name = name;
+//		this.description = description;
+//		responses = new ArrayList<Response>();
+//		this.status = Task.STATUS_PRIVATE;
+//		this.type = TextResponse.class.toString();
+//		this.votes = 0;
+//	}
 	public Task(String name, String description,String type)
 	{
 		this.name = name;
 		this.description = description;
 		responses = new ArrayList<Response>();
 		this.status = Task.STATUS_PRIVATE;
-		this.type = TextResponse.class.toString();
+		this.type = type;
 		this.votes = 0;
-}
+	}
 
 	public Task(String name, String description, String id, String type)
 	{
@@ -88,7 +88,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 		this.id = id;
 		this.type = type;
 		this.responses = new ArrayList<Response>();
-		this.type = TextResponse.class.toString();
+		this.type = type;
 		this.votes = 0;
 	}
 
@@ -112,7 +112,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	{
 		this.status = status;
 	}
-	
+
 	public void increaseVotes()
 	{
 		this.votes++;
@@ -142,7 +142,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	{
 		return this.status;
 	}
-	
+
 	public int getVotes()
 	{
 		return this.votes;
@@ -163,7 +163,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	public Task clone()
 	{
 
-		
+
 		String cloneid = null;
 		if (this.id != null)
 		{
@@ -171,7 +171,7 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 		}
 		Task clone = new Task(this.name.substring(0),
 				this.description.substring(0), cloneid, this.status,
-				new ArrayList<Response>(), this.votes);
+				new ArrayList<Response>(), this.type.substring(0), this.votes);
 		// Fill in the clone with the response clones.
 		for (Response resp : this.responses)
 		{
