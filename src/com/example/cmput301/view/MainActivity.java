@@ -97,6 +97,8 @@ public class MainActivity extends Activity  {
                     mainController.checkoutUnanswered();
                 } else if (choices[position].equals("Other User's Tasks")) {
                     mainController.checkoutRemote();
+                } else if (choices[position].equals("Random Tasks")) {
+                    mainController.checkoutRandom();
                 }
                 return true;
             }

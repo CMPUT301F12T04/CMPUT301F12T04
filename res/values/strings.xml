@@ -30,6 +30,7 @@
         <item>My Shared</item>
         <item>Unanswered</item>
         <item>Other User\'s Tasks</item>
+        <item>Random Tasks</item> 
     </string-array>
 
 </resources>

@@ -226,7 +226,7 @@ public class TaskManager {
      * @return
      */
     public ArrayList<Task> getRemoteTasks() {
-        return this.dbman.getRemoteTaskList();
+        return dbman.getRemoteTaskList();
     }
 
     /**

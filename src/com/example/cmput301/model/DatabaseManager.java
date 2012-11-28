@@ -371,8 +371,9 @@ public class DatabaseManager {
 					JSONObject obj = toJsonTask(c.getString(c.getColumnIndex(col_content)));
 					out.add(toTask(obj));
 				}
-				return out;
 			}
+			
+			return out;
 
 		}
 		catch(JSONException e)

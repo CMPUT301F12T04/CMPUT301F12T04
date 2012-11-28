@@ -22,6 +22,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.Collections;
+
 import com.example.cmput301.model.*;
 import com.example.cmput301.model.response.Response;
 import com.example.cmput301.application.*;
@@ -235,6 +237,14 @@ public class MainController {
 	 */
 	public void checkoutRemote() {
 		tasks = taskManager.getRemoteTasks();
+		if (adapter != null) {
+			adapter.notifyDataSetChanged();
+		}
+	}
+	
+	public void checkoutRandom() {
+		tasks = taskManager.getRemoteTasks();
+		Collections.shuffle(tasks);
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();
 		}
