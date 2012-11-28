@@ -28,6 +28,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -162,8 +163,8 @@ public class PictureSelectionView extends Activity {
 	   checkedTextView.setText(pResponses.get(position).getAnnotation());
 	   
 	   //set the image for the picture response 
-	   ImageView respImage = (ImageView)row.findViewById(R.id.pic_response_entry);
-	   respImage.setImageResource(android.R.drawable.ic_menu_gallery);
+	 //  ImageView respImage = (ImageView)row.findViewById(R.id.pic_response_entry);
+	  // respImage.setImageResource(android.R.drawable.ic_menu_gallery);
 	   
 	   //check if the position is checked
 	   Boolean checked = myChecked.get(position);
@@ -212,5 +213,17 @@ public class PictureSelectionView extends Activity {
 		return true;
 		
 }
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {  
+            Bitmap photo = (Bitmap) data.getExtras().get("data"); 
+            
+            //setting photo taken from camera
+            ImageView respImage = (ImageView)findViewById(R.id.pic_response_entry);
+            respImage.setImageBitmap(photo);
+        }  
+    } 
+	
+	
 	
 }
