@@ -103,6 +103,8 @@ public class MainActivity extends Activity  {
                 return true;
             }
         };
+        
+        
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
 
   
@@ -146,7 +148,20 @@ public class MainActivity extends Activity  {
     @Override
     public void onResume() {
         super.onResume();
-        mainController.checkoutPrivate();
+        int navIndex = getActionBar().getSelectedNavigationIndex();
+        String[] choices = getResources().getStringArray(R.array.taskview_options);
+        
+        if (choices[navIndex].equals("My Tasks")) {
+            mainController.checkoutPrivate();
+        } else if (choices[navIndex].equals("My Shared")) {
+            mainController.checkoutShared();
+        } else if (choices[navIndex].equals("Unanswered")) {
+            mainController.checkoutUnanswered();
+        } else if (choices[navIndex].equals("Other User's Tasks")) {
+            mainController.checkoutRemote();
+        } else if (choices[navIndex].equals("Random Tasks")) {
+            mainController.checkoutRandom();
+        }        
     }
 
     /**
