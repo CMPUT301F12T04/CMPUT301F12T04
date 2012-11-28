@@ -342,7 +342,8 @@ public class MainController {
 			//set the description of the task
 			TextView descView;
 			descView = (TextView) row.findViewById(R.id.TaskDescListEntry);
-			descView.setText(tasks.get(position).getDescription());
+			descView.setSingleLine(false);
+			descView.setText(tasks.get(position).getDescription() + "\nVotes: " + tasks.get(position).getVotes());
 
 			//Sets the image for the task, task in this case is a picture type task
 			if(tasks.get(position).getType().equals(PictureResponse.class.toString()))
