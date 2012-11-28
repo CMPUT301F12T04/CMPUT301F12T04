@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import com.example.cmput301.model.*;
+import com.example.cmput301.model.response.PictureResponse;
 import com.example.cmput301.model.response.Response;
 import com.example.cmput301.application.*;
 
@@ -343,9 +344,18 @@ public class MainController {
 			descView = (TextView) row.findViewById(R.id.TaskDescListEntry);
 			descView.setText(tasks.get(position).getDescription());
 
-			//Sets the image for the task, all tasks are currently set for TEXT only
+			//Sets the image for the task, task in this case is a picture type task
+			if(tasks.get(position).getType().equals(PictureResponse.class.toString()))
+			{
+				ImageView taskTypeImg = (ImageView) row.findViewById(R.id.TasktypePic);
+				taskTypeImg.setImageResource(android.R.drawable.ic_menu_gallery);
+			}
+			//task is another type
+			else
+			{
 			ImageView taskTypeImg = (ImageView) row.findViewById(R.id.TasktypePic);
 			taskTypeImg.setImageResource(android.R.drawable.ic_menu_edit);
+			}
 
 			return row;
 		}

@@ -118,6 +118,7 @@ SearchView.OnCloseListener {
             //the task is passed to individual task view
             public void onItemClick(AdapterView<?> adp, View view,
                     int pos, long id) {
+            	
                 Intent in = new Intent(MainActivity.this, IndividualTaskView.class);
                 //passing task to individual task view
                 Bundle bundle = new Bundle();
@@ -127,7 +128,7 @@ SearchView.OnCloseListener {
                 startActivity(in);
                 
                 //testing Code
-               /* Intent in = new Intent(MainActivity.this, PhotoResponseView.class);
+                /*Intent in = new Intent(MainActivity.this, PhotoResponseView.class);
                 //passing task to individual task view
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", pos);
