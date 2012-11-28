@@ -119,23 +119,30 @@ SearchView.OnCloseListener {
             public void onItemClick(AdapterView<?> adp, View view,
                     int pos, long id) {
             	
-                Intent in = new Intent(MainActivity.this, IndividualTaskView.class);
-                //passing task to individual task view
-                Bundle bundle = new Bundle();
-                bundle.putInt("id", pos);
-                bundle.putSerializable("task", mainController.getList().get(pos));
-                in.putExtras(bundle);
-                startActivity(in);
-                
-                //testing Code
-                /*Intent in = new Intent(MainActivity.this, PhotoResponseView.class);
-                //passing task to individual task view
-                Bundle bundle = new Bundle();
-                bundle.putInt("id", pos);
-                bundle.putSerializable("task", mainController.getList().get(pos));
-                in.putExtras(bundle);
-                startActivity(in); */
-  
+
+            	if(mainController.getList().get(pos).getType().equals(
+            			PictureResponse.class.toString()))
+            	{
+            		Intent in = new Intent(MainActivity.this, PhotoResponseView.class);
+            		//passing task to individual task view
+            		Bundle bundle = new Bundle();
+            		bundle.putInt("id", pos);
+            		bundle.putSerializable("task", mainController.getList().get(pos));
+            		in.putExtras(bundle);
+            		startActivity(in); 
+            	}
+            	else
+            	{
+
+            		Intent in = new Intent(MainActivity.this, IndividualTaskView.class);
+            		//passing task to individual task view
+            		Bundle bundle = new Bundle();
+            		bundle.putInt("id", pos);
+            		bundle.putSerializable("task", mainController.getList().get(pos));
+            		in.putExtras(bundle);
+            		startActivity(in);
+            	}
+
             }
         });
         

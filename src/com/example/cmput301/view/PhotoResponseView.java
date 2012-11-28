@@ -20,6 +20,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Picture;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +31,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cmput301.R;
 import com.example.cmput301.model.Task;
@@ -55,7 +57,8 @@ public class PhotoResponseView extends ResponseView {
 		
 		//fake task and responses
 		t1 = new Task("df","dsf",PictureResponse.class.toString());
-		PictureResponse pR = (PictureResponse) respFactory.createResponse("fdsa", null);
+		Picture p = null;
+		PictureResponse pR = (PictureResponse) respFactory.createResponse("fdsa", p);
 		t1.addResponse(pR);
 		
 		//set up the listview to use custom adapter
