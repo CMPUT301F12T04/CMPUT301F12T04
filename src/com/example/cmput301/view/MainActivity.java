@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.SearchView;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -53,8 +54,10 @@ import com.example.cmput301.application.*;
  *
  */
 @TargetApi(15)
-public class MainActivity extends Activity  {
+public class MainActivity extends Activity  implements  SearchView.OnQueryTextListener,
+SearchView.OnCloseListener {
 
+	private SearchView mSearchView;
     private MainController mainController;
     //setting up list view and using customAdapter for tasks
     ListView taskview;
@@ -134,6 +137,8 @@ public class MainActivity extends Activity  {
   
             }
         });
+        
+        
     }
 
 	/**
@@ -142,10 +147,17 @@ public class MainActivity extends Activity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) searchItem.getActionView();
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnCloseListener(this);
         return true;
     }
 
-    @Override
+   
+    
+
+	@Override
     public void onResume() {
         super.onResume();
         int navIndex = getActionBar().getSelectedNavigationIndex();
@@ -248,5 +260,25 @@ public class MainActivity extends Activity  {
     	      onResume();
     	   }
     	}
+
+	
+    @Override
+	public boolean onClose() {
+    	mainController.restoreUnfiltered();
+    	return false;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String arg0) {
+		mainController.filter(arg0);
+		
+		return true;
+	}
+
+	@Override
+	public boolean onQueryTextSubmit(String arg0) {
+		
+		return onClose();
+	}
 }
 

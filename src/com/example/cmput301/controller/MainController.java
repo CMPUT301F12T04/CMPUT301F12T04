@@ -41,6 +41,7 @@ public class MainController {
 
 	private TaskManager taskManager;
 	private ArrayList<Task> tasks;
+	private ArrayList<Task> tasksBackup;
 	private TaskListAdapter adapter;
 	public static MyCallback callBack;
 	
@@ -251,21 +252,24 @@ public class MainController {
 	}
 
 	/**
-	 * Apply a filter to the task list being viewed and return the result.
+	 * Apply a filter to the task list being viewed and change the tasks view 
+	 * to match.
 	 * 
 	 * If any task has one or more keywords from the search parameters in it's
 	 * title or description then it will be included in the list.
 	 * 
-	 * @param searchParams A string with keywords seperated by spaces.
-	 * @return 
+	 * @param searchParams A string with keywords seperated by spaces
 	 */
-	public ArrayList<Task> filter(String searchParams) {
+	public void filter(String searchParams) {
+		if(tasksBackup == null) {
+			tasksBackup = tasks;
+		}
 		ArrayList<Task> filtered = new ArrayList<Task>();
 
 		//Assuming search parameters are seperated by a space.
 		String[] parameters = searchParams.split(" ");
 
-		for (Task task : filtered) {
+		for (Task task : tasksBackup) {
 			boolean matched = false;
 
 			for (String param : parameters) {
@@ -279,9 +283,24 @@ public class MainController {
 				filtered.add(task);
 			}
 		}
-		return filtered;
+		
+		
+		tasks = filtered;
+		if (adapter != null) {
+			adapter.notifyDataSetChanged();
+		}
 	}
 
+	public void restoreUnfiltered() {
+		if(tasksBackup != null) {
+			tasks = tasksBackup;
+			tasksBackup = null;
+			
+			if (adapter != null) {
+				adapter.notifyDataSetChanged();
+			}
+		}
+	}
 	/**
 	 * Returns the listitem adapter
 	 * @return 
