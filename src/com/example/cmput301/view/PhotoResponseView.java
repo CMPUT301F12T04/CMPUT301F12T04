@@ -13,7 +13,6 @@ package com.example.cmput301.view;
 
 
 
-import java.util.Date;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -31,7 +30,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.cmput301.R;
 import com.example.cmput301.model.Task;

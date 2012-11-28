@@ -11,6 +11,7 @@
  ******************************************************************************/
 package com.example.cmput301.view;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +27,11 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +51,9 @@ public class PictureSelectionView extends Activity {
 
 	MyArrayAdapter myArrayAdapter;
 	private ArrayList<PictureResponse> pResponses = new ArrayList<PictureResponse>();
+	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	public static final int MEDIA_TYPE_IMAGE = 1;
+	private Uri fileUri;
 
 
 	@Override
@@ -181,7 +189,9 @@ public class PictureSelectionView extends Activity {
 			finish();
 		}
 		if (item.getItemId() == R.id.menu_camera_select) {
-			finish();
+			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+			startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 		}
 		if (item.getItemId() == R.id.menu_pic_respond) {
 			String result = "";
