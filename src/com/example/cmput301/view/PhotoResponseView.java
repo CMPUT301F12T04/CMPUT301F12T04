@@ -85,6 +85,10 @@ public class PhotoResponseView extends ResponseView {
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 		}
+		if (item.getItemId() == R.id.menu_p_task_upload)
+		{
+			finish();
+		}
 		//take a picture, go to selection view
 		if (item.getItemId() == R.id.menu_camera) {
 			 Intent in = new Intent(PhotoResponseView.this, PictureSelectionView.class);
