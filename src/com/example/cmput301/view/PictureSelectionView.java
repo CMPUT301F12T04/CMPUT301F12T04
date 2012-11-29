@@ -49,8 +49,10 @@ public class PictureSelectionView extends Activity {
 	MyArrayAdapter myArrayAdapter;
 	private ArrayList<PictureResponse> pResponses = new ArrayList<PictureResponse>();
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-	public static final int MEDIA_TYPE_IMAGE = 1;
+	private static final int STATIC_INTEGER_VALUE = 2;
 	ResponseFactory respFactory = new PictureResponseFactory();
+	private String annotation = "";
+	private Bitmap photo;
 
 
 	@Override
@@ -59,14 +61,6 @@ public class PictureSelectionView extends Activity {
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pic_select_view);
-
-		//fake task, with fake picture response
-		/*PictureResponse pR = (PictureResponse) respFactory.createResponse("hello", null);
-		PictureResponse pR1 = (PictureResponse) respFactory.createResponse("hello1", null);
-		PictureResponse pR2 = (PictureResponse) respFactory.createResponse("hello2", null);
-		pResponses.add(pR);
-		pResponses.add(pR1);
-		pResponses.add(pR2);*/
 
 		//set back button on actionbar
 		ActionBar actionBar = getActionBar();
@@ -108,12 +102,7 @@ public class PictureSelectionView extends Activity {
 			    myChecked.put(i, false);
 		   }
 	  }
-	  public void printSize()
-	  {
-		  Toast.makeText(getApplicationContext(), 
-      			"The size = " + myChecked.size(), Toast.LENGTH_SHORT).show();
-		  
-	  }
+	 
 	     
 	  public void toggleChecked(int position){
 	   if(myChecked.get(position)){
@@ -214,17 +203,25 @@ public class PictureSelectionView extends Activity {
 		return true;
 		
 }
-	
+
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
+		if(requestCode == STATIC_INTEGER_VALUE && resultCode == RESULT_OK ) {
+			
+			Toast.makeText(getApplicationContext(), 
+					data.getStringExtra("annotation"), Toast.LENGTH_SHORT).show();
+			annotation =  data.getStringExtra("annotation");
+			PictureResponse pR = (PictureResponse) respFactory.createResponse(annotation, photo);
+			pResponses.add(pR);
+			myArrayAdapter.notifyDataSetChanged();
+			myArrayAdapter.resetcheckedSize();
+		}
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {  
-            Bitmap photo = (Bitmap) data.getExtras().get("data"); 
-            
-            PictureResponse pR = (PictureResponse) respFactory.createResponse("hello", photo);
-            pResponses.add(pR);
-            myArrayAdapter.notifyDataSetChanged();
-            myArrayAdapter.resetcheckedSize();
-            myArrayAdapter.printSize();
-        }  
+            photo = (Bitmap) data.getExtras().get("data"); 
+            Intent in = new Intent(PictureSelectionView.this,
+					AnnotationInputView.class);
+			startActivityForResult(in, STATIC_INTEGER_VALUE);
+        }
+      
     } 
 	
 	

@@ -26,14 +26,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.example.cmput301.model.*;
 import com.example.cmput301.model.response.TextResponse;
-import com.example.cmput301.model.response.factory.PictureResponseFactory;
 import com.example.cmput301.model.response.factory.TextResponseFactory;
 import com.example.cmput301.controller.*;
 import com.example.cmput301.R;
 
-
-
-import java.util.Date;
 
 /**
  * This class is a type of response view, it is responsible for getting
