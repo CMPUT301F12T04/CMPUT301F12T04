@@ -11,15 +11,13 @@
  ******************************************************************************/
 package com.example.cmput301.view;
 
-import java.io.File;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import com.example.cmput301.R;
 import com.example.cmput301.model.response.PictureResponse;
-import com.example.cmput301.model.response.Response;
 import com.example.cmput301.model.response.factory.PictureResponseFactory;
 import com.example.cmput301.model.response.factory.ResponseFactory;
 
@@ -29,9 +27,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,25 +50,23 @@ public class PictureSelectionView extends Activity {
 	private ArrayList<PictureResponse> pResponses = new ArrayList<PictureResponse>();
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	public static final int MEDIA_TYPE_IMAGE = 1;
-	private Uri fileUri;
+	ResponseFactory respFactory = new PictureResponseFactory();
 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {	
-
-		ResponseFactory respFactory = new PictureResponseFactory();
 
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pic_select_view);
 
 		//fake task, with fake picture response
-		PictureResponse pR = (PictureResponse) respFactory.createResponse("hello", null);
+		/*PictureResponse pR = (PictureResponse) respFactory.createResponse("hello", null);
 		PictureResponse pR1 = (PictureResponse) respFactory.createResponse("hello1", null);
 		PictureResponse pR2 = (PictureResponse) respFactory.createResponse("hello2", null);
 		pResponses.add(pR);
 		pResponses.add(pR1);
-		pResponses.add(pR2);
+		pResponses.add(pR2);*/
 
 		//set back button on actionbar
 		ActionBar actionBar = getActionBar();
@@ -98,21 +92,27 @@ public class PictureSelectionView extends Activity {
 		   myArrayAdapter.toggleChecked(position);
 		  }});
 		
-				
-		
-
 	}
 	 private class MyArrayAdapter extends ArrayAdapter<PictureResponse>{
 	     
 	     private HashMap<Integer, Boolean> myChecked = new HashMap<Integer, Boolean>();
 
 	  public MyArrayAdapter(Context context, int resource,
-	    int textViewResourceId, ArrayList<PictureResponse> list) {
+	    int textViewResourceId, ArrayList<PictureResponse> list){
 	   super(context, resource, textViewResourceId, list);
 	   
-	   for(int i = 0; i < list.size(); i++){
-	    myChecked.put(i, false);
-	   }
+	  }
+	  public void resetcheckedSize()
+	  {
+		  for(int i = 0; i < pResponses.size(); i++){
+			    myChecked.put(i, false);
+		   }
+	  }
+	  public void printSize()
+	  {
+		  Toast.makeText(getApplicationContext(), 
+      			"The size = " + myChecked.size(), Toast.LENGTH_SHORT).show();
+		  
 	  }
 	     
 	  public void toggleChecked(int position){
@@ -137,8 +137,8 @@ public class PictureSelectionView extends Activity {
 	   return checkedItemPositions;
 	  }
 	  
-	  public List<Response> getCheckedItems(){
-	   List<Response> checkedItems = new ArrayList<Response>();
+	  public List<PictureResponse> getCheckedItems(){
+	   List<PictureResponse> checkedItems = new ArrayList<PictureResponse>();
 	   
 	   for(int i = 0; i < myChecked.size(); i++){
 	    if (myChecked.get(i)){
@@ -163,8 +163,8 @@ public class PictureSelectionView extends Activity {
 	   checkedTextView.setText(pResponses.get(position).getAnnotation());
 	   
 	   //set the image for the picture response 
-	 //  ImageView respImage = (ImageView)row.findViewById(R.id.pic_response_entry);
-	  // respImage.setImageResource(android.R.drawable.ic_menu_gallery);
+	   ImageView respImage = (ImageView)row.findViewById(R.id.pic_response_entry);
+	   respImage.setImageBitmap((Bitmap) pResponses.get(position).getContent());
 	   
 	   //check if the position is checked
 	   Boolean checked = myChecked.get(position);
@@ -198,9 +198,10 @@ public class PictureSelectionView extends Activity {
 			String result = "";
 		       
 		    //getCheckedItems
-		    List<Response> resultList = myArrayAdapter.getCheckedItems();
+			myArrayAdapter.notifyDataSetChanged();
+		    List<PictureResponse> resultList = myArrayAdapter.getCheckedItems();
 		    for(int i = 0; i < resultList.size(); i++){
-		     result += String.valueOf(resultList.get(i).getAnnotation()) + "\n";
+		     result += String.valueOf(resultList.get(i)) + "\n";
 		    }
 		    
 		    //show selected items for now
@@ -218,9 +219,11 @@ public class PictureSelectionView extends Activity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {  
             Bitmap photo = (Bitmap) data.getExtras().get("data"); 
             
-            //setting photo taken from camera
-            ImageView respImage = (ImageView)findViewById(R.id.pic_response_entry);
-            respImage.setImageBitmap(photo);
+            PictureResponse pR = (PictureResponse) respFactory.createResponse("hello", photo);
+            pResponses.add(pR);
+            myArrayAdapter.notifyDataSetChanged();
+            myArrayAdapter.resetcheckedSize();
+            myArrayAdapter.printSize();
         }  
     } 
 	

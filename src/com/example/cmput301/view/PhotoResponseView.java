@@ -19,6 +19,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Picture;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -55,7 +56,7 @@ public class PhotoResponseView extends ResponseView {
 		
 		//fake task and responses
 		t1 = new Task("df","dsf",PictureResponse.class.toString());
-		Picture p = null;
+		Bitmap p = null;
 		PictureResponse pR = (PictureResponse) respFactory.createResponse("fdsa", p);
 		t1.addResponse(pR);
 		

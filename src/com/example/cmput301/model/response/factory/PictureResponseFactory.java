@@ -2,6 +2,7 @@ package com.example.cmput301.model.response.factory;
 
 import java.util.Date;
 
+import android.graphics.Bitmap;
 import android.graphics.Picture;
 
 import com.example.cmput301.model.response.PictureResponse;
@@ -16,10 +17,10 @@ public class PictureResponseFactory implements ResponseFactory {
 		return null;*/
 		
 		
-		return new PictureResponse(annotation, new Date(),(Picture) content);
+		return new PictureResponse(annotation, new Date(),(Bitmap) content);
 	}
 	
-	public PictureResponse createResponse(String annotation, Picture content) {
+	public PictureResponse createResponse(String annotation, Bitmap content) {
 		return new PictureResponse(annotation, new Date(), content);
 	}
 	

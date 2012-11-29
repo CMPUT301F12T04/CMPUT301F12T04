@@ -13,13 +13,19 @@ package com.example.cmput301.model.response;
 
 import java.util.Date;
 
-import android.graphics.Picture;
+import android.graphics.Bitmap;
+
 
 public class PictureResponse extends Response {
 	private static final long serialVersionUID = 1L;
 
-    public PictureResponse(String annotation, Date timestamp, Picture picture) {
+    public PictureResponse(String annotation, Date timestamp, Bitmap picture) {
         super(annotation, timestamp, picture);
+    }
+    
+    public Bitmap getPicture()
+    {
+    	return (Bitmap) getContent();
     }
 
     public PictureResponse clone() {
