@@ -377,7 +377,7 @@ public class WebService
 		else
 		{
 			return new Task(jsonTask.getString("name"), jsonTask.getString("description"), jsonTask.getString("id")
-					,jsonTask.getInt("status"), toResponses(jsonTask),jsonTask.getString("type"),0);
+					,jsonTask.getInt("status"), toResponses(jsonTask),jsonTask.getString("type"),jsonTask.getInt("votes"));
 		}
 	}
 
@@ -489,6 +489,7 @@ public class WebService
 		jsonObject.put("type", task.getType());
 		Log.d("TYPE","WEBSERVICE TASK TYPE + " + task.getType());
 		jsonObject.put("status", task.getStatus());
+		jsonObject.put("votes", task.getVotes());
 
 		List<Response> responses = task.getResponses();
 		JSONArray arr = new JSONArray();
