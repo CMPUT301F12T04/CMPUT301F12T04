@@ -14,13 +14,14 @@ package com.example.cmput301.view;
 
 
 
+import java.util.ArrayList;
+
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Picture;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,6 +32,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cmput301.R;
 import com.example.cmput301.model.Task;
@@ -40,9 +42,11 @@ import com.example.cmput301.model.response.factory.PictureResponseFactory;
 
 @TargetApi(15)
 public class PhotoResponseView extends ResponseView {
+	private static final int PHOTO_RESPONSES_CAMERA_CODE = 1;
 
 
 	Task t1;
+	pResponseListAdapter pRLA;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {	
 
@@ -55,18 +59,18 @@ public class PhotoResponseView extends ResponseView {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		//fake task and responses
-		t1 = new Task("df","dsf",PictureResponse.class.toString());
-		Bitmap p = null;
-		PictureResponse pR = (PictureResponse) respFactory.createResponse("fdsa", p);
-		t1.addResponse(pR);
+		Bundle bundle = getIntent().getExtras();
+		t1 = (Task) bundle.getSerializable("task");	
+		String taskTile = t1.getName();
+		String taskDesc = t1.getDescription();
+
 		
 		//set up the listview to use custom adapter
 		ListView photoList = (ListView) findViewById(R.id.photo_response_list);
-		pResponseListAdapter pRLA = new pResponseListAdapter(this);
+		pRLA = new pResponseListAdapter(this);
 		photoList.setAdapter(pRLA);
 		
 		//set title to be task title
-		String taskTile;
 		taskTile = t1.getName();
 		setTitle(taskTile);
 
@@ -92,7 +96,7 @@ public class PhotoResponseView extends ResponseView {
 		//take a picture, go to selection view
 		if (item.getItemId() == R.id.menu_camera) {
 			 Intent in = new Intent(PhotoResponseView.this, PictureSelectionView.class);
-	          startActivity(in);
+			 startActivityForResult(in,PHOTO_RESPONSES_CAMERA_CODE);
 		}
 			return true;
 		}
@@ -128,7 +132,7 @@ public class PhotoResponseView extends ResponseView {
 
 			//Sets the image for the response, all tasks are currently set for TEXT only
 			ImageView taskTypeImg = (ImageView) row.findViewById(R.id.entry_responsePhoto);
-			taskTypeImg.setImageResource(android.R.drawable.ic_menu_gallery);
+			taskTypeImg.setImageBitmap((Bitmap)t1.getResponses().get(position).getContent());
 
 			return row;
 		}
@@ -145,5 +149,25 @@ public class PhotoResponseView extends ResponseView {
 			return position;
 		}
 	}
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
+		if(requestCode == PHOTO_RESPONSES_CAMERA_CODE && resultCode == RESULT_OK ) {
+			ArrayList<String> annoList = new ArrayList<String>();
+			ArrayList<Bitmap> bitList = new ArrayList<Bitmap>();
+					
+			annoList = (ArrayList<String>) data.getSerializableExtra("annos");
+			bitList = (ArrayList<Bitmap>) data.getSerializableExtra("photos");
+			
+			for(int i = 0; i<annoList.size();i++)
+			{
+				PictureResponse pR = (PictureResponse) respFactory.createResponse(
+						annoList.get(i), bitList.get(i));	
+				t1.addResponse(pR);
+			}
+			
+			pRLA.notifyDataSetChanged();
+			
+		}
+	}
+			
 
 }

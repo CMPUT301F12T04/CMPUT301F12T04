@@ -49,7 +49,7 @@ public class PictureSelectionView extends Activity {
 	MyArrayAdapter myArrayAdapter;
 	private ArrayList<PictureResponse> pResponses = new ArrayList<PictureResponse>();
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-	private static final int STATIC_INTEGER_VALUE = 2;
+	private static final int ANNOTATION_REQUEST_CODE = 2;
 	ResponseFactory respFactory = new PictureResponseFactory();
 	private String annotation = "";
 	private Bitmap photo;
@@ -126,8 +126,8 @@ public class PictureSelectionView extends Activity {
 	   return checkedItemPositions;
 	  }
 	  
-	  public List<PictureResponse> getCheckedItems(){
-	   List<PictureResponse> checkedItems = new ArrayList<PictureResponse>();
+	  public ArrayList<PictureResponse> getCheckedItems(){
+	   ArrayList<PictureResponse> checkedItems = new ArrayList<PictureResponse>();
 	   
 	   for(int i = 0; i < myChecked.size(); i++){
 	    if (myChecked.get(i)){
@@ -188,16 +188,20 @@ public class PictureSelectionView extends Activity {
 		       
 		    //getCheckedItems
 			myArrayAdapter.notifyDataSetChanged();
-		    List<PictureResponse> resultList = myArrayAdapter.getCheckedItems();
-		    for(int i = 0; i < resultList.size(); i++){
-		     result += String.valueOf(resultList.get(i)) + "\n";
+		    ArrayList<PictureResponse> resultList = myArrayAdapter.getCheckedItems();
+		    ArrayList<String> strList = new ArrayList<String>();
+		    ArrayList<Bitmap> bitList = new ArrayList<Bitmap>();
+		   for(int i = 0; i < resultList.size(); i++){
+			   strList.add(resultList.get(i).getAnnotation());
+			   bitList.add((Bitmap)resultList.get(i).getContent());
 		    }
+
+		    Intent i = new Intent();
+    		i.putExtra("annos",strList);
+    		i.putExtra("photos", bitList);
+			setResult(Activity.RESULT_OK, i);
+			finish();
 		    
-		    //show selected items for now
-		    Toast.makeText(
-		      getApplicationContext(), 
-		      result, 
-		      Toast.LENGTH_LONG).show();
 		}
 		
 		return true;
@@ -205,7 +209,7 @@ public class PictureSelectionView extends Activity {
 }
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
-		if(requestCode == STATIC_INTEGER_VALUE && resultCode == RESULT_OK ) {
+		if(requestCode == ANNOTATION_REQUEST_CODE && resultCode == RESULT_OK ) {
 			
 			Toast.makeText(getApplicationContext(), 
 					data.getStringExtra("annotation"), Toast.LENGTH_SHORT).show();
@@ -219,7 +223,7 @@ public class PictureSelectionView extends Activity {
             photo = (Bitmap) data.getExtras().get("data"); 
             Intent in = new Intent(PictureSelectionView.this,
 					AnnotationInputView.class);
-			startActivityForResult(in, STATIC_INTEGER_VALUE);
+			startActivityForResult(in, ANNOTATION_REQUEST_CODE);
         }
       
     } 
