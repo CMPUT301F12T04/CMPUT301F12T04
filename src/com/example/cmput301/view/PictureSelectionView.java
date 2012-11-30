@@ -211,8 +211,6 @@ public class PictureSelectionView extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
 		if(requestCode == ANNOTATION_REQUEST_CODE && resultCode == RESULT_OK ) {
 			
-			Toast.makeText(getApplicationContext(), 
-					data.getStringExtra("annotation"), Toast.LENGTH_SHORT).show();
 			annotation =  data.getStringExtra("annotation");
 			PictureResponse pR = (PictureResponse) respFactory.createResponse(annotation, photo);
 			pResponses.add(pR);
