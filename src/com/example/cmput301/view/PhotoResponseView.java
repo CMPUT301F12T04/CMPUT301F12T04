@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cmput301.R;
+import com.example.cmput301.controller.MainController;
 import com.example.cmput301.model.Task;
 import com.example.cmput301.model.response.PictureResponse;
 import com.example.cmput301.model.response.factory.PictureResponseFactory;
@@ -43,7 +44,7 @@ import com.example.cmput301.model.response.factory.PictureResponseFactory;
 @TargetApi(15)
 public class PhotoResponseView extends ResponseView {
 	private static final int PHOTO_RESPONSES_CAMERA_CODE = 1;
-
+	private MainController mainController;
 
 	Task t1;
 	pResponseListAdapter pRLA;
@@ -52,6 +53,7 @@ public class PhotoResponseView extends ResponseView {
 
 		respFactory = new PictureResponseFactory();
 		super.onCreate(savedInstanceState);
+		mainController = new MainController(this.getApplicationContext(), this);
 		setContentView(R.layout.photo_response_view);
 
 		//set action bar to have back option
@@ -73,7 +75,10 @@ public class PhotoResponseView extends ResponseView {
 		//set title to be task title
 		taskTile = t1.getName();
 		setTitle(taskTile);
-
+		
+		// setting the description of the task
+		TextView title = (TextView) findViewById(R.id.indvidual_des_view);
+		title.setText("Votes: " + t1.getVotes() + "\n\n" + taskDesc);
 	}
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.photo_response_view, menu);
@@ -92,6 +97,12 @@ public class PhotoResponseView extends ResponseView {
 		if (item.getItemId() == R.id.menu_p_task_upload)
 		{
 			finish();
+		}
+		if (item.getItemId() == R.id.menu_vote) {
+			mainController.voteTask(t1);
+			TextView title = (TextView) findViewById(R.id.indvidual_des_view);
+			title.setText("Votes: " + t1.getVotes() + "\n\n"
+					+ t1.getDescription());
 		}
 		//take a picture, go to selection view
 		if (item.getItemId() == R.id.menu_camera) {
