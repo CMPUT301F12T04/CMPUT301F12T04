@@ -6,18 +6,18 @@
     
  
 	<TextView
-        android:id="@+id/indvidual_des_view"
+        android:id="@+id/p_task_des_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="30dp"
         android:paddingBottom="50dp"
-        android:textSize="16dp"/>
+        android:textSize="16dp"
+        android:layout_alignParentTop="true"/>
     <ListView
-        android:layout_alignParentTop="true"
         android:id="@+id/photo_response_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/indvidual_des_view">
+        android:layout_below="@id/p_task_des_view">
     </ListView>
 
 </RelativeLayout>
