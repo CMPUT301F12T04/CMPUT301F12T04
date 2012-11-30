@@ -99,6 +99,7 @@ public class IndividualTaskView extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		getMenuInflater().inflate(R.menu.individual_task_view, menu);
+		
 		return true;
 	}
 
@@ -159,6 +160,16 @@ public class IndividualTaskView extends Activity {
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 		}
+		return true;
+	}
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuItem shareButton = menu.findItem(R.id.menu_upload);
+	    if(t.getStatus() == Task.STATUS_SHARED)
+	    {
+	    	shareButton.setEnabled(false);
+	    	shareButton.setVisible(false);	
+	    }
+			
 		return true;
 	}
 }
