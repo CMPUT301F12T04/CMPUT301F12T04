@@ -251,6 +251,16 @@ public class MainController {
 			adapter.notifyDataSetChanged();
 		}
 	}
+	
+	public void checkoutPopular() {
+		tasks = taskManager.getRemoteTasks();
+		ArrayList<Task> tasks2 = taskManager.getSharedTasks();
+		tasks.addAll(tasks2);
+		Collections.sort(tasks, new VotesComparator());
+		if (adapter != null) {
+			adapter.notifyDataSetChanged();
+		}
+	}
 
 	/**
 	 * Apply a filter to the task list being viewed and change the tasks view 

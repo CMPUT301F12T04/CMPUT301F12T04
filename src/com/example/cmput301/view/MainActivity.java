@@ -102,6 +102,8 @@ SearchView.OnCloseListener {
                     mainController.checkoutRemote();
                 } else if (choices[position].equals("Random Tasks")) {
                     mainController.checkoutRandom();
+                } else if (choices[position].equals("Popular")) {
+                	mainController.checkoutPopular();
                 }
                 return true;
             }
@@ -181,7 +183,9 @@ SearchView.OnCloseListener {
             mainController.checkoutRemote();
         } else if (choices[navIndex].equals("Random Tasks")) {
             mainController.checkoutRandom();
-        }        
+        } else if (choices[navIndex].equals("Popular")) {
+        	mainController.checkoutPopular();
+        }       
     }
 
     /**
