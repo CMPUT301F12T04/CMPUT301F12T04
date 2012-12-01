@@ -121,6 +121,38 @@ public class MainController {
 		}
 
 	}
+	
+	/**
+	 * Convert a task from private to shared which has the given task id.
+	 *
+	 * Refreshes the view.
+	 *
+	 * @param taskid
+	 */
+	public void updateRemoteTasks() {
+		new RemoteTaskUpdate().execute();
+		checkoutPrivate();
+	}
+
+	private class RemoteTaskUpdate extends AsyncTask<Void,Void,Task>
+	{
+
+		@Override
+		protected Task doInBackground(Void... args)
+		{
+			taskManager.Refresh();
+			return null;
+		}
+
+		protected void onPostExecute(Task result)
+		{
+//			tasks = taskManager.getPrivateTasks();
+			checkoutRemote(); 
+//			Log.d("REMOTE","REFRESHED");
+//			
+//			callBack.callbackCall();
+		}
+	}
 	/**
 	 * Convert a task from private to shared which has the given task id.
 	 *
@@ -129,7 +161,6 @@ public class MainController {
 	 * @param taskid
 	 */
 	public void shareTask(String taskid) {
-//		taskManager.hide(taskid);
 		new ShareTask().execute("share", taskid);
 		checkoutPrivate();
 	}

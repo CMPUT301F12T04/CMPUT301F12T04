@@ -363,7 +363,7 @@ public class DatabaseManager {
 
 		try
 		{
-//			Log.d("REMOTE","STARTING REMOTE TASK LIST");
+			Log.d("refresh","STARTING REMOTE TASK LIST");
 			ArrayList<Task> out = new ArrayList<Task>();
 
 			Cursor c = db.rawQuery("SELECT * FROM "+remote_task_table, new String[]{});
@@ -373,9 +373,10 @@ public class DatabaseManager {
 				{
 					JSONObject obj = toJsonTask(c.getString(c.getColumnIndex(col_content)));
 					out.add(toTask(obj));
+					c.moveToNext();
 				}
 			}
-			
+			Log.d("refresh","sizeof remotetasklist = "+out.size());
 			return out;
 
 		}

@@ -75,6 +75,8 @@ SearchView.OnCloseListener {
         mainController = new MainController(this.getApplicationContext(), this);
 
         MainController.callBack = (MyCallback) new Callback();
+
+        mainController.updateRemoteTasks();
         
         //Setting up the action bar
         ActionBar actionBar = getActionBar();
@@ -266,7 +268,7 @@ SearchView.OnCloseListener {
         }
         if(item.getItemId() == R.id.menu_refresh)
         {
-        	
+        	mainController.updateRemoteTasks();
         }
         return true;
     }
