@@ -250,7 +250,9 @@ SearchView.OnCloseListener {
                     	//Create new task here and add to database etc.
                     	mainController.addTask(titleInput, descInput, type);
                     	dialog.dismiss();
+                    	getActionBar().setSelectedNavigationItem(0);
                     }
+                    
                 }
             });
 
