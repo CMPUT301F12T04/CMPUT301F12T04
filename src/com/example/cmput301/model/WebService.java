@@ -157,8 +157,8 @@ public class WebService
 			String httpResponse = getHttpResponse(conn,data);
 
 			// convert string response to json object
-			Log.d("RESPONSE","Data: "+ data);
-			Log.d("RESPONSE","ID:" +id);
+//			Log.d("RESPONSE","Data: "+ data);
+//			Log.d("RESPONSE","ID:" +id);
 			JSONObject jsonObject = toJsonTask(httpResponse);
 			
 			// convert json object to task and return
@@ -190,7 +190,7 @@ public class WebService
 			Task webTask = get(task.getId());
 			
 			// add new response
-			Log.d("RESPONSE", (String)response.getContent());
+//			Log.d("RESPONSE", (String)response.getContent());
 			webTask.addResponse(response);
 			
 			// get data string
@@ -408,7 +408,7 @@ public class WebService
 			for(int i = 0; i < jsonArray.length(); i++)
 			{
 
-				Response resp = respFactory.createResponse(null /*Annotation goes here when it's implemented.*/, jsonArray.getJSONObject(i).getString("content"));
+				Response resp = respFactory.createResponse(jsonArray.getJSONObject(i).getString("annotation"), jsonArray.getJSONObject(i).getString("content"));
 				resp.setTimestamp(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(jsonArray.getJSONObject(i).getString("timestamp")));
 				responses.add(resp);
 
@@ -484,10 +484,10 @@ public class WebService
 		if(task.getId()!=null&&!task.getId().contains("local"))
 		{
 			jsonObject.put("id", task.getId());
-			Log.d("RESPONSE","ID:===" + task.getId());
+//			Log.d("RESPONSE","ID:===" + task.getId());
 		}
 		jsonObject.put("type", task.getType());
-		Log.d("TYPE","WEBSERVICE TASK TYPE + " + task.getType());
+//		Log.d("TYPE","WEBSERVICE TASK TYPE + " + task.getType());
 		jsonObject.put("status", task.getStatus());
 		jsonObject.put("votes", task.getVotes());
 
@@ -496,7 +496,8 @@ public class WebService
 		for(Response response : responses)
 		{
 			JSONObject jo = new JSONObject();
-			jo.put("content", response.getContent());
+			jo.put("annotation", response.getAnnotation());
+			jo.put("content", response.getSaveable());
 			jo.put("timestamp", response.getTimestamp());
 			arr.put(jo);
 		}
@@ -514,7 +515,7 @@ public class WebService
 	{
 		// TODO Auto-generated method stub
 		JSONObject jsonResponse = new JSONObject(httpResponse);
-		Log.d("RESPNOSE", httpResponse);
+//		Log.d("RESPNOSE", httpResponse);
 		JSONObject jsonTask = jsonResponse.getJSONObject("content");
 		jsonTask.put("id", jsonResponse.get("id"));
 		return jsonTask;

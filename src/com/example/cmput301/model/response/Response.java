@@ -38,7 +38,7 @@ public abstract class Response implements Serializable, Cloneable {
     public Object getContent() {
         return this.content;
     }
-
+   
     public void setContent(Object content) {
         this.content = content;
     }
@@ -71,6 +71,10 @@ public abstract class Response implements Serializable, Cloneable {
         }
     }
     
+    
     @Override
-    public abstract Response clone();
+    public abstract Response clone();    
+    public abstract String getSaveable();
+    
+    
 }

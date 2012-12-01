@@ -171,8 +171,9 @@ public class PhotoResponseView extends ResponseView {
 			for(int i = 0; i<annoList.size();i++)
 			{
 				PictureResponse pR = (PictureResponse) respFactory.createResponse(
-						annoList.get(i), bitList.get(i));	
-				t1.addResponse(pR);
+						annoList.get(i), bitList.get(i));
+				
+				mainController.addResponse(t1, pR);
 			}
 			
 			pRLA.notifyDataSetChanged();

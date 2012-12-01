@@ -66,7 +66,7 @@ public class DatabaseManager {
 
 		if(task.getStatus()==2)
 		{
-			Log.d("REMOTE","SHARED " + task.getName());
+//			Log.d("REMOTE","SHARED " + task.getName());
 
 		}
 		if(task.getId()==null)
@@ -80,7 +80,7 @@ public class DatabaseManager {
 		}
 		this.addTask_LocaleTable(task);
 
-		Log.d("DATABASE",task.getId());
+//		Log.d("DATABASE",task.getId());
 		return task;
 
 	}
@@ -91,7 +91,7 @@ public class DatabaseManager {
 		cv.put(col_id, task.getId());
 		try
 		{
-			Log.d("DATABASE",toJson(task).toString());
+//			Log.d("DATABASE",toJson(task).toString());
 			cv.put(col_content, toJson(task).toString() );
 		}
 		catch (JSONException e)
@@ -140,10 +140,10 @@ public class DatabaseManager {
 		jsonObject.put("description", task.getDescription());
 
 		jsonObject.put("id", task.getId());
-		Log.d("RESPONSE","ID:===" + task.getId());
+//		Log.d("RESPONSE","ID:===" + task.getId());
 
 		jsonObject.put("type", task.getType());
-		Log.d("TYPE",task.getType());
+//		Log.d("TYPE",task.getType());
 		jsonObject.put("status", task.getStatus());
 		jsonObject.put("votes", task.getVotes());
 
@@ -152,7 +152,8 @@ public class DatabaseManager {
 		for(Response response : responses)
 		{
 			JSONObject jo = new JSONObject();
-			jo.put("content", response.getContent());
+			jo.put("annotation", response.getAnnotation());
+			jo.put("content", response.getSaveable());
 			jo.put("timestamp", response.getTimestamp());
 			arr.put(jo);
 		}
@@ -263,7 +264,8 @@ public class DatabaseManager {
 			for(int i = 0; i < jsonArray.length(); i++)
 			{
 
-				Response resp = respFactory.createResponse(null /*Annotation goes here when it's implemented.*/, jsonArray.getJSONObject(i).getString("content"));
+
+				Response resp = respFactory.createResponse(jsonArray.getJSONObject(i).getString("annotation"), jsonArray.getJSONObject(i).getString("content"));
 				resp.setTimestamp(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(jsonArray.getJSONObject(i).getString("timestamp")));
 				responses.add(resp);
 				
@@ -303,7 +305,7 @@ public class DatabaseManager {
 			{
 				while(c.isAfterLast()==false)
 				{
-					Log.d("DATABASE",c.getString(c.getColumnIndex(col_content)));
+//					Log.d("DATABASE",c.getString(c.getColumnIndex(col_content)));
 					JSONObject obj = toJsonTask(c.getString(c.getColumnIndex(col_content)));
 					out.add(toTask(obj));
 					c.moveToNext();
@@ -361,7 +363,7 @@ public class DatabaseManager {
 
 		try
 		{
-			Log.d("REMOTE","STARTING REMOTE TASK LIST");
+//			Log.d("REMOTE","STARTING REMOTE TASK LIST");
 			ArrayList<Task> out = new ArrayList<Task>();
 
 			Cursor c = db.rawQuery("SELECT * FROM "+remote_task_table, new String[]{});
@@ -399,8 +401,8 @@ public class DatabaseManager {
 			Cursor c = db.rawQuery("SELECT * FROM " + local_task_table + " WHERE " + this.col_id + "='" + task.getId() + "'",  new String[]{});
 			c.moveToFirst();
 			
-			Log.d("TEST", "" +  toJson(task).toString());
-			Log.d("TEST!B", c.getString(c.getColumnIndex(this.col_content)));
+//			Log.d("TEST", "" +  toJson(task).toString());
+//			Log.d("TEST!B", c.getString(c.getColumnIndex(this.col_content)));
 
 			cv.put(this.col_content, toJson(task).toString());
 			
@@ -409,7 +411,7 @@ public class DatabaseManager {
 			
 			Cursor c2 = db.rawQuery("SELECT * FROM " + local_task_table + " WHERE " + this.col_id + "='" + task.getId() + "'",  new String[]{});
 			c2.moveToFirst();
-			Log.d("TEST!A", c2.getString(c.getColumnIndex(this.col_content)));
+//			Log.d("TEST!A", c2.getString(c.getColumnIndex(this.col_content)));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

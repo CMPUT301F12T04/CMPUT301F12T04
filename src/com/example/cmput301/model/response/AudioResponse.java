@@ -25,4 +25,11 @@ public class AudioResponse extends Response {
     public AudioResponse clone() {
         return null;
     }
+
+	@Override
+	public String getSaveable() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

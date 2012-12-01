@@ -106,7 +106,7 @@ public class MainController {
 			if(args.length==2)
 			{
 				Log.d("RESPONSE",((Task)args[0]).getName());
-				Log.d("RESPONSE",(String)((Response)args[1]).getContent());
+				Log.d("RESPONSE",((Response)args[1]).getContent().toString());
 				Task task = (Task)args[0];
 				Response response = (Response)args[1];
 				taskManager.postResponse(task, response);

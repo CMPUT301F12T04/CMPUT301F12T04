@@ -50,4 +50,10 @@ public class TextResponse extends Response {
 
         return clone;
     }
+
+	@Override
+	public String getSaveable() {
+		
+		return (String) this.content;
+	}
 }
