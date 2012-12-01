@@ -77,7 +77,7 @@ public class PhotoResponseView extends ResponseView {
 		setTitle(taskTile);
 		
 		// setting the description of the task
-		TextView title = (TextView) findViewById(R.id.indvidual_des_view);
+		TextView title = (TextView) findViewById(R.id.p_task_des_view);
 		title.setText("Votes: " + t1.getVotes() + "\n\n" + taskDesc);
 	}
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,7 +100,7 @@ public class PhotoResponseView extends ResponseView {
 		}
 		if (item.getItemId() == R.id.menu_vote) {
 			mainController.voteTask(t1);
-			TextView title = (TextView) findViewById(R.id.indvidual_des_view);
+			TextView title = (TextView) findViewById(R.id.p_task_des_view);
 			title.setText("Votes: " + t1.getVotes() + "\n\n"
 					+ t1.getDescription());
 		}
