@@ -28,7 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.cmput301.model.response.AudioResponse;
 import com.example.cmput301.model.response.PictureResponse;
 import com.example.cmput301.model.response.Response;
 import com.example.cmput301.model.response.TextResponse;

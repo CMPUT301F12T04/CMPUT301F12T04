@@ -35,7 +35,6 @@ import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import com.example.cmput301.controller.*;
-import com.example.cmput301.model.response.AudioResponse;
 import com.example.cmput301.model.response.PictureResponse;
 import com.example.cmput301.model.response.TextResponse;
 import com.example.cmput301.R;
@@ -227,7 +226,6 @@ SearchView.OnCloseListener {
 					//Check which radio button was selected
 					RadioButton rPhoto = (RadioButton) dialog.findViewById(R.id.radioPhoto);
 					RadioButton rText = (RadioButton) dialog.findViewById(R.id.radioText);
-					RadioButton rAudio = (RadioButton) dialog.findViewById(R.id.radioAudio);
 
 					String type;
 					if (rPhoto.isChecked()) {
@@ -236,9 +234,6 @@ SearchView.OnCloseListener {
 					} else if (rText.isChecked()) {
 						//set type of Task to be text
 						type = TextResponse.class.toString();
-					} else if (rAudio.isChecked()) {
-						//set type of Task to be audio
-						type = AudioResponse.class.toString();
 					}
 					else
 					{

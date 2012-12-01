@@ -31,42 +31,39 @@
             android:layout_below="@id/title_Input" >
         </EditText>
 
-   
      <LinearLayout
-        android:id="@+id/RadioButtonLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="3"
-        android:layout_below="@id/des_Input" >
+         android:id="@+id/RadioButtonLayout"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/des_Input"
+         android:layout_centerInParent="true"
+         android:showDividers="beginning"
+         android:weightSum="3" >
         
           <RadioGroup 	
         android:id="@+id/ResponseType"
-        android:orientation="horizontal"	  	
+        android:orientation="horizontal"
+            android:paddingLeft="75sp"	  	
         android:layout_width="wrap_content"	  	
         android:layout_height="wrap_content" >
-          
-         <RadioButton
-            android:id="@+id/radioText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Text" 
-            android:layout_weight="1"
-            android:checked="true" />
- 
-        <RadioButton
-            android:id="@+id/radioAudio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/Audio" />
-         
-        <RadioButton
-            android:id="@+id/radioPhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/Photo" />
+
+              <RadioButton
+                  android:id="@+id/radioText"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:checked="true"
+                  android:paddingRight="10sp"
+                  android:text="@string/Text" />
+
     </RadioGroup>
+
+          <RadioButton
+              android:id="@+id/radioPhoto"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:text="@string/Photo" />
     
     </LinearLayout>
     
