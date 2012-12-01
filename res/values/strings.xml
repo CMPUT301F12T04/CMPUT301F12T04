@@ -34,6 +34,7 @@
         <item>Unanswered</item>
         <item>Other User\'s Tasks</item>
         <item>Random Tasks</item> 
+        <item>Popular</item> 
     </string-array>
 
 </resources>
