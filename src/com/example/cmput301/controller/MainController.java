@@ -131,7 +131,6 @@ public class MainController {
 	 */
 	public void updateRemoteTasks() {
 		new RemoteTaskUpdate().execute();
-		checkoutPrivate();
 	}
 
 	private class RemoteTaskUpdate extends AsyncTask<Void,Void,Task>
@@ -147,7 +146,7 @@ public class MainController {
 		protected void onPostExecute(Task result)
 		{
 //			tasks = taskManager.getPrivateTasks();
-			checkoutRemote(); 
+			callBack.callbackCall();
 //			Log.d("REMOTE","REFRESHED");
 //			
 //			callBack.callbackCall();
@@ -182,10 +181,6 @@ public class MainController {
 
 		protected void onPostExecute(Task result)
 		{
-			tasks = taskManager.getPrivateTasks();
-			checkoutPrivate();   
-			Log.d("REMOTE","REFRESHED");
-			
 			callBack.callbackCall();
 		}
 	}
