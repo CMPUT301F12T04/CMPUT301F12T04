@@ -95,6 +95,7 @@ public class PhotoResponseView extends ResponseView {
 		}
 		if (item.getItemId() == R.id.menu_p_task_upload)
 		{
+			mainController.shareTask(t1.getId());
 			finish();
 		}
 		if (item.getItemId() == R.id.menu_vote) {
