@@ -26,4 +26,10 @@
         android:icon="@android:drawable/ic_menu_add"
         android:showAsAction="always"
         android:orderInCategory="2"/>
+     <item android:id="@+id/menu_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:showAsAction="always"
+        android:orderInCategory="3"/>
 </menu>
