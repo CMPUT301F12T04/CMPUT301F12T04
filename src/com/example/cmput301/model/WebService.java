@@ -35,7 +35,6 @@ import com.example.cmput301.model.response.factory.PictureResponseFactory;
 import com.example.cmput301.model.response.factory.ResponseFactory;
 import com.example.cmput301.model.response.factory.TextResponseFactory;
 
-import android.util.Log;
 
 public class WebService
 {
