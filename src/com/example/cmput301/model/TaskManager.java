@@ -15,6 +15,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.cmput301.model.response.Response;
 
@@ -239,9 +240,13 @@ public class TaskManager {
     public void Refresh() {
         //Not the best method but will work.
         dbman.nukeRemote();
-        for (Task task : WebService.list()) {
+        Log.d("REFRESH","running refresh");
+        List<Task> tasks = WebService.list();
+        Log.d("refresh","got webservice list and size is "+tasks.size());
+        for (Task task : tasks) {
             //This is inefficient but will have to work for now.
-            dbman.updateTask(task);
+//            dbman.updateTask(task);
+        	Log.d("refresh","posting task " + task.getName());
             dbman.postRemote(task);
         }
     }
