@@ -194,6 +194,10 @@ public class TaskManager {
     public ArrayList<Task> getSharedTasks() {
         ArrayList<Task> sharedList = new ArrayList<Task>();
 
+        if(dbman.getLocalTaskList()==null)
+        {
+        	return sharedList;
+        }
         for (Task task : dbman.getLocalTaskList()) {
             if (task.getStatus() == Task.STATUS_SHARED) {
                 sharedList.add(task);
@@ -211,7 +215,7 @@ public class TaskManager {
     public ArrayList<Task> getUnansweredTasks() {
         ArrayList<Task> unansweredList = new ArrayList<Task>();
 
-        for (Task task : this.dbman.getRemoteTaskList()) {
+        for (Task task : dbman.getRemoteTaskList()) {
             if (task.getResponses().size() == 0) {
                 unansweredList.add(task);
             }
@@ -234,11 +238,11 @@ public class TaskManager {
      */
     public void Refresh() {
         //Not the best method but will work.
-        this.dbman.nukeRemote();
+        dbman.nukeRemote();
         for (Task task : WebService.list()) {
             //This is inefficient but will have to work for now.
-            this.dbman.updateTask(task);
-            this.dbman.postRemote(task);
+            dbman.updateTask(task);
+            dbman.postRemote(task);
         }
     }
 
@@ -246,7 +250,7 @@ public class TaskManager {
      * Nuke the databse.
      */
     public void nukeLocal() {
-        this.dbman.nukeAll();
+        dbman.nukeAll();
     }
 
     /**
