@@ -264,6 +264,10 @@ SearchView.OnCloseListener {
             dialog.show();
             dialog.setTitle("Adding a Task");
         }
+        if(item.getItemId() == R.id.menu_refresh)
+        {
+        	
+        }
         return true;
     }
 
