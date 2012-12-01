@@ -17,6 +17,7 @@ import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -58,247 +59,267 @@ public class MainActivity extends Activity  implements  SearchView.OnQueryTextLi
 SearchView.OnCloseListener {
 
 	private SearchView mSearchView;
-    private MainController mainController;
-    //setting up list view and using customAdapter for tasks
-    ListView taskview;
-    /**
-     * Method is responsible for the creation of the view of the activity,
-     * Things such as the actionbar and the list of tasks are set here.
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-    	
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);  
-        
-        //Setup the main controller
-        mainController = new MainController(this.getApplicationContext(), this);
-
-        MainController.callBack = (MyCallback) new Callback();
-
-        mainController.updateRemoteTasks();
-        
-        //Setting up the action bar
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        actionBar.setDisplayShowTitleEnabled(false);
-        OnNavigationListener mOnNavigationListener;
-
-        //Using custom dropdown list with white color font
-        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.taskview_options,
-                R.layout.spinner_dropdown_item);
-
-        //When item is clicked, a toast is displayed for now
-        mOnNavigationListener = new OnNavigationListener() {
-            String[] choices = getResources().getStringArray(R.array.taskview_options);
-
-            public boolean onNavigationItemSelected(int position, long itemId) {
-
-                if (choices[position].equals("My Tasks")) {
-                    mainController.checkoutPrivate();
-                } else if (choices[position].equals("My Shared")) {
-                    mainController.checkoutShared();
-                } else if (choices[position].equals("Unanswered")) {
-                    mainController.checkoutUnanswered();
-                } else if (choices[position].equals("Other User's Tasks")) {
-                    mainController.checkoutRemote();
-                } else if (choices[position].equals("Random Tasks")) {
-                    mainController.checkoutRandom();
-                } else if (choices[position].equals("Popular")) {
-                	mainController.checkoutPopular();
-                }
-                return true;
-            }
-        };
-        
-        
-        actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
-
-  
-        taskview = (ListView) findViewById(R.id.mainActivityList);
-        taskview.setAdapter(mainController.getListAdapter());
-        taskview.setOnItemClickListener(new OnItemClickListener() {
-            //When item is clicked individual task view is opened,
-            //the task is passed to individual task view
-            public void onItemClick(AdapterView<?> adp, View view,
-                    int pos, long id) {
-            	
-
-            	if(mainController.getList().get(pos).getType().equals(
-            			PictureResponse.class.toString()))
-            	{
-            		Intent in = new Intent(MainActivity.this, PhotoResponseView.class);
-            		//passing task to individual task view
-            		Bundle bundle = new Bundle();
-            		bundle.putInt("id", pos);
-            		bundle.putSerializable("task", mainController.getList().get(pos));
-            		in.putExtras(bundle);
-            		startActivity(in); 
-            	}
-            	else
-            	{
-
-            		Intent in = new Intent(MainActivity.this, IndividualTaskView.class);
-            		//passing task to individual task view
-            		Bundle bundle = new Bundle();
-            		bundle.putInt("id", pos);
-            		bundle.putSerializable("task", mainController.getList().get(pos));
-            		in.putExtras(bundle);
-            		startActivity(in);
-            	}
-
-            }
-        });
-        
-        
-    }
-
+	private MainController mainController;
+	//setting up list view and using customAdapter for tasks
+	ListView taskview;
+	ProgressDialog mDialog;
 	/**
-     * Using own custom menu
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
-        mSearchView = (SearchView) searchItem.getActionView();
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setOnCloseListener(this);
-        return true;
-    }
+	 * Method is responsible for the creation of the view of the activity,
+	 * Things such as the actionbar and the list of tasks are set here.
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
 
-   
-    
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);  
+
+		//Setup the main controller
+		mainController = new MainController(this.getApplicationContext(), this);
+
+		MainController.callBack = (MyCallback) new Callback();
+
+		mDialog = new ProgressDialog(this);
+
+		
+		mainController.updateRemoteTasks();
+
+		//Setting up the action bar
+		ActionBar actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		actionBar.setDisplayShowTitleEnabled(false);
+		OnNavigationListener mOnNavigationListener;
+
+		//Using custom dropdown list with white color font
+		SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this,
+				R.array.taskview_options,
+				R.layout.spinner_dropdown_item);
+
+		//When item is clicked, a toast is displayed for now
+		mOnNavigationListener = new OnNavigationListener() {
+			String[] choices = getResources().getStringArray(R.array.taskview_options);
+
+			public boolean onNavigationItemSelected(int position, long itemId) {
+
+				if (choices[position].equals("My Tasks")) {
+					mainController.checkoutPrivate();
+				} else if (choices[position].equals("My Shared")) {
+					mainController.checkoutShared();
+				} else if (choices[position].equals("Unanswered")) {
+					mainController.checkoutUnanswered();
+				} else if (choices[position].equals("Other User's Tasks")) {
+					mainController.checkoutRemote();
+				} else if (choices[position].equals("Random Tasks")) {
+					mainController.checkoutRandom();
+				} else if (choices[position].equals("Popular")) {
+					mainController.checkoutPopular();
+				}
+				return true;
+			}
+		};
+
+
+		actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
+
+
+		taskview = (ListView) findViewById(R.id.mainActivityList);
+		taskview.setAdapter(mainController.getListAdapter());
+		taskview.setOnItemClickListener(new OnItemClickListener() {
+			//When item is clicked individual task view is opened,
+			//the task is passed to individual task view
+			public void onItemClick(AdapterView<?> adp, View view,
+					int pos, long id) {
+
+
+				if(mainController.getList().get(pos).getType().equals(
+						PictureResponse.class.toString()))
+				{
+					Intent in = new Intent(MainActivity.this, PhotoResponseView.class);
+					//passing task to individual task view
+					Bundle bundle = new Bundle();
+					bundle.putInt("id", pos);
+					bundle.putSerializable("task", mainController.getList().get(pos));
+					in.putExtras(bundle);
+					startActivity(in); 
+				}
+				else
+				{
+
+					Intent in = new Intent(MainActivity.this, IndividualTaskView.class);
+					//passing task to individual task view
+					Bundle bundle = new Bundle();
+					bundle.putInt("id", pos);
+					bundle.putSerializable("task", mainController.getList().get(pos));
+					in.putExtras(bundle);
+					startActivity(in);
+				}
+			}
+		});
+
+
+	}
+	/**
+	 * Using own custom menu
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_main, menu);
+		MenuItem searchItem = menu.findItem(R.id.menu_search);
+		mSearchView = (SearchView) searchItem.getActionView();
+		mSearchView.setOnQueryTextListener(this);
+		mSearchView.setOnCloseListener(this);
+		return true;
+	}
+
+
+
 
 	@Override
-    public void onResume() {
-        super.onResume();
-        int navIndex = getActionBar().getSelectedNavigationIndex();
-        String[] choices = getResources().getStringArray(R.array.taskview_options);
-        
-        if (choices[navIndex].equals("My Tasks")) {
-            mainController.checkoutPrivate();
-        } else if (choices[navIndex].equals("My Shared")) {
-            mainController.checkoutShared();
-        } else if (choices[navIndex].equals("Unanswered")) {
-            mainController.checkoutUnanswered();
-        } else if (choices[navIndex].equals("Other User's Tasks")) {
-            mainController.checkoutRemote();
-        } else if (choices[navIndex].equals("Random Tasks")) {
-            mainController.checkoutRandom();
-        } else if (choices[navIndex].equals("Popular")) {
-        	mainController.checkoutPopular();
-        }       
-    }
+	public void onResume() {
+		super.onResume();
+		int navIndex = getActionBar().getSelectedNavigationIndex();
+		String[] choices = getResources().getStringArray(R.array.taskview_options);
 
-    /**
-     * Overrided method, that checks if the add option was click. If so a dialog
-     * box will appear and the task can be defined. The database will be updated
-     * accordingly
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+		if (choices[navIndex].equals("My Tasks")) {
+			mainController.checkoutPrivate();
+		} else if (choices[navIndex].equals("My Shared")) {
+			mainController.checkoutShared();
+		} else if (choices[navIndex].equals("Unanswered")) {
+			mainController.checkoutUnanswered();
+		} else if (choices[navIndex].equals("Other User's Tasks")) {
+			mainController.checkoutRemote();
+		} else if (choices[navIndex].equals("Random Tasks")) {
+			mainController.checkoutRandom();
+		} else if (choices[navIndex].equals("Popular")) {
+			mainController.checkoutPopular();
+		}       
+	}
 
-        //Adding a task has been selected
-        if (item.getItemId() == R.id.menu_add) {
+	/**
+	 * Overrided method, that checks if the add option was click. If so a dialog
+	 * box will appear and the task can be defined. The database will be updated
+	 * accordingly
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
 
-            //Defining dialog style and setting it up
-            final Dialog dialog = new Dialog(this, R.style.dialogStyle);
-            dialog.setContentView(R.layout.add_task_view);
+		//Adding a task has been selected
+		if (item.getItemId() == R.id.menu_add) {
 
-            //Defining accept button
-            Button acceptButton = (Button) dialog.findViewById(R.id.dialogButtonAccept);
-            acceptButton.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    String titleInput;
-                    String descInput;
+			//Defining dialog style and setting it up
+			final Dialog dialog = new Dialog(this, R.style.dialogStyle);
+			dialog.setContentView(R.layout.add_task_view);
 
-                    //Get the title input
-                    EditText titleText = (EditText) dialog.findViewById(R.id.title_Input);
-                    titleInput = titleText.getText().toString();
+			//Defining accept button
+			Button acceptButton = (Button) dialog.findViewById(R.id.dialogButtonAccept);
+			acceptButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					String titleInput;
+					String descInput;
 
-                    //Get the description input
-                    EditText descText = (EditText) dialog.findViewById(R.id.des_Input);
-                    descInput = descText.getText().toString();
+					//Get the title input
+					EditText titleText = (EditText) dialog.findViewById(R.id.title_Input);
+					titleInput = titleText.getText().toString();
 
-                    //Check which radio button was selected
-                    RadioButton rPhoto = (RadioButton) dialog.findViewById(R.id.radioPhoto);
-                    RadioButton rText = (RadioButton) dialog.findViewById(R.id.radioText);
-                    RadioButton rAudio = (RadioButton) dialog.findViewById(R.id.radioAudio);
+					//Get the description input
+					EditText descText = (EditText) dialog.findViewById(R.id.des_Input);
+					descInput = descText.getText().toString();
 
-                    String type;
-                    if (rPhoto.isChecked()) {
-                        //set type of Task to be photo
-                    	type = PictureResponse.class.toString(); 
-                    } else if (rText.isChecked()) {
-                        //set type of Task to be text
-                    	type = TextResponse.class.toString();
-                    } else if (rAudio.isChecked()) {
-                        //set type of Task to be audio
-                    	type = AudioResponse.class.toString();
-                    }
-                    else
-                    {
-                    	throw new IllegalStateException();
-                    }
+					//Check which radio button was selected
+					RadioButton rPhoto = (RadioButton) dialog.findViewById(R.id.radioPhoto);
+					RadioButton rText = (RadioButton) dialog.findViewById(R.id.radioText);
+					RadioButton rAudio = (RadioButton) dialog.findViewById(R.id.radioAudio);
 
-                    if(titleInput.equals(""))
-                    {
-                    	Toast.makeText(getApplicationContext(), 
-                    			"New task requires a title!", Toast.LENGTH_SHORT).show();                	
-                    }
-                    else
-                    {
-                    	//Create new task here and add to database etc.
-                    	mainController.addTask(titleInput, descInput, type);
-                    	dialog.dismiss();
-                    	getActionBar().setSelectedNavigationItem(0);
-                    }
-                    
-                }
-            });
+					String type;
+					if (rPhoto.isChecked()) {
+						//set type of Task to be photo
+						type = PictureResponse.class.toString(); 
+					} else if (rText.isChecked()) {
+						//set type of Task to be text
+						type = TextResponse.class.toString();
+					} else if (rAudio.isChecked()) {
+						//set type of Task to be audio
+						type = AudioResponse.class.toString();
+					}
+					else
+					{
+						throw new IllegalStateException();
+					}
 
-            //Defining cancel button
-            Button cancelButton = (Button) dialog.findViewById(R.id.dialogButtonCancel);
-            cancelButton.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
-            dialog.setTitle("Adding a Task");
-        }
-        if(item.getItemId() == R.id.menu_refresh)
-        {
-        	mainController.updateRemoteTasks();
-        }
-        return true;
-    }
+					if(titleInput.equals(""))
+					{
+						Toast.makeText(getApplicationContext(), 
+								"New task requires a title!", Toast.LENGTH_SHORT).show();                	
+					}
+					else
+					{
+						//Create new task here and add to database etc.
+						mainController.addTask(titleInput, descInput, type);
+						dialog.dismiss();
+						getActionBar().setSelectedNavigationItem(0);
+					}
 
-    class Callback implements MyCallback {
-    	   public void callbackCall() {
-    	      Log.d("TEST","WORKED");
-    	      onResume();
-    	   }
-    	}
+				}
+			});
 
-	
-    @Override
+			//Defining cancel button
+			Button cancelButton = (Button) dialog.findViewById(R.id.dialogButtonCancel);
+			cancelButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+			dialog.show();
+			dialog.setTitle("Adding a Task");
+		}
+		if(item.getItemId() == R.id.menu_refresh)
+		{
+			mainController.updateRemoteTasks();
+		}
+		return true;
+	}
+
+	class Callback implements MyCallback {
+		public void finished() {
+			Log.d("TEST","WORKED");
+			if(mDialog.isShowing())
+			{
+				mDialog.dismiss();
+			}
+			onResume();
+		}
+
+		@Override
+		public void startSyncLoadingScreen()
+		{	
+			mDialog.setMessage("Syncing");
+			mDialog.show();
+		}
+
+		@Override
+		public void startUploadingScreen()
+		{
+			mDialog.setMessage("Uploading");
+			mDialog.show();
+		}
+	}
+
+
+	@Override
 	public boolean onClose() {
-    	mainController.restoreUnfiltered();
-    	return false;
+		mainController.restoreUnfiltered();
+		return false;
 	}
 
 	@Override
 	public boolean onQueryTextChange(String arg0) {
 		mainController.filter(arg0);
-		
+
 		return true;
 	}
 
 	@Override
 	public boolean onQueryTextSubmit(String arg0) {
-		
+
 		return onClose();
 	}
 }

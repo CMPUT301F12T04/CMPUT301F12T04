@@ -45,7 +45,7 @@ public class MainController {
 	private ArrayList<Task> tasksBackup;
 	private TaskListAdapter adapter;
 	public static MyCallback callBack;
-	
+
 	/**
 	 * Basic constructor for the main controller.
 	 *
@@ -61,7 +61,7 @@ public class MainController {
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();
 		}	
-		
+
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class MainController {
 			adapter.notifyDataSetChanged();
 		}
 	}
-	
+
 	/**
 	 * Add a response to the given task in the database.
 	 *
@@ -121,7 +121,7 @@ public class MainController {
 		}
 
 	}
-	
+
 	/**
 	 * Convert a task from private to shared which has the given task id.
 	 *
@@ -135,6 +135,12 @@ public class MainController {
 
 	private class RemoteTaskUpdate extends AsyncTask<Void,Void,Task>
 	{
+		@Override
+		protected void onPreExecute()
+		{
+			super.onPreExecute();
+			callBack.startSyncLoadingScreen();
+		}
 
 		@Override
 		protected Task doInBackground(Void... args)
@@ -145,11 +151,11 @@ public class MainController {
 
 		protected void onPostExecute(Task result)
 		{
-//			tasks = taskManager.getPrivateTasks();
-			callBack.callbackCall();
-//			Log.d("REMOTE","REFRESHED");
-//			
-//			callBack.callbackCall();
+			//			tasks = taskManager.getPrivateTasks();
+			callBack.finished();
+			//			Log.d("REMOTE","REFRESHED");
+			//			
+			//			callBack.callbackCall();
 		}
 	}
 	/**
@@ -168,6 +174,11 @@ public class MainController {
 	{
 
 		@Override
+		protected void onPreExecute()
+		{
+			callBack.startUploadingScreen();
+		}
+		@Override
 		protected Task doInBackground(String... args)
 		{
 			if(args.length == 2)
@@ -181,7 +192,7 @@ public class MainController {
 
 		protected void onPostExecute(Task result)
 		{
-			callBack.callbackCall();
+			callBack.finished();
 		}
 	}
 	/**
@@ -269,7 +280,7 @@ public class MainController {
 			adapter.notifyDataSetChanged();
 		}
 	}
-	
+
 	public void checkoutRandom() {
 		tasks = taskManager.getRemoteTasks();
 		Collections.shuffle(tasks);
@@ -277,7 +288,7 @@ public class MainController {
 			adapter.notifyDataSetChanged();
 		}
 	}
-	
+
 	public void checkoutPopular() {
 		tasks = taskManager.getRemoteTasks();
 		ArrayList<Task> tasks2 = taskManager.getSharedTasks();
@@ -320,8 +331,8 @@ public class MainController {
 				filtered.add(task);
 			}
 		}
-		
-		
+
+
 		tasks = filtered;
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();
@@ -332,7 +343,7 @@ public class MainController {
 		if(tasksBackup != null) {
 			tasks = tasksBackup;
 			tasksBackup = null;
-			
+
 			if (adapter != null) {
 				adapter.notifyDataSetChanged();
 			}
@@ -390,8 +401,8 @@ public class MainController {
 			//task is another type
 			else
 			{
-			ImageView taskTypeImg = (ImageView) row.findViewById(R.id.TasktypePic);
-			taskTypeImg.setImageResource(android.R.drawable.ic_menu_edit);
+				ImageView taskTypeImg = (ImageView) row.findViewById(R.id.TasktypePic);
+				taskTypeImg.setImageResource(android.R.drawable.ic_menu_edit);
 			}
 
 			return row;
