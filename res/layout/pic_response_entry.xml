@@ -7,7 +7,8 @@
      <ImageView 
         android:id="@+id/pic_response_entry"
         android:layout_width="70dp"
-        android:layout_height="70dp"/>
+        android:layout_height="70dp"
+        android:contentDescription = "@string/desc"/>
     <CheckedTextView
         android:id="@+id/pic_annotation_entry"
         android:layout_width="match_parent"

@@ -22,8 +22,11 @@
     <string name="Audio">Audio</string>
     <string name="Text">Text</string>
     <string name="Photo">Photo</string>
-    <string name="desc">Task type</string> 
+    <string name="desc">Task type</string>
+    <string name="p_desc">Task type</string> 
     <string name="Post">Post</string> 
+    <string name="t_response_prompt">Enter your response here..</string> 
+    <string name="annotation_prompt">Give an annotation for your photo..</string> 
 
     <string-array name="taskview_options">
         <item>My Tasks</item>

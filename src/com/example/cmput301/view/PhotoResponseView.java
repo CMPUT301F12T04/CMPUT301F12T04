@@ -32,7 +32,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.cmput301.R;
 import com.example.cmput301.controller.MainController;
@@ -160,6 +159,7 @@ public class PhotoResponseView extends ResponseView {
 			return position;
 		}
 	}
+	@SuppressWarnings("unchecked")
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
 		if(requestCode == PHOTO_RESPONSES_CAMERA_CODE && resultCode == RESULT_OK ) {
 			ArrayList<String> annoList = new ArrayList<String>();
@@ -179,6 +179,16 @@ public class PhotoResponseView extends ResponseView {
 			pRLA.notifyDataSetChanged();
 			
 		}
+	}
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuItem shareButton = menu.findItem(R.id.menu_p_task_upload);
+	    if(t1.getStatus() == Task.STATUS_SHARED)
+	    {
+	    	shareButton.setEnabled(false);
+	    	shareButton.setVisible(false);	
+	    }
+			
+		return true;
 	}
 			
 

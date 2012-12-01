@@ -11,16 +11,15 @@
  ******************************************************************************/
 package com.example.cmput301.view;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import com.example.cmput301.R;
 import com.example.cmput301.model.response.PictureResponse;
 import com.example.cmput301.model.response.factory.PictureResponseFactory;
 import com.example.cmput301.model.response.factory.ResponseFactory;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -40,24 +39,20 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 @TargetApi(15)
 public class PictureSelectionView extends Activity {
 
-
-	MyArrayAdapter myArrayAdapter;
-	private ArrayList<PictureResponse> pResponses = new ArrayList<PictureResponse>();
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private static final int ANNOTATION_REQUEST_CODE = 2;
-	ResponseFactory respFactory = new PictureResponseFactory();
 	private String annotation = "";
 	private Bitmap photo;
-
+	private ArrayList<PictureResponse> pResponses = new ArrayList<PictureResponse>();
+	PhotoRespAdapter pRespAdapter;
+	ResponseFactory respFactory = new PictureResponseFactory();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {	
-
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pic_select_view);
@@ -67,77 +62,83 @@ public class PictureSelectionView extends Activity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		ListView photoList = (ListView) findViewById(R.id.photo_selection_list);
-
 		
-		//set up array adapter
-		myArrayAdapter = new MyArrayAdapter(this,
+		//set up array adapter for photo responses
+		pRespAdapter = new PhotoRespAdapter(this,
 				R.layout.pic_response_entry,
 				R.id.pic_annotation_entry,
 				pResponses
 				);
-
-		photoList.setAdapter(myArrayAdapter);
+		photoList.setAdapter(pRespAdapter);
 		photoList.setOnItemClickListener(new OnItemClickListener() {
 			
-			//when item is clicked, it is checked
+			//when a photo response is clicked it is, the check box is checked
 		  @Override
 		  public void onItemClick(AdapterView<?> parent, View view, int position,
 		    long id) {
-		   myArrayAdapter.toggleChecked(position);
+		   pRespAdapter.toggleChecked(position);
 		  }});
 		
 	}
-	 private class MyArrayAdapter extends ArrayAdapter<PictureResponse>{
+	/**
+	 * This class is a custom adapter created to handle displaying PhotoResponse
+	 * objects. It takes the PhotoResponse object and displays the Bitmap in the form
+	 * of an ImageView and it's annotation as a String. This is done for each photo
+	 * response in the task that is given to the adapter
+	 */
+	 @SuppressLint("UseSparseArrays")
+	private class PhotoRespAdapter extends ArrayAdapter<PictureResponse>{
 	     
-	     private HashMap<Integer, Boolean> myChecked = new HashMap<Integer, Boolean>();
+	     private HashMap<Integer, Boolean> itemsChecked = new HashMap<Integer, Boolean>();
 
-	  public MyArrayAdapter(Context context, int resource,
+	  public PhotoRespAdapter(Context context, int resource,
 	    int textViewResourceId, ArrayList<PictureResponse> list){
-	   super(context, resource, textViewResourceId, list);
-	   
+		  super(context, resource, textViewResourceId, list);
+
 	  }
+
+	  /**
+	   * Updates the checked array to match number of potential responses
+	   */
 	  public void resetcheckedSize()
 	  {
 		  for(int i = 0; i < pResponses.size(); i++){
-			    myChecked.put(i, false);
-		   }
-	  }
-	 
-	     
-	  public void toggleChecked(int position){
-	   if(myChecked.get(position)){
-	    myChecked.put(position, false);
-	   }else{
-	    myChecked.put(position, true);
-	   }
-	   
-	   notifyDataSetChanged();
-	  }
-	  
-	  public List<Integer> getCheckedItemPositions(){
-	   List<Integer> checkedItemPositions = new ArrayList<Integer>();
-	   
-	   for(int i = 0; i < myChecked.size(); i++){
-	    if (myChecked.get(i)){
-	     (checkedItemPositions).add(i);
-	    }
-	   }
-	   
-	   return checkedItemPositions;
-	  }
-	  
-	  public ArrayList<PictureResponse> getCheckedItems(){
-	   ArrayList<PictureResponse> checkedItems = new ArrayList<PictureResponse>();
-	   
-	   for(int i = 0; i < myChecked.size(); i++){
-	    if (myChecked.get(i)){
-	     (checkedItems).add(pResponses.get(i));
-	    }
-	   }
-	   
-	   return checkedItems;
+			  itemsChecked.put(i, false);
+		  }
+		  return;
 	  }
 
+	  /**
+	   * Marks the position as being checked or unchecked
+	   * @param position the position of the item selected in the list
+	   */
+	  public void toggleChecked(int position){
+		  if(itemsChecked.get(position)){
+			  itemsChecked.put(position, false);
+		  }else{
+			  itemsChecked.put(position, true);
+		  }
+		  notifyDataSetChanged();
+	  }
+	  
+	  /**
+	   * Get the checked items that the user has selected.
+	   * @return all the checked items in the form of an arraylist
+	   */
+	  public ArrayList<PictureResponse> getCheckedItems(){
+		  ArrayList<PictureResponse> checkedItems = new ArrayList<PictureResponse>();
+
+		  for(int i = 0; i < itemsChecked.size(); i++){
+			  if (itemsChecked.get(i)){
+				  (checkedItems).add(pResponses.get(i));
+			  }
+		  }
+		  return checkedItems;
+	  }
+
+	  /**
+	   * Overiided method to display custom view
+	   */
 	  @Override
 	  public View getView(int position, View convertView, ViewGroup parent) {
 	   View row = convertView;
@@ -156,7 +157,7 @@ public class PictureSelectionView extends Activity {
 	   respImage.setImageBitmap((Bitmap) pResponses.get(position).getContent());
 	   
 	   //check if the position is checked
-	   Boolean checked = myChecked.get(position);
+	   Boolean checked = itemsChecked.get(position);
 	   if (checked != null) {
 		   checkedTextView.setChecked(checked);
 	   }  
@@ -164,13 +165,16 @@ public class PictureSelectionView extends Activity {
 	  }
 	 }
 	  
+	 /**
+	  * Populates the action bar with items set in menu xml
+	  */
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.pic_select_view, menu);
 		return true;
 	}
 	
     /**
-     * Overrided method that just enables the back button to kill the activity
+     * Overrided method that listens on the clicks made on action bar icons
      */
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -178,24 +182,27 @@ public class PictureSelectionView extends Activity {
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 		}
+		//camera is selected, go to camera, get a picture and annotation back
+		//or nothing if user doesn't take a photo
 		if (item.getItemId() == R.id.menu_camera_select) {
 			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
 			startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 		}
+		//make a response with the selected items
 		if (item.getItemId() == R.id.menu_pic_respond) {
-			String result = "";
-		       
-		    //getCheckedItems
-			myArrayAdapter.notifyDataSetChanged();
-		    ArrayList<PictureResponse> resultList = myArrayAdapter.getCheckedItems();
+			pRespAdapter.notifyDataSetChanged();
+			
+		    ArrayList<PictureResponse> resultList = pRespAdapter.getCheckedItems();
 		    ArrayList<String> strList = new ArrayList<String>();
 		    ArrayList<Bitmap> bitList = new ArrayList<Bitmap>();
+		    
+		    //Go through list and extract annotations and bitmaps
 		   for(int i = 0; i < resultList.size(); i++){
 			   strList.add(resultList.get(i).getAnnotation());
 			   bitList.add((Bitmap)resultList.get(i).getContent());
 		    }
 
+		   //pass the extracted values back to parent activity
 		    Intent i = new Intent();
     		i.putExtra("annos",strList);
     		i.putExtra("photos", bitList);
@@ -203,22 +210,30 @@ public class PictureSelectionView extends Activity {
 			finish();
 		    
 		}
-		
 		return true;
-		
 }
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
+	/**
+	 * Overrided method that checks if the camera returns a successful image, it also checks
+	 * for the return of a user inputted annotation
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		//Annotation has been returned
 		if(requestCode == ANNOTATION_REQUEST_CODE && resultCode == RESULT_OK ) {
 			
+			//create a new temporary photo response
 			annotation =  data.getStringExtra("annotation");
 			PictureResponse pR = (PictureResponse) respFactory.createResponse(annotation, photo);
 			pResponses.add(pR);
-			myArrayAdapter.notifyDataSetChanged();
-			myArrayAdapter.resetcheckedSize();
+			pRespAdapter.notifyDataSetChanged();
+			pRespAdapter.resetcheckedSize(); //update items checked array size
 		}
+		//Image has been returned
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {  
-            photo = (Bitmap) data.getExtras().get("data"); 
+            photo = (Bitmap) data.getExtras().get("data");
+            
+            //Get the annotation from user
             Intent in = new Intent(PictureSelectionView.this,
 					AnnotationInputView.class);
 			startActivityForResult(in, ANNOTATION_REQUEST_CODE);

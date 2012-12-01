@@ -43,9 +43,9 @@ public class TextResponseView extends ResponseView {
 
 	
 	private MainController mainController;
-	Task t;
+	Task aTask;
 	String responseString;
-	Activity that;
+	Activity currentActivity;
 
 	/**
 	 * Overrided method that sets the view of the activity.
@@ -60,7 +60,7 @@ public class TextResponseView extends ResponseView {
 		
 		respFactory = new TextResponseFactory();
 		
-		that = this;
+		currentActivity = this;
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.text_response_view);
@@ -73,8 +73,8 @@ public class TextResponseView extends ResponseView {
 
 		//Getting information from bundle passed from MainActivity
 		Bundle bundle = getIntent().getExtras();
-		t = (Task) bundle.getSerializable("task");
-		taskTile = t.getName();
+		aTask = (Task) bundle.getSerializable("task");
+		taskTile = aTask.getName();
 
 		//setting the title of the task to be the activity title
 		setTitle(taskTile);
@@ -102,14 +102,14 @@ public class TextResponseView extends ResponseView {
 				}
 				else
 				{
-					mainController.addResponse(t, resp);
+					mainController.addResponse(aTask, resp);
 					responseInput.setText("");
 				}
 				//setting list of responses for task
 				ListView responses = (ListView) findViewById(R.id.text_response_list);
 				@SuppressWarnings({ "rawtypes", "unchecked" })
-				ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(that,
-						android.R.layout.simple_list_item_1, (ArrayList) t.getResponses());
+				ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(currentActivity,
+						android.R.layout.simple_list_item_1, (ArrayList) aTask.getResponses());
 				responses.setAdapter(adapter);
 			}
 		});
@@ -118,7 +118,7 @@ public class TextResponseView extends ResponseView {
 		ListView responses = (ListView) findViewById(R.id.text_response_list);
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
-				android.R.layout.simple_list_item_1, (ArrayList) t.getResponses());
+				android.R.layout.simple_list_item_1, (ArrayList) aTask.getResponses());
 		responses.setAdapter(adapter);
 	}
 
