@@ -53,17 +53,16 @@
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
                   android:checked="true"
-                  android:paddingRight="10sp"
                   android:text="@string/Text" />
-
-    </RadioGroup>
-
-          <RadioButton
+                <RadioButton
               android:id="@+id/radioPhoto"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_weight="1"
               android:text="@string/Photo" />
+
+    </RadioGroup>
+
     
     </LinearLayout>
     
