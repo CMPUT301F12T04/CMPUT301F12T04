@@ -40,7 +40,7 @@ import com.example.cmput301.R;
  * depending on the view.
  */
 public class MainController {
-	private TaskManager taskManager;
+	private Manager taskManager;
 	private ArrayList<Task> tasks;
 	private ArrayList<Task> tasksBackup;
 	private TaskListAdapter adapter;
@@ -55,7 +55,7 @@ public class MainController {
 	 */
 	public MainController(Context context, Activity activity) {
 		this.context = context;
-		this.taskManager = new TaskManager(context);
+		this.taskManager = new Manager(context);
 		this.tasks = taskManager.getPrivateTasks();
 		this.adapter = new TaskListAdapter(activity);
 		if (adapter != null) {

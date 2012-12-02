@@ -10,13 +10,13 @@ import android.util.Log;
 import com.example.cmput301.application.ConnUpdateCallback;
 import com.example.cmput301.controller.MainController.TaskListAdapter;
 import com.example.cmput301.model.Task;
-import com.example.cmput301.model.TaskManager;
+import com.example.cmput301.model.Manager;
 import com.example.cmput301.model.response.Response;
 
 public class PhotoResponseController
 {
 	public static ConnUpdateCallback callBack;
-	private TaskManager taskManager;
+	private Manager taskManager;
 	private TaskListAdapter adapter;
 	private Context context;
 
@@ -28,7 +28,7 @@ public class PhotoResponseController
 	 */
 	public PhotoResponseController(Context context, Activity activity) {
 		this.context = context;
-		this.taskManager = new TaskManager(context);
+		this.taskManager = new Manager(context);
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();
 		}	
