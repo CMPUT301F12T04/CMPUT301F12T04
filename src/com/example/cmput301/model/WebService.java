@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.example.cmput301.application.StringRes;
 import com.example.cmput301.model.response.PictureResponse;
 import com.example.cmput301.model.response.Response;
 import com.example.cmput301.model.response.TextResponse;
@@ -53,7 +54,7 @@ public class WebService
 	 */
 	
 	// need to add a resource for this
-	private static String uri = "http://crowdsourcer.softwareprocess.es/F12/CMPUT301F12T04/";
+	private static String uri = StringRes.uri;
 
 	/* public methods */
 	

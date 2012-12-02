@@ -77,9 +77,9 @@ SearchView.OnCloseListener {
 
 		//setup callback functions used to interact with loading screen and
 		//refresh lists
-		MainController.callBack = (MyCallback) new Callback();
-		PhotoResponseController.callBack = (MyCallback) new Callback();
-		IndividualTaskController.callBack = (MyCallback) new Callback();
+		MainController.callBack = (ConnUpdateCallback) new Callback();
+		PhotoResponseController.callBack = (ConnUpdateCallback) new Callback();
+		IndividualTaskController.callBack = (ConnUpdateCallback) new Callback();
 		
 		//setup loading screen
 		mDialog = new ProgressDialog(this);
@@ -281,7 +281,7 @@ SearchView.OnCloseListener {
 	/**
 	 * Used to send receive http commands.  Handles loading screen as well
 	 */
-	class Callback implements MyCallback {
+	class Callback implements ConnUpdateCallback {
 		public void finished() {
 			Log.d("TEST","WORKED");
 			if(mDialog.isShowing())

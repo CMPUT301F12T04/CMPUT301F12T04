@@ -37,10 +37,6 @@ import com.example.cmput301.model.response.factory.TextResponseFactory;
 
 public class DatabaseManager {
 	private SQLiteDatabase db; 
-	private static final String LOCAL_TASK_TABLE = "local_task_table"; 
-	private static final String REMOTE_TASK_TABLE = "remote_task_table";
-	private static final String COL_ID = "id";
-	private static final String COL_CONTENT = "content";
 
 	/**
 	 * Create a new database manager with the "database" being saved to a file.
@@ -83,20 +79,20 @@ public class DatabaseManager {
 	private void addTask_LocaleTable(Task task)
 	{
 		ContentValues cv = new ContentValues();
-		cv.put(COL_ID, task.getId());
+		cv.put(StringRes.COL_ID, task.getId());
 		try
 		{
-			cv.put(COL_CONTENT, toJson(task).toString() );
+			cv.put(StringRes.COL_CONTENT, toJson(task).toString() );
 		}
 		catch (JSONException e)
 		{
 			e.printStackTrace();
 		}
-		db.insert(LOCAL_TASK_TABLE, COL_ID, cv);
+		db.insert(StringRes.LOCAL_TASK_TABLE_NAME, StringRes.COL_ID, cv);
 	}
 
 	private boolean localIdExists(String id) {
-		Cursor c = db.rawQuery("SELECT * FROM "+LOCAL_TASK_TABLE+" WHERE "+COL_ID+"=?", new String[]{id,});
+		Cursor c = db.rawQuery("SELECT * FROM "+ StringRes.LOCAL_TASK_TABLE_NAME+" WHERE "+StringRes.COL_ID+"=?", new String[]{id,});
 		if(c==null||c.getCount()==0)
 		{
 			return false;
@@ -112,17 +108,17 @@ public class DatabaseManager {
 	 */
 	public Task postRemote(Task task) {
 		ContentValues cv = new ContentValues();
-		cv.put(COL_ID, task.getId());
+		cv.put(StringRes.COL_ID, task.getId());
 		try
 		{
-			cv.put(COL_CONTENT, toJson(task).toString());
+			cv.put(StringRes.COL_CONTENT, toJson(task).toString());
 		}
 		catch (JSONException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		db.insert(REMOTE_TASK_TABLE, COL_ID, cv);
+		db.insert(StringRes.REMOTE_TASK_TABLE_NAME, StringRes.COL_ID, cv);
 		return task;
 	}
 
@@ -156,7 +152,7 @@ public class DatabaseManager {
 	 * @param id The id of the task to be deleted.
 	 */
 	public void deleteLocalTask(String id) {
-		db.delete(LOCAL_TASK_TABLE, COL_ID + " =?", new String[]{id,});
+		db.delete(StringRes.LOCAL_TASK_TABLE_NAME, StringRes.COL_ID + " =?", new String[]{id,});
 	}
 
 	/**
@@ -167,7 +163,7 @@ public class DatabaseManager {
 	@SuppressWarnings("unused")
 	// fixed
 	private void deleteRemoteTask(String id) {
-		db.delete(REMOTE_TASK_TABLE, COL_ID + " =?", new String[]{id,});
+		db.delete(StringRes.REMOTE_TASK_TABLE_NAME, StringRes.COL_ID + " =?", new String[]{id,});
 	}
 
 	/**
@@ -181,7 +177,7 @@ public class DatabaseManager {
 	public Task getLocalTask(String id) {
 		try
 		{
-			Cursor c = db.rawQuery("SELECT * FROM " + LOCAL_TASK_TABLE + " WHERE "+COL_ID+"=?", new String[]{id,});
+			Cursor c = db.rawQuery("SELECT * FROM " + StringRes.LOCAL_TASK_TABLE_NAME + " WHERE "+StringRes.COL_ID+"=?", new String[]{id,});
 			if(c==null||c.getCount()==0)
 			{ 
 				return null;
@@ -189,7 +185,7 @@ public class DatabaseManager {
 			else
 			{
 				c.moveToFirst();
-				String taskContent = c.getString(c.getColumnIndex(COL_CONTENT));
+				String taskContent = c.getString(c.getColumnIndex(StringRes.COL_CONTENT));
 				JSONObject jsonTask;
 
 				jsonTask = toJsonTask(taskContent);
@@ -281,12 +277,12 @@ public class DatabaseManager {
 		{
 			ArrayList<Task> out = new ArrayList<Task>();
 
-			Cursor c = db.rawQuery("SELECT * FROM "+LOCAL_TASK_TABLE, new String[]{});
+			Cursor c = db.rawQuery("SELECT * FROM "+StringRes.LOCAL_TASK_TABLE_NAME, new String[]{});
 			if(c.moveToFirst())
 			{
 				while(c.isAfterLast()==false)
 				{
-					JSONObject obj = toJsonTask(c.getString(c.getColumnIndex(COL_CONTENT)));
+					JSONObject obj = toJsonTask(c.getString(c.getColumnIndex(StringRes.COL_CONTENT)));
 					out.add(toTask(obj));
 					c.moveToNext();
 				}
@@ -310,7 +306,7 @@ public class DatabaseManager {
 	public Task getRemoteTask(String id)  {
 		try
 		{
-			Cursor c = db.rawQuery("SELECT * FROM " + REMOTE_TASK_TABLE + " WHERE " + COL_ID + "=?", new String[]{id,});
+			Cursor c = db.rawQuery("SELECT * FROM " + StringRes.REMOTE_TASK_TABLE_NAME + " WHERE " + StringRes.COL_ID + "=?", new String[]{id,});
 			c.moveToFirst();
 			if(c==null||c.getCount()==0)
 			{ 
@@ -318,7 +314,7 @@ public class DatabaseManager {
 			}
 			else
 			{
-				String taskContent = c.getString(c.getColumnIndex(COL_CONTENT));
+				String taskContent = c.getString(c.getColumnIndex(StringRes.COL_CONTENT));
 				JSONObject jsonTask = toJsonTask(taskContent);
 				return toTask(jsonTask);
 			}
@@ -342,12 +338,12 @@ public class DatabaseManager {
 		{
 			Log.d("refresh","STARTING REMOTE TASK LIST");
 			ArrayList<Task> out = new ArrayList<Task>();
-			Cursor c = db.rawQuery("SELECT * FROM "+REMOTE_TASK_TABLE, new String[]{});
+			Cursor c = db.rawQuery("SELECT * FROM "+StringRes.REMOTE_TASK_TABLE_NAME, new String[]{});
 			if(c.moveToFirst())
 			{
 				while(c.isAfterLast()==false)
 				{
-					JSONObject obj = toJsonTask(c.getString(c.getColumnIndex(COL_CONTENT)));
+					JSONObject obj = toJsonTask(c.getString(c.getColumnIndex(StringRes.COL_CONTENT)));
 					out.add(toTask(obj));
 					c.moveToNext();
 				}
@@ -375,17 +371,17 @@ public class DatabaseManager {
 	{	
 		try {
 			ContentValues cv = new ContentValues();
-			cv.put(COL_CONTENT, toJson(task).toString());	
-			cv.put(COL_ID,task.getId());
-			int n = db.delete(LOCAL_TASK_TABLE, COL_ID + "=?", new String[]{task.getId(),});
+			cv.put(StringRes.COL_CONTENT, toJson(task).toString());	
+			cv.put(StringRes.COL_ID,task.getId());
+			int n = db.delete(StringRes.LOCAL_TASK_TABLE_NAME, StringRes.COL_ID + "=?", new String[]{task.getId(),});
 			if(n==1)
 			{
-				db.insert(LOCAL_TASK_TABLE, COL_ID, cv);;
+				db.insert(StringRes.LOCAL_TASK_TABLE_NAME, StringRes.COL_ID, cv);;
 			}
-			int b = db.delete(REMOTE_TASK_TABLE, COL_ID + "=?", new String[]{task.getId(),});
+			int b = db.delete(StringRes.REMOTE_TASK_TABLE_NAME, StringRes.COL_ID + "=?", new String[]{task.getId(),});
 			if(b==1)
 			{
-				db.insert(REMOTE_TASK_TABLE, COL_ID, cv);
+				db.insert(StringRes.REMOTE_TASK_TABLE_NAME, StringRes.COL_ID, cv);
 			}
 
 			
@@ -395,18 +391,18 @@ public class DatabaseManager {
 	}
 
 	public void nukeRemote() {
-		db.delete(REMOTE_TASK_TABLE, null, null);
+		db.delete(StringRes.REMOTE_TASK_TABLE_NAME, null, null);
 	}
 
 	//fixed
 	public void nukeAll() {
-		db.delete(LOCAL_TASK_TABLE, null, null);
-		db.delete(REMOTE_TASK_TABLE, null, null);
+		db.delete(StringRes.LOCAL_TASK_TABLE_NAME, null, null);
+		db.delete(StringRes.REMOTE_TASK_TABLE_NAME, null, null);
 	}
 
 	//fixed
 	public void nukeLocal() {
-		db.delete(LOCAL_TASK_TABLE, null, null);
+		db.delete(StringRes.LOCAL_TASK_TABLE_NAME, null, null);
 	}
 
 	public void close()
@@ -419,12 +415,12 @@ public class DatabaseManager {
 		Task task = this.getLocalTask(taskid);
 		task.setStatus(5);
 		ContentValues cv = new ContentValues();
-		cv.put(COL_ID, task.getId());
+		cv.put(StringRes.COL_ID, task.getId());
 		try
 		{
-			cv.put(COL_CONTENT, this.toJson(task).toString());
-			db.delete(LOCAL_TASK_TABLE, COL_ID+"=?", new String[]{taskid,});
-			db.insert(LOCAL_TASK_TABLE, COL_ID, cv);			
+			cv.put(StringRes.COL_CONTENT, this.toJson(task).toString());
+			db.delete(StringRes.LOCAL_TASK_TABLE_NAME, StringRes.COL_ID+"=?", new String[]{taskid,});
+			db.insert(StringRes.LOCAL_TASK_TABLE_NAME, StringRes.COL_ID, cv);			
 		}
 		catch (JSONException e)
 		{

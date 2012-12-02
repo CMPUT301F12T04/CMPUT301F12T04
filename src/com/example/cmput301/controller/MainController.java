@@ -45,7 +45,7 @@ public class MainController {
 	private ArrayList<Task> tasks;
 	private ArrayList<Task> tasksBackup;
 	private TaskListAdapter adapter;
-	public static MyCallback callBack;
+	public static ConnUpdateCallback callBack;
 	private Context context;
 
 	/**
