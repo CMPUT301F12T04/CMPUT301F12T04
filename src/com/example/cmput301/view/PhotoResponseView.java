@@ -11,6 +11,7 @@
  ******************************************************************************/
 package com.example.cmput301.view;
 
+
 import java.util.ArrayList;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -25,11 +26,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.example.cmput301.R;
 import com.example.cmput301.controller.PhotoResponseController;
@@ -61,19 +64,34 @@ public class PhotoResponseView extends ResponseView {
 		t1 = (Task) bundle.getSerializable("task");	
 		String taskTile = t1.getName();
 		String taskDesc = t1.getDescription();
+
+		//set title to be task title
+		taskTile = t1.getName();
+		setTitle(taskTile);
+
+		// setting the description of the task
+		TextView title = (TextView) findViewById(R.id.p_task_des_view);
+		title.setText("Votes: " + t1.getVotes() + "\n\n" + taskDesc);
+		
+		
 		
 		//set up the listview to use custom adapter
 		ListView photoList = (ListView) findViewById(R.id.photo_response_list);
 		pRLA = new pResponseListAdapter(this);
 		photoList.setAdapter(pRLA);
+		photoList.setOnItemClickListener(new OnItemClickListener() {
+	
+			public void onItemClick(AdapterView<?> adp, View view,
+					int pos, long id) {
+				Intent in = new Intent(PhotoResponseView.this, EnlargedPhotoView.class);
+				//passing task to enlarge photo view
+				Bitmap b = (Bitmap) t1.getResponses().get(pos).getContent();
+				in.putExtra("photo", b );
+				startActivity(in); 
+				
+			}});
 		
-		//set title to be task title
-		taskTile = t1.getName();
-		setTitle(taskTile);
 		
-		// setting the description of the task
-		TextView title = (TextView) findViewById(R.id.p_task_des_view);
-		title.setText("Votes: " + t1.getVotes() + "\n\n" + taskDesc);
 	}
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.photo_response_view, menu);
