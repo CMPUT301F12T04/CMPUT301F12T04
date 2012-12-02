@@ -11,11 +11,7 @@
  ******************************************************************************/
 package com.example.cmput301.view;
 
-
-
-
 import java.util.ArrayList;
-
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -32,18 +28,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.example.cmput301.R;
-import com.example.cmput301.controller.MainController;
+import com.example.cmput301.controller.PhotoResponseController;
 import com.example.cmput301.model.Task;
 import com.example.cmput301.model.response.PictureResponse;
 import com.example.cmput301.model.response.factory.PictureResponseFactory;
 
-
 @TargetApi(15)
 public class PhotoResponseView extends ResponseView {
 	private static final int PHOTO_RESPONSES_CAMERA_CODE = 1;
-	private MainController mainController;
+	private PhotoResponseController prController;
 
 	Task t1;
 	pResponseListAdapter pRLA;
@@ -52,7 +46,7 @@ public class PhotoResponseView extends ResponseView {
 
 		respFactory = new PictureResponseFactory();
 		super.onCreate(savedInstanceState);
-		mainController = new MainController(this.getApplicationContext(), this);
+		prController = new PhotoResponseController(this.getApplicationContext(), this);
 		setContentView(R.layout.photo_response_view);
 
 		//set action bar to have back option
@@ -64,7 +58,6 @@ public class PhotoResponseView extends ResponseView {
 		t1 = (Task) bundle.getSerializable("task");	
 		String taskTile = t1.getName();
 		String taskDesc = t1.getDescription();
-
 		
 		//set up the listview to use custom adapter
 		ListView photoList = (ListView) findViewById(R.id.photo_response_list);
@@ -95,11 +88,11 @@ public class PhotoResponseView extends ResponseView {
 		}
 		if (item.getItemId() == R.id.menu_p_task_upload)
 		{
-			mainController.shareTask(t1.getId());
+			prController.shareTask(t1.getId());
 			finish();
 		}
 		if (item.getItemId() == R.id.menu_vote) {
-			mainController.voteTask(t1);
+			prController.voteTask(t1);
 			TextView title = (TextView) findViewById(R.id.p_task_des_view);
 			title.setText("Votes: " + t1.getVotes() + "\n\n"
 					+ t1.getDescription());
@@ -174,7 +167,7 @@ public class PhotoResponseView extends ResponseView {
 				PictureResponse pR = (PictureResponse) respFactory.createResponse(
 						annoList.get(i), bitList.get(i));
 				
-				mainController.addResponse(t1, pR);
+				prController.addResponse(t1, pR);
 			}
 			
 			pRLA.notifyDataSetChanged();

@@ -75,7 +75,6 @@ public class MainController {
 	 */
 	public void addTask(String name, String description, String type) {
 		Task task = new Task(name, description, type);
-
 		taskManager.addTask(task);
 
 		// Set the view to show private tasks when a task is added.
@@ -97,9 +96,6 @@ public class MainController {
 
 	/**
 	 * Convert a task from private to shared which has the given task id.
-	 *
-	 * Refreshes the view.
-	 *
 	 * @param taskid
 	 */
 	public void updateRemoteTasks() {
@@ -115,9 +111,6 @@ public class MainController {
 
 	/**
 	 * Convert a task from private to shared which has the given task id.
-	 *
-	 * Refreshes the view.
-	 *
 	 * @param taskid
 	 */
 	public void shareTask(String taskid) {
@@ -400,6 +393,9 @@ public class MainController {
 		}
 	}
 
+	/**
+	 * Shares responses with the web service
+	 */
 	private class AddResponse extends AsyncTask<Object,Void,Task>
 	{
 		@Override
@@ -414,13 +410,12 @@ public class MainController {
 			}
 			return null;
 		}
-
-		protected void onPostExecute(Task result)
-		{
-		}
-
 	}
 
+	/**
+	 * Gets tasks from the web service, and controls a loading
+	 * screen in MainController 
+	 */
 	private class RemoteTaskUpdate extends AsyncTask<Void,Void,Boolean>
 	{
 		@Override

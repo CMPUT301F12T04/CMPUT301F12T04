@@ -76,6 +76,7 @@ SearchView.OnCloseListener {
 		mainController = new MainController(this.getApplicationContext(), this);
 
 		MainController.callBack = (MyCallback) new Callback();
+		PhotoResponseController.callBack = (MyCallback) new Callback();
 
 		mDialog = new ProgressDialog(this);
 
