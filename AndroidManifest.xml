@@ -77,6 +77,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.cmput301.view.MainActivity" />
         </activity>
+        <activity
+            android:name=".view.EnlargedPhotoView"
+            android:label="Photo View" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cmput301.view.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
