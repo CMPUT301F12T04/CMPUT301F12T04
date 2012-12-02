@@ -13,6 +13,8 @@ package com.example.cmput301.controller;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,12 +41,12 @@ import com.example.cmput301.R;
  * depending on the view.
  */
 public class MainController {
-
 	private TaskManager taskManager;
 	private ArrayList<Task> tasks;
 	private ArrayList<Task> tasksBackup;
 	private TaskListAdapter adapter;
 	public static MyCallback callBack;
+	private Context context;
 
 	/**
 	 * Basic constructor for the main controller.
@@ -53,15 +55,13 @@ public class MainController {
 	 * @param activity The active activity.
 	 */
 	public MainController(Context context, Activity activity) {
-
-		Log.d("RESPONSE","CREATED NEW MAIN CONTROLLER");
-		taskManager = new TaskManager(context);
-		tasks = taskManager.getPrivateTasks();
-		adapter = new TaskListAdapter(activity);
+		this.context = context;
+		this.taskManager = new TaskManager(context);
+		this.tasks = taskManager.getPrivateTasks();
+		this.adapter = new TaskListAdapter(activity);
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();
 		}	
-
 	}
 
 	/**
@@ -95,33 +95,6 @@ public class MainController {
 		new AddResponse().execute(task, resp);
 	}
 
-
-
-	private class AddResponse extends AsyncTask<Object,Void,Task>
-	{
-
-		@Override
-		protected Task doInBackground(Object... args)
-		{
-			if(args.length==2)
-			{
-				Log.d("RESPONSE",((Task)args[0]).getName());
-				Log.d("RESPONSE",((Response)args[1]).getContent().toString());
-				Task task = (Task)args[0];
-				Response response = (Response)args[1];
-				taskManager.postResponse(task, response);
-				return task;
-			}
-			return null;
-		}
-
-		protected void onPostExecute(Task result)
-		{
-			//update task
-		}
-
-	}
-
 	/**
 	 * Convert a task from private to shared which has the given task id.
 	 *
@@ -130,34 +103,16 @@ public class MainController {
 	 * @param taskid
 	 */
 	public void updateRemoteTasks() {
-		new RemoteTaskUpdate().execute();
-	}
-
-	private class RemoteTaskUpdate extends AsyncTask<Void,Void,Task>
-	{
-		@Override
-		protected void onPreExecute()
+		if(isConnected())
 		{
-			super.onPreExecute();
-			callBack.startSyncLoadingScreen();
+			new RemoteTaskUpdate().execute();
 		}
-
-		@Override
-		protected Task doInBackground(Void... args)
+		else
 		{
-			taskManager.Refresh();
-			return null;
-		}
-
-		protected void onPostExecute(Task result)
-		{
-			//			tasks = taskManager.getPrivateTasks();
-			callBack.finished();
-			//			Log.d("REMOTE","REFRESHED");
-			//			
-			//			callBack.callbackCall();
+			callBack.failed();
 		}
 	}
+
 	/**
 	 * Convert a task from private to shared which has the given task id.
 	 *
@@ -166,35 +121,17 @@ public class MainController {
 	 * @param taskid
 	 */
 	public void shareTask(String taskid) {
-		new ShareTask().execute("share", taskid);
-		checkoutPrivate();
-	}
-
-	private class ShareTask extends AsyncTask<String,Void,Task>
-	{
-
-		@Override
-		protected void onPreExecute()
+		if(isConnected())
 		{
-			callBack.startUploadingScreen();
+			new ShareTask().execute(taskid);
 		}
-		@Override
-		protected Task doInBackground(String... args)
+		else
 		{
-			if(args.length == 2)
-			{
-				String taskid = args[1];
-				Task result = taskManager.shareTask(taskid);
-				return result;
-			}
-			return null;
-		}
-
-		protected void onPostExecute(Task result)
-		{
-			callBack.finished();
+			callBack.failed();
 		}
 	}
+
+
 	/**
 	 * Delete a task with the given id.
 	 * Note: This only works if it is a local task.
@@ -215,7 +152,6 @@ public class MainController {
 	 * @return 
 	 */
 	public Task getTask(String taskid) {
-
 		Task task = taskManager.getLocalTask(taskid);
 		if (task == null) {
 			task = taskManager.getRemoteTask(taskid);
@@ -300,6 +236,21 @@ public class MainController {
 	}
 
 	/**
+	 * Determines Internet connectivity
+	 * @return true if connected, either in 3G or wi-fi, false if otherwise
+	 */
+	public boolean isConnected() {
+		ConnectivityManager cm =
+				(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
 	 * Apply a filter to the task list being viewed and change the tasks view 
 	 * to match.
 	 * 
@@ -316,7 +267,6 @@ public class MainController {
 
 		//Assuming search parameters are seperated by a space.
 		String[] parameters = searchParams.split(" ");
-
 		for (Task task : tasksBackup) {
 			boolean matched = false;
 
@@ -331,8 +281,6 @@ public class MainController {
 				filtered.add(task);
 			}
 		}
-
-
 		tasks = filtered;
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();
@@ -343,7 +291,6 @@ public class MainController {
 		if(tasksBackup != null) {
 			tasks = tasksBackup;
 			tasksBackup = null;
-
 			if (adapter != null) {
 				adapter.notifyDataSetChanged();
 			}
@@ -418,6 +365,81 @@ public class MainController {
 
 		public long getItemId(int position) {
 			return position;
+		}
+	}
+
+	/**
+	 * Shares tasks with the web service, and controls a loading
+	 * screen in MainController 
+	 */
+	private class ShareTask extends AsyncTask<String,Void,Task>
+	{
+		@Override
+		protected void onPreExecute()
+		{
+			//start loading screen in main controller
+			callBack.startUploadingScreen();
+		}
+
+		@Override
+		protected Task doInBackground(String... args)
+		{
+			if(args.length == 1)
+			{
+				String taskid = args[0];
+
+				//share task to web service and return result
+				Task result = taskManager.shareTask(taskid);
+				return result;
+			}
+			return null;
+		}
+		protected void onPostExecute(Task result)
+		{
+			callBack.finished();
+		}
+	}
+
+	private class AddResponse extends AsyncTask<Object,Void,Task>
+	{
+		@Override
+		protected Task doInBackground(Object... args)
+		{
+			if(args.length==2)
+			{
+				Task task = (Task)args[0];
+				Response response = (Response)args[1];
+				taskManager.postResponse(task, response);
+				return task;
+			}
+			return null;
+		}
+
+		protected void onPostExecute(Task result)
+		{
+		}
+
+	}
+
+	private class RemoteTaskUpdate extends AsyncTask<Void,Void,Boolean>
+	{
+		@Override
+		protected void onPreExecute()
+		{
+			super.onPreExecute();
+			callBack.startSyncLoadingScreen();
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... args)
+		{
+			taskManager.Refresh();
+			return true;
+		}
+
+		protected void onPostExecute(Boolean success)
+		{
+				callBack.finished();
 		}
 	}
 }

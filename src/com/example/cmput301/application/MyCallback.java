@@ -4,4 +4,5 @@ public interface MyCallback
 	void finished();
 	void startUploadingScreen();
 	void startSyncLoadingScreen();
+	void failed();
 }

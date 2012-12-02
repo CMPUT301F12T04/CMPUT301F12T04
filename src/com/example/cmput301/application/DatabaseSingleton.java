@@ -6,7 +6,13 @@ import android.database.sqlite.SQLiteDatabase;
 public class DatabaseSingleton
 {
 	private static volatile DatabaseSingleton instance = null;
+	private SQLiteDatabase db;
 	
+	/**
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public static DatabaseSingleton getInstance(Context context)
 	{
 		if(instance==null)
@@ -21,7 +27,6 @@ public class DatabaseSingleton
 		}
 		return instance;
 	}
-	private SQLiteDatabase db;
 	public DatabaseSingleton(Context context)
 	{
 		db = new DatabaseOpenHelper(context).getWritableDatabase();

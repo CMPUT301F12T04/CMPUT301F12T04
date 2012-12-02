@@ -273,6 +273,9 @@ SearchView.OnCloseListener {
 		return true;
 	}
 
+	/**
+	 * Used to send receive http commands.  Handles loading screen as well
+	 */
 	class Callback implements MyCallback {
 		public void finished() {
 			Log.d("TEST","WORKED");
@@ -295,6 +298,14 @@ SearchView.OnCloseListener {
 		{
 			mDialog.setMessage("Uploading");
 			mDialog.show();
+		}
+
+		@Override
+		public void failed()
+		{
+			// http request/response failed
+			Toast.makeText(getApplicationContext(), "connection failed", Toast.LENGTH_LONG).show();
+			mDialog.dismiss();
 		}
 	}
 
