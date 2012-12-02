@@ -75,12 +75,16 @@ SearchView.OnCloseListener {
 		//Setup the main controller
 		mainController = new MainController(this.getApplicationContext(), this);
 
+		//setup callback functions used to interact with loading screen and
+		//refresh lists
 		MainController.callBack = (MyCallback) new Callback();
 		PhotoResponseController.callBack = (MyCallback) new Callback();
-
+		IndividualTaskController.callBack = (MyCallback) new Callback();
+		
+		//setup loading screen
 		mDialog = new ProgressDialog(this);
 
-		
+		// sync application with web service
 		mainController.updateRemoteTasks();
 
 		//Setting up the action bar

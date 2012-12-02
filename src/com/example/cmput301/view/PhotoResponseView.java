@@ -23,11 +23,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.cmput301.R;
 import com.example.cmput301.controller.PhotoResponseController;
 import com.example.cmput301.model.Task;
@@ -137,10 +140,11 @@ public class PhotoResponseView extends ResponseView {
 			//Sets the image for the response, all tasks are currently set for TEXT only
 			ImageView taskTypeImg = (ImageView) row.findViewById(R.id.entry_responsePhoto);
 			taskTypeImg.setImageBitmap((Bitmap)t1.getResponses().get(position).getContent());
-
+		
 			return row;
 		}
 
+		
 		public int getCount() {
 			return t1.getResponses().size();
 		}

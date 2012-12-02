@@ -44,7 +44,7 @@ import com.example.cmput301.R;
 public class IndividualTaskView extends Activity {
 
 	ProgressBar progressBar;
-	private MainController mainController;
+	private IndividualTaskController itController;
 	Task t;
 	int taskPos;
 
@@ -57,7 +57,7 @@ public class IndividualTaskView extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.individual_task_view);
 
-		mainController = new MainController(this.getApplicationContext(), this);
+		itController = new IndividualTaskController(this.getApplicationContext(), this);
 
 		String taskTile;
 		String taskDesc;
@@ -82,7 +82,7 @@ public class IndividualTaskView extends Activity {
 
 		ListView responses = (ListView) findViewById(R.id.individual_res_list);
 
-		List<Response> r = mainController.getTask(t.getId()).getResponses();
+		List<Response> r = itController.getTask(t.getId()).getResponses();
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(
@@ -107,7 +107,7 @@ public class IndividualTaskView extends Activity {
 	public void onResume() {
 		super.onResume();
 
-		t = mainController.getTask(t.getId());
+		t = itController.getTask(t.getId());
 		List<Response> r = t.getResponses();
 
 		ListView responses = (ListView) findViewById(R.id.individual_res_list);
@@ -135,7 +135,7 @@ public class IndividualTaskView extends Activity {
 
 		// do upload, currently set to just kill activity
 		if (item.getItemId() == R.id.menu_upload) {
-			mainController.shareTask(t.getId());
+			itController.shareTask(t.getId());
 
 			finish();
 		}
@@ -148,9 +148,10 @@ public class IndividualTaskView extends Activity {
 			bundle.putSerializable("task", t);
 			in.putExtras(bundle);
 			startActivity(in);
+			finish();
 		}
 		if (item.getItemId() == R.id.menu_vote) {
-			mainController.voteTask(t);
+			itController.voteTask(t);
 			TextView title = (TextView) findViewById(R.id.indvidual_des_view);
 			title.setText("Votes: " + t.getVotes() + "\n\n"
 					+ t.getDescription());

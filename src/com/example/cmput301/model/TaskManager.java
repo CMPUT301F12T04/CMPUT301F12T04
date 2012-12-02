@@ -61,7 +61,7 @@ public class TaskManager {
 
 		//Get the task from the database.
 		Task localTask = dbman.getLocalTask(id);
-
+		
 		//Post to the webservice.
 		Task sharedTask = WebService.put(localTask);        
 
@@ -122,10 +122,12 @@ public class TaskManager {
 
 		//If its private dont update the webservice first.
 		if (task.getStatus() == Task.STATUS_PRIVATE) {
+
+			Log.d("RESPONSE","Still private");
 			task.addResponse(response);
 			dbman.updateTask(task);
 		} else {
-			Log.d("RESPONSE",(String)response.getContent());
+			Log.d("RESPONSE","Content ===="+(String)response.getContent());
 			Task updatedTask = WebService.post(task, response);
 			dbman.updateTask(updatedTask);
 		}

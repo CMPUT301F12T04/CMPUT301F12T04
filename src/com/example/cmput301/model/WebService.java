@@ -28,6 +28,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.example.cmput301.model.response.PictureResponse;
 import com.example.cmput301.model.response.Response;
 import com.example.cmput301.model.response.TextResponse;
@@ -153,7 +155,7 @@ public class WebService
 
 			// Send data and get response
 			String httpResponse = getHttpResponse(conn,data);
-
+			Log.d("RESPOSNE",httpResponse);
 			// convert string response to json object
 //			Log.d("RESPONSE","Data: "+ data);
 //			Log.d("RESPONSE","ID:" +id);
@@ -184,16 +186,17 @@ public class WebService
 	{
 		try
 		{	
+			Log.d("RESPONSE", "TASKKKK");
 			//get current version of task from webservice
 			Task webTask = get(task.getId());
-			
+//			delete(task.getId());
 			// add new response
-//			Log.d("RESPONSE", (String)response.getContent());
+			Log.d("RESPONSE", (String)response.getContent());
 			webTask.addResponse(response);
 			
 			// get data string
-			String dataString = getDataString(toJson(webTask), "post");
-			
+			String dataString = getDataString(toJson(webTask), "update");
+			Log.d("RESPONSE",dataString);
 			// setup connection
 			HttpURLConnection conn = setupConnections();
 			
@@ -443,6 +446,12 @@ public class WebService
 			data += "&" + URLEncoder.encode("content","UTF8")  + "=" + URLEncoder.encode(jsonTask.toString(),"UTF8");
 			return data;
 		}
+		else if(action.equals("update"))
+		{
+			data += "&" + URLEncoder.encode("id","UTF8")  + "=" + URLEncoder.encode(jsonTask.getString("id"),"UTF8");
+			data += "&" + URLEncoder.encode("content","UTF8")  + "=" + URLEncoder.encode(jsonTask.toString(),"UTF8");
+			return data;
+		}
 		else if(action.equals("list"))
 		{
 			return data;
@@ -482,11 +491,9 @@ public class WebService
 		if(task.getId()!=null&&!task.getId().contains("local"))
 		{
 			jsonObject.put("id", task.getId());
-//			Log.d("RESPONSE","ID:===" + task.getId());
 		}
 		jsonObject.put("type", task.getType());
-//		Log.d("TYPE","WEBSERVICE TASK TYPE + " + task.getType());
-		jsonObject.put("status", task.getStatus());
+		jsonObject.put("status", Task.STATUS_SHARED);
 		jsonObject.put("votes", task.getVotes());
 
 		List<Response> responses = task.getResponses();
@@ -511,9 +518,7 @@ public class WebService
 	 */
 	private static JSONObject toJsonTask(String httpResponse) throws JSONException
 	{
-		// TODO Auto-generated method stub
 		JSONObject jsonResponse = new JSONObject(httpResponse);
-//		Log.d("RESPNOSE", httpResponse);
 		JSONObject jsonTask = jsonResponse.getJSONObject("content");
 		jsonTask.put("id", jsonResponse.get("id"));
 		return jsonTask;

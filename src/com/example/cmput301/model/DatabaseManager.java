@@ -310,7 +310,7 @@ public class DatabaseManager {
 	public Task getRemoteTask(String id)  {
 		try
 		{
-			Cursor c = db.rawQuery("SELECT * FROM " + REMOTE_TASK_TABLE, new String[]{id,});
+			Cursor c = db.rawQuery("SELECT * FROM " + REMOTE_TASK_TABLE + " WHERE " + COL_ID + "=?", new String[]{id,});
 			c.moveToFirst();
 			if(c==null||c.getCount()==0)
 			{ 
@@ -373,15 +373,22 @@ public class DatabaseManager {
 	 */
 	public void updateTask(Task task)
 	{	
-		ContentValues cv = new ContentValues();
 		try {
-			Cursor c = db.rawQuery("SELECT * FROM " + LOCAL_TASK_TABLE + " WHERE " + COL_ID + "=?",  new String[]{task.getId(),});
-			c.moveToFirst();
+			ContentValues cv = new ContentValues();
 			cv.put(COL_CONTENT, toJson(task).toString());	
-			db.update(LOCAL_TASK_TABLE, cv, COL_ID + "=?",  new String[]{task.getId(),});
-			db.update(REMOTE_TASK_TABLE, cv, COL_ID + "=?",  new String[]{task.getId(),});	
-			Cursor c2 = db.rawQuery("SELECT * FROM " + LOCAL_TASK_TABLE + " WHERE " + COL_ID + "=?",  new String[]{task.getId(),});
-			c2.moveToFirst();
+			cv.put(COL_ID,task.getId());
+			int n = db.delete(LOCAL_TASK_TABLE, COL_ID + "=?", new String[]{task.getId(),});
+			if(n==1)
+			{
+				db.insert(LOCAL_TASK_TABLE, COL_ID, cv);;
+			}
+			int b = db.delete(REMOTE_TASK_TABLE, COL_ID + "=?", new String[]{task.getId(),});
+			if(b==1)
+			{
+				db.insert(REMOTE_TASK_TABLE, COL_ID, cv);
+			}
+
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

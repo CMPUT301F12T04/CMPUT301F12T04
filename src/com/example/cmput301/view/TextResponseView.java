@@ -42,7 +42,7 @@ import com.example.cmput301.R;
 public class TextResponseView extends ResponseView {
 
 	
-	private MainController mainController;
+	private IndividualTaskController itController;
 	Task aTask;
 	String responseString;
 	Activity currentActivity;
@@ -68,7 +68,7 @@ public class TextResponseView extends ResponseView {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		mainController = new MainController(this.getApplicationContext(), this);
+		itController = new IndividualTaskController(this.getApplicationContext(), this);
 		String taskTile;
 
 		//Getting information from bundle passed from MainActivity
@@ -102,7 +102,7 @@ public class TextResponseView extends ResponseView {
 				}
 				else
 				{
-					mainController.addResponse(aTask, resp);
+					itController.addResponse(aTask, resp);
 					responseInput.setText("");
 				}
 				//setting list of responses for task
@@ -111,6 +111,7 @@ public class TextResponseView extends ResponseView {
 				ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(currentActivity,
 						android.R.layout.simple_list_item_1, (ArrayList) aTask.getResponses());
 				responses.setAdapter(adapter);
+				finish();
 			}
 		});
 
