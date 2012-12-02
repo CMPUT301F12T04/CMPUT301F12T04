@@ -40,10 +40,7 @@ import com.example.cmput301.R;
  * depending on the view.
  */
 public class MainController {
-	private Manager taskManager;
-	private ArrayList<Task> tasks;
-	private ArrayList<Task> tasksBackup;
-	private TaskListAdapter adapter;
+	private TaskListController checkout = new TaskListController();
 	public static ConnUpdateCallback callBack;
 	private Context context;
 
@@ -55,11 +52,11 @@ public class MainController {
 	 */
 	public MainController(Context context, Activity activity) {
 		this.context = context;
-		this.taskManager = new Manager(context);
-		this.tasks = taskManager.getPrivateTasks();
-		this.adapter = new TaskListAdapter(activity);
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
+		checkout.setTaskManager(new Manager(context));
+		checkout.setTasks(checkout.getTaskManager().getPrivateTasks());
+		checkout.setAdapter(new TaskListAdapter(activity));
+		if (checkout.getAdapter() != null) {
+			checkout.getAdapter().notifyDataSetChanged();
 		}	
 	}
 
@@ -73,14 +70,7 @@ public class MainController {
 	 * @param type The type of response that this task will require.
 	 */
 	public void addTask(String name, String description, String type) {
-		Task task = new Task(name, description, type);
-		taskManager.addTask(task);
-
-		// Set the view to show private tasks when a task is added.
-		tasks = taskManager.getPrivateTasks();
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
-		}
+		checkout.addTask(name, description, type);
 	}
 
 	/**
@@ -99,101 +89,53 @@ public class MainController {
 	}
 
 	/**
-	 * Delete a task with the given id.
-	 * Note: This only works if it is a local task.
-	 * @param taskid 
-	 */
-	public void deleteTask(String taskid) {
-		taskManager.deleteTask(taskid);
-		tasks = taskManager.getPrivateTasks();
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
-		}
-	}
-
-	/**
 	 * Get list of all tasks that are currently being shown.
 	 * 
 	 * @return 
 	 */
 	public ArrayList<Task> getList() {
-		return tasks;
+		return checkout.getTasks();
 	}
 
 	/**
 	 * Checkout the private task list.
 	 */
 	public void checkoutPrivate() {
-		tasks = taskManager.getPrivateTasks();
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
-		}
+		checkout.checkoutPrivate();
 	}
 
 	/**
 	 * Checkout the shared task list.
 	 */
 	public void checkoutShared() {
-		tasks = taskManager.getSharedTasks();
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
-		}
+		checkout.checkoutShared();
 	}
 
 	/**
 	 * Checkout the unanswered task list.
 	 */
 	public void checkoutUnanswered() {
-		tasks = taskManager.getUnansweredTasks();
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
-		}
+		checkout.checkoutUnanswered();
 	}
 
 	/**
 	 * Checkout the remote task list.
 	 */
 	public void checkoutRemote() {
-		tasks = taskManager.getRemoteTasks();
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
-		}
+		checkout.checkoutRemote();
 	}
 
 	public void checkoutRandom() {
-		tasks = taskManager.getRemoteTasks();
-		Collections.shuffle(tasks);
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
-		}
+		checkout.checkoutRandom();
 	}
 
 	public void checkoutPopular() {
-		tasks = taskManager.getRemoteTasks();
-		ArrayList<Task> tasks2 = taskManager.getSharedTasks();
-		tasks.addAll(tasks2);
-		Collections.sort(tasks, new VotesComparator());
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
-		}
+		checkout.checkoutPopular();
 	}
 	
 	public void refreshCurrentList(String listIndex)
 	{	
-		//refresh current list
-		if (listIndex.equals("My Tasks")) {
-			this.checkoutPrivate();
-		} else if (listIndex.equals("My Shared")) {
-			this.checkoutShared();
-		} else if (listIndex.equals("Unanswered")) {
-			this.checkoutUnanswered();
-		} else if (listIndex.equals("Other User's Tasks")) {
-			this.checkoutRemote();
-		} else if (listIndex.equals("Random Tasks")) {
-			this.checkoutRandom();
-		} else if (listIndex.equals("Popular")) {
-			this.checkoutPopular();
-		}      
+		checkout.refreshCurrentList(listIndex);      
 	}
 
 	/**
@@ -221,49 +163,18 @@ public class MainController {
 	 * @param searchParams A string with keywords seperated by spaces
 	 */
 	public void filter(String searchParams) {
-		if(tasksBackup == null) {
-			tasksBackup = tasks;
-		}
-		ArrayList<Task> filtered = new ArrayList<Task>();
-
-		for (Task task : tasksBackup) {
-			if (matched(task,searchParams.split(" "))) {
-				filtered.add(task);
-			}
-		}
-		tasks = filtered;
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
-		}
-	}
-
-	private boolean matched(Task task, String parameters[])
-	{
-		for (String param : parameters) {
-			if (task.getName().indexOf(param) != -1
-					|| task.getDescription().indexOf(param) != -1) {
-				return true;
-			}
-		}
-		return false;
+		checkout.filter(searchParams);
 	}
 
 	public void restoreUnfiltered() {
-		if(tasksBackup != null) {
-			tasks = tasksBackup;
-			tasksBackup = null;
-			if (adapter != null) {
-				adapter.notifyDataSetChanged();
-			}
-		}
+		checkout.restoreUnfiltered();
 	}
 	/**
 	 * Returns the listitem adapter
 	 * @return 
 	 */
 	public TaskListAdapter getListAdapter() {
-		Log.d("RESPONSE","NEW LIST ADAPTER");
-		return adapter;
+		return checkout.getListAdapter();
 	}
 
 	/**
@@ -291,15 +202,15 @@ public class MainController {
 
 			//set the title of the task
 			TextView titleView = getTitleView(convertView);
-			titleView.setText(tasks.get(position).getName());
+			titleView.setText(checkout.getTasks().get(position).getName());
 
 			//set the description of the task
 			TextView descView =getDescView(convertView);
 			descView.setSingleLine(false);
-			descView.setText(tasks.get(position).getDescription() + "\nVotes: " + tasks.get(position).getVotes());
+			descView.setText(checkout.getTasks().get(position).getDescription() + "\nVotes: " + checkout.getTasks().get(position).getVotes());
 
 			//Sets the image for the task, task in this case is a picture type task
-			if(tasks.get(position).getType().equals(PictureResponse.class.toString()))
+			if(checkout.getTasks().get(position).getType().equals(PictureResponse.class.toString()))
 			{
 				ImageView taskTypeImg = (ImageView) row.findViewById(R.id.TasktypePic);
 				taskTypeImg.setImageResource(android.R.drawable.ic_menu_gallery);
@@ -338,11 +249,11 @@ public class MainController {
 		}
 
 		public int getCount() {
-			return tasks.size();
+			return checkout.getTasks().size();
 		}
 
 		public Object getItem(int position) {
-			return tasks.get(position);
+			return checkout.getTasks().get(position);
 		}
 
 		public long getItemId(int position) {
@@ -366,7 +277,7 @@ public class MainController {
 		@Override
 		protected Boolean doInBackground(Void... args)
 		{
-			taskManager.Refresh();
+			checkout.getTaskManager().Refresh();
 			return true;
 		}
 

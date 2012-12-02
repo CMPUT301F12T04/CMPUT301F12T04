@@ -12,8 +12,6 @@
 package com.example.cmput301.model;
 
 import android.content.Context;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +23,9 @@ import com.example.cmput301.model.response.Response;
  * responses to tasks, and allows you to grab tasks which meet certain criteria
  */
 public class Manager {
-	private TaskManager taskManagerConnection = new TaskManager();
+	private TaskManager taskManager = new TaskManager();
 	private TaskLists taskLists = new TaskLists();
-	private ResponseManager taskManagerResponses = new ResponseManager();
+	private ResponseManager responseManager = new ResponseManager();
 	public static DatabaseManager dbman;
 
 	/**
@@ -49,7 +47,7 @@ public class Manager {
 	 * @return The task which was added with the local task id attached.
 	 */
 	public Task addTask(Task task) {
-		return taskManagerConnection.addTask(task);
+		return taskManager.addTask(task);
 	}
 
 	/**
@@ -59,7 +57,7 @@ public class Manager {
 	 */
 	public Task shareTask(String id) {
 
-		return taskManagerConnection.shareTask(id);
+		return taskManager.shareTask(id);
 	}
 
 	/**
@@ -68,7 +66,7 @@ public class Manager {
 	 * @param id The task you want one vote added to.
 	 */
 	public void voteTask(Task task) {
-		taskManagerResponses.voteTask(task);
+		responseManager.voteTask(task);
 	}
 
 	/**
@@ -80,7 +78,7 @@ public class Manager {
 	 */
 	public boolean deleteTask(String id) {
 
-		return taskManagerConnection.deleteTask(id);
+		return taskManager.deleteTask(id);
 
 	}
 
@@ -92,7 +90,7 @@ public class Manager {
 	 */
 	public void postResponse(Task task, Response response) {
 
-		taskManagerResponses.postResponse(task, response);
+		responseManager.postResponse(task, response);
 	}
 
 	/**
