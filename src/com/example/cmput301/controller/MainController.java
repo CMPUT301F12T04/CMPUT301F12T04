@@ -28,7 +28,6 @@ import java.util.Collections;
 
 import com.example.cmput301.model.*;
 import com.example.cmput301.model.response.PictureResponse;
-import com.example.cmput301.model.response.Response;
 import com.example.cmput301.application.*;
 
 import com.example.cmput301.R;
@@ -85,16 +84,6 @@ public class MainController {
 	}
 
 	/**
-	 * Add a response to the given task in the database.
-	 *
-	 * @param task The task you want a response added to
-	 * @param resp The response.
-	 */
-	public void addResponse(Task task, Response resp) {
-		new AddResponse().execute(task, resp);
-	}
-
-	/**
 	 * Convert a task from private to shared which has the given task id.
 	 * @param taskid
 	 */
@@ -110,22 +99,6 @@ public class MainController {
 	}
 
 	/**
-	 * Convert a task from private to shared which has the given task id.
-	 * @param taskid
-	 */
-	public void shareTask(String taskid) {
-		if(isConnected())
-		{
-			new ShareTask().execute(taskid);
-		}
-		else
-		{
-			callBack.failed();
-		}
-	}
-
-
-	/**
 	 * Delete a task with the given id.
 	 * Note: This only works if it is a local task.
 	 * @param taskid 
@@ -136,29 +109,6 @@ public class MainController {
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();
 		}
-	}
-
-	/**
-	 * Get a task with the given task id from the database.
-	 * 
-	 * @param taskid
-	 * @return 
-	 */
-	public Task getTask(String taskid) {
-		Task task = taskManager.getLocalTask(taskid);
-		if (task == null) {
-			task = taskManager.getRemoteTask(taskid);
-		}
-		return task;
-	}
-
-	/**
-	 * Adds one vote to the task.
-	 *
-	 * @param task
-	 */
-	public void voteTask(Task task) {
-		taskManager.voteTask(task);
 	}
 
 	/**
@@ -397,57 +347,6 @@ public class MainController {
 
 		public long getItemId(int position) {
 			return position;
-		}
-	}
-
-	/**
-	 * Shares tasks with the web service, and controls a loading
-	 * screen in MainController 
-	 */
-	private class ShareTask extends AsyncTask<String,Void,Task>
-	{
-		@Override
-		protected void onPreExecute()
-		{
-			//start loading screen in main controller
-			callBack.startUploadingScreen();
-		}
-
-		@Override
-		protected Task doInBackground(String... args)
-		{
-			if(args.length == 1)
-			{
-				String taskid = args[0];
-
-				//share task to web service and return result
-				Task result = taskManager.shareTask(taskid);
-				return result;
-			}
-			return null;
-		}
-		protected void onPostExecute(Task result)
-		{
-			callBack.finished();
-		}
-	}
-
-	/**
-	 * Shares responses with the web service
-	 */
-	private class AddResponse extends AsyncTask<Object,Void,Task>
-	{
-		@Override
-		protected Task doInBackground(Object... args)
-		{
-			if(args.length==2)
-			{
-				Task task = (Task)args[0];
-				Response response = (Response)args[1];
-				taskManager.postResponse(task, response);
-				return task;
-			}
-			return null;
 		}
 	}
 
