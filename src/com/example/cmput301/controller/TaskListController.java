@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import com.example.cmput301.model.Task;
 import java.util.Collections;
 import com.example.cmput301.model.VotesComparator;
-import android.util.Log;
 
 public class TaskListController
 {
@@ -154,19 +153,6 @@ public class TaskListController
 		}
 	}
 
-	/**
-	 * Delete a task with the given id. Note: This only works if it is a local task.
-	 * @param taskid  
-	 */
-	public void deleteTask(String taskid)
-	{
-		taskManager.deleteTask(taskid);
-		tasks = taskManager.getPrivateTasks();
-		if (adapter != null)
-		{
-			adapter.notifyDataSetChanged();
-		}
-	}
 
 	/**
 	 * Checkout the shared task list.
