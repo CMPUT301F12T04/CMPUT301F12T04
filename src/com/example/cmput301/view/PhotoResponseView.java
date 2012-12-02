@@ -107,6 +107,10 @@ public class PhotoResponseView extends ResponseView {
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 		}
+		if (item.getItemId() == R.id.menu_delete) {
+			prController.deleteTask(t1.getId());
+			finish();
+		}
 		if (item.getItemId() == R.id.menu_p_task_upload)
 		{
 			prController.shareTask(t1.getId());
@@ -224,10 +228,13 @@ public class PhotoResponseView extends ResponseView {
 	}
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem shareButton = menu.findItem(R.id.menu_p_task_upload);
+		MenuItem deleteButton = menu.findItem(R.id.menu_delete);
 	    if(t1.getStatus() == Task.STATUS_SHARED)
 	    {
 	    	shareButton.setEnabled(false);
 	    	shareButton.setVisible(false);	
+	    	deleteButton.setEnabled(false);
+	    	deleteButton.setVisible(false);	
 	    }
 			
 		return true;

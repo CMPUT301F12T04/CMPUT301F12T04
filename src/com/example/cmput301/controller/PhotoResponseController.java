@@ -87,6 +87,16 @@ public class PhotoResponseController
 			callBack.failed();
 		}
 	}
+	
+	/**
+	 * Delete a task with the given id.
+	 * Note: This only works if it is a local task.
+	 * @param taskid 
+	 */
+	public void deleteTask(String taskid) {
+		taskManager.deleteTask(taskid);
+	}
+
 
 	/** Determines Internet connectivity
 	 * @return true if connected, either in 3G or wi-fi, false if otherwise
