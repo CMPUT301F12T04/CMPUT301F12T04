@@ -56,33 +56,32 @@ public class DatabaseManager {
 	 */
 	//fixed
 	public Task postLocal(Task task) {
-
-		if(task.getStatus()==2)
-		{
-//			Log.d("REMOTE","SHARED " + task.getName());
-
-		}
 		if(task.getId()==null)
 		{
-			String id;
-
-			do {
-				id = "local@" + UUID.randomUUID().toString();
-			} while (this.localIdExists(id));
+			String id = getUniqueId();
 			task.setId(id);			
 		}
 		this.addTask_LocaleTable(task);
 		return task;
 
 	}
-	
+
+	private String getUniqueId()
+	{
+		String id  = "";
+		do {
+			id = "local@" + UUID.randomUUID().toString();
+		} while (this.localIdExists(id));
+		return id;
+	}
+
 	private void addTask_LocaleTable(Task task)
 	{
 		ContentValues cv = new ContentValues();
 		cv.put(StringRes.COL_ID, task.getId());
 		try
 		{
-			cv.put(StringRes.COL_CONTENT, toJson(task).toString() );
+			cv.put(StringRes.COL_CONTENT, task.toJson().toString() );
 		}
 		catch (JSONException e)
 		{
@@ -111,7 +110,7 @@ public class DatabaseManager {
 		cv.put(StringRes.COL_ID, task.getId());
 		try
 		{
-			cv.put(StringRes.COL_CONTENT, toJson(task).toString());
+			cv.put(StringRes.COL_CONTENT, task.toJson().toString());
 		}
 		catch (JSONException e)
 		{
@@ -120,30 +119,6 @@ public class DatabaseManager {
 		}
 		db.insert(StringRes.REMOTE_TASK_TABLE_NAME, StringRes.COL_ID, cv);
 		return task;
-	}
-
-	private JSONObject toJson(Task task) throws JSONException
-	{
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("name", task.getName());
-		jsonObject.put("description", task.getDescription());
-		jsonObject.put("id", task.getId());
-		jsonObject.put("type", task.getType());
-		jsonObject.put("status", task.getStatus());
-		jsonObject.put("votes", task.getVotes());
-
-		List<Response> responses = task.getResponses();
-		JSONArray arr = new JSONArray();
-		for(Response response : responses)
-		{
-			JSONObject jo = new JSONObject();
-			jo.put("annotation", response.getAnnotation());
-			jo.put("content", response.getSaveable());
-			jo.put("timestamp", response.getTimestamp());
-			arr.put(jo);
-		}
-		jsonObject.put("responses", arr);
-		return jsonObject;
 	}
 
 	/**
@@ -173,7 +148,6 @@ public class DatabaseManager {
 	 * @return Task found, if nothing found returns null.
 	 * @throws JSONException 
 	 */
-	//  fixed
 	public Task getLocalTask(String id) {
 		try
 		{
@@ -185,12 +159,9 @@ public class DatabaseManager {
 			else
 			{
 				c.moveToFirst();
-				String taskContent = c.getString(c.getColumnIndex(StringRes.COL_CONTENT));
-				JSONObject jsonTask;
+				String string = c.getString(c.getColumnIndex(StringRes.COL_CONTENT));
 
-				jsonTask = toJsonTask(taskContent);
-
-				return toTask(jsonTask);
+				return toTask(getJsonTask(string));
 			}
 		}
 		catch (JSONException e)
@@ -199,6 +170,20 @@ public class DatabaseManager {
 		}
 		return null;
 
+	}
+
+	private JSONObject getJsonTask(String string)
+	{
+		try
+		{
+			return toJsonTask(string);
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -232,18 +217,9 @@ public class DatabaseManager {
 		{
 			JSONArray jsonArray = jsonTask.getJSONArray("responses");
 			List<Response> responses = new ArrayList<Response>();
-			String type = jsonTask.getString("type");
-			
-			ResponseFactory respFactory;
-			
-			if(type.equals(TextResponse.class.toString())){
-				respFactory = new TextResponseFactory();
-			} else if (type.equals(PictureResponse.class.toString())) {
-				respFactory = new PictureResponseFactory();
-			} else {
-				throw new UnsupportedOperationException("Not implemented");
-			}
-			
+
+			ResponseFactory respFactory = getRespFactory(jsonTask.getString("type"));
+
 			for(int i = 0; i < jsonArray.length(); i++)
 			{
 				Response resp = respFactory.createResponse(jsonArray.getJSONObject(i).getString("annotation"), jsonArray.getJSONObject(i).getString("content"));
@@ -258,6 +234,17 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	private static ResponseFactory getRespFactory(String type)
+	{
+		if(type.equals(TextResponse.class.toString())){
+			return new TextResponseFactory();
+		} else if (type.equals(PictureResponse.class.toString())) {
+			return  new PictureResponseFactory();
+		} else {
+			throw new UnsupportedOperationException("Not implemented");
+		}
 	}
 
 	private JSONObject toJsonTask(String taskContent) throws JSONException
@@ -371,7 +358,7 @@ public class DatabaseManager {
 	{	
 		try {
 			ContentValues cv = new ContentValues();
-			cv.put(StringRes.COL_CONTENT, toJson(task).toString());	
+			cv.put(StringRes.COL_CONTENT, task.toJson().toString());	
 			cv.put(StringRes.COL_ID,task.getId());
 			int n = db.delete(StringRes.LOCAL_TASK_TABLE_NAME, StringRes.COL_ID + "=?", new String[]{task.getId(),});
 			if(n==1)
@@ -384,7 +371,7 @@ public class DatabaseManager {
 				db.insert(StringRes.REMOTE_TASK_TABLE_NAME, StringRes.COL_ID, cv);
 			}
 
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -418,7 +405,7 @@ public class DatabaseManager {
 		cv.put(StringRes.COL_ID, task.getId());
 		try
 		{
-			cv.put(StringRes.COL_CONTENT, this.toJson(task).toString());
+			cv.put(StringRes.COL_CONTENT, task.toJson().toString());
 			db.delete(StringRes.LOCAL_TASK_TABLE_NAME, StringRes.COL_ID+"=?", new String[]{taskid,});
 			db.insert(StringRes.LOCAL_TASK_TABLE_NAME, StringRes.COL_ID, cv);			
 		}

@@ -14,6 +14,9 @@ package com.example.cmput301.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.example.cmput301.model.response.Response;
 
@@ -164,8 +167,6 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	@Override
 	public Task clone()
 	{
-
-
 		String cloneid = null;
 		if (this.id != null)
 		{
@@ -196,5 +197,28 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 
 		// Return the string comparison of their ids.
 		return anotherTask.getId().compareTo(this.getId());
+	}
+
+	public JSONObject toJson() throws JSONException
+	{
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("name", getName());
+		jsonObject.put("description", getDescription());
+		jsonObject.put("id", getId());
+		jsonObject.put("type", getType());
+		jsonObject.put("status", getStatus());
+		jsonObject.put("votes", getVotes());
+		List<Response> responses = getResponses();
+		JSONArray arr = new JSONArray();
+		for (Response response : responses)
+		{
+			JSONObject jo = new JSONObject();
+			jo.put("annotation", response.getAnnotation());
+			jo.put("content", response.getSaveable());
+			jo.put("timestamp", response.getTimestamp());
+			arr.put(jo);
+		}
+		jsonObject.put("responses", arr);
+		return jsonObject;
 	}
 }

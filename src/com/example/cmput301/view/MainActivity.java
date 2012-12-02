@@ -180,24 +180,15 @@ SearchView.OnCloseListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		int navIndex = getActionBar().getSelectedNavigationIndex();
-		String[] choices = getResources().getStringArray(R.array.taskview_options);
-
-		if (choices[navIndex].equals("My Tasks")) {
-			mainController.checkoutPrivate();
-		} else if (choices[navIndex].equals("My Shared")) {
-			mainController.checkoutShared();
-		} else if (choices[navIndex].equals("Unanswered")) {
-			mainController.checkoutUnanswered();
-		} else if (choices[navIndex].equals("Other User's Tasks")) {
-			mainController.checkoutRemote();
-		} else if (choices[navIndex].equals("Random Tasks")) {
-			mainController.checkoutRandom();
-		} else if (choices[navIndex].equals("Popular")) {
-			mainController.checkoutPopular();
-		}       
+		refreshList();
 	}
 
+	private void refreshList()
+	{
+		int navIndex = getActionBar().getSelectedNavigationIndex();
+		String[] choices = getResources().getStringArray(R.array.taskview_options); 
+		mainController.refreshCurrentList(choices[navIndex]);
+	}
 	/**
 	 * Overrided method, that checks if the add option was click. If so a dialog
 	 * box will appear and the task can be defined. The database will be updated

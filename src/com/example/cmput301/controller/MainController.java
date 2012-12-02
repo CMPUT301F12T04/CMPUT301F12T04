@@ -227,6 +227,24 @@ public class MainController {
 			adapter.notifyDataSetChanged();
 		}
 	}
+	
+	public void refreshCurrentList(String listIndex)
+	{	
+		//refresh current list
+		if (listIndex.equals("My Tasks")) {
+			this.checkoutPrivate();
+		} else if (listIndex.equals("My Shared")) {
+			this.checkoutShared();
+		} else if (listIndex.equals("Unanswered")) {
+			this.checkoutUnanswered();
+		} else if (listIndex.equals("Other User's Tasks")) {
+			this.checkoutRemote();
+		} else if (listIndex.equals("Random Tasks")) {
+			this.checkoutRandom();
+		} else if (listIndex.equals("Popular")) {
+			this.checkoutPopular();
+		}      
+	}
 
 	/**
 	 * Determines Internet connectivity
@@ -258,19 +276,8 @@ public class MainController {
 		}
 		ArrayList<Task> filtered = new ArrayList<Task>();
 
-		//Assuming search parameters are seperated by a space.
-		String[] parameters = searchParams.split(" ");
 		for (Task task : tasksBackup) {
-			boolean matched = false;
-
-			for (String param : parameters) {
-				if (task.getName().indexOf(param) != -1
-						|| task.getDescription().indexOf(param) != -1) {
-					matched = true;
-					break;
-				}
-			}
-			if (matched) {
+			if (matched(task,searchParams.split(" "))) {
 				filtered.add(task);
 			}
 		}
@@ -278,6 +285,17 @@ public class MainController {
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();
 		}
+	}
+
+	private boolean matched(Task task, String parameters[])
+	{
+		for (String param : parameters) {
+			if (task.getName().indexOf(param) != -1
+					|| task.getDescription().indexOf(param) != -1) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void restoreUnfiltered() {
@@ -322,13 +340,11 @@ public class MainController {
 			}
 
 			//set the title of the task
-			TextView titleView;
-			titleView = (TextView) row.findViewById(R.id.TaskTitleListEntry);
+			TextView titleView = getTitleView(convertView);
 			titleView.setText(tasks.get(position).getName());
 
 			//set the description of the task
-			TextView descView;
-			descView = (TextView) row.findViewById(R.id.TaskDescListEntry);
+			TextView descView =getDescView(convertView);
 			descView.setSingleLine(false);
 			descView.setText(tasks.get(position).getDescription() + "\nVotes: " + tasks.get(position).getVotes());
 
@@ -346,6 +362,29 @@ public class MainController {
 			}
 
 			return row;
+		}
+
+		private TextView getTitleView(View convertView)
+		{
+			View row = convertView;
+
+			if (row == null) {
+				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+				row = inflater.inflate(R.layout.task_entry, null);
+			}
+			return (TextView) row.findViewById(R.id.TaskTitleListEntry);
+		}
+
+		private TextView getDescView(View convertView)
+		{
+			View row = convertView;
+
+			if (row == null) {
+				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+				row = inflater.inflate(R.layout.task_entry, null);
+			}
+
+			return (TextView) row.findViewById(R.id.TaskDescListEntry);
 		}
 
 		public int getCount() {

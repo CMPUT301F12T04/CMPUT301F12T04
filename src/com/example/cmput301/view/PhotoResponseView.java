@@ -138,31 +138,57 @@ public class PhotoResponseView extends ResponseView {
 		 */
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			View row = getRow(convertView);
+
+			//set the annotation of the photo response
+			getAnnoView(convertView,position);
+
+			//set the time stamp of the photo response
+			getTimeView(convertView,position);
+
+			//Sets the image for the response, all tasks are currently set for TEXT only
+			setTaskTypeImg(convertView,position);
+		
+			return row;
+		}
+
+		
+		private void setTaskTypeImg(View convertView, int position)
+		{
+			View row = getRow(convertView);
+
+			ImageView taskTypeImg = (ImageView) row.findViewById(R.id.entry_responsePhoto);
+			taskTypeImg.setImageBitmap((Bitmap)t1.getResponses().get(position).getContent());
+		}
+
+		private View getRow(View convertView)
+		{
 			View row = convertView;
 
 			if (row == null) {
 				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 				row = inflater.inflate(R.layout.photo_response_entry, null);
 			}
-
-			//set the annotation of the photo response
-			TextView annoView;
-			annoView = (TextView) row.findViewById(R.id.p_entry_responseAno);
-			annoView.setText(t1.getResponses().get(position).getAnnotation());
-
-			//set the time stamp of the photo response
-			TextView timeView;
-			timeView = (TextView) row.findViewById(R.id.p_entry_responseTime);
-			timeView.setText(t1.getResponses().get(position).getTimestamp().toString());
-
-			//Sets the image for the response, all tasks are currently set for TEXT only
-			ImageView taskTypeImg = (ImageView) row.findViewById(R.id.entry_responsePhoto);
-			taskTypeImg.setImageBitmap((Bitmap)t1.getResponses().get(position).getContent());
-		
 			return row;
 		}
 
-		
+		private TextView getTimeView(View convertView, int position)
+		{
+			View row = getRow(convertView);
+			
+			TextView timeView = (TextView) row.findViewById(R.id.p_entry_responseTime);
+			timeView.setText(t1.getResponses().get(position).getTimestamp().toString());
+			return timeView;
+		}
+
+		private void getAnnoView(View convertView, int position)
+		{
+			View row = getRow(convertView);
+			
+			TextView annoView = (TextView) row.findViewById(R.id.p_entry_responseAno);
+			annoView.setText(t1.getResponses().get(position).getAnnotation());
+		}
+
 		public int getCount() {
 			return t1.getResponses().size();
 		}
