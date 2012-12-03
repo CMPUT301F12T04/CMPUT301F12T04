@@ -157,7 +157,11 @@ public class IndividualTaskView extends Activity {
 					+ t.getDescription());
 		}
 
-		// go back, kills activity
+		if (item.getItemId() == R.id.menu_delete) {
+			itController.deleteTask(t.getId());
+			finish();
+		}
+		
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 		}
@@ -165,10 +169,13 @@ public class IndividualTaskView extends Activity {
 	}
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem shareButton = menu.findItem(R.id.menu_upload);
+		MenuItem deleteButton = menu.findItem(R.id.menu_delete);
 	    if(t.getStatus() == Task.STATUS_SHARED)
 	    {
 	    	shareButton.setEnabled(false);
 	    	shareButton.setVisible(false);	
+	    	deleteButton.setEnabled(false);
+	    	deleteButton.setVisible(false);	
 	    }
 			
 		return true;
