@@ -50,7 +50,15 @@ public class PhotoResponseController
 	 * @param resp The response.
 	 */
 	public void addResponse(Task task, Response resp) {
-		new AddResponse().execute(task, resp);
+		if(task.getStatus()==Task.STATUS_PRIVATE)
+		{
+			taskManager.postResponse(task, resp);
+			return;
+		}
+		else
+		{
+			new AddResponse().execute(task, resp);
+		}
 	}
 
 	/**
