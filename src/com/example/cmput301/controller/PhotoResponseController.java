@@ -44,6 +44,20 @@ public class PhotoResponseController
 	}
 	
 	/**
+	 * Get a task with the given task id from the database.
+	 * 
+	 * @param taskid
+	 * @return 
+	 */
+	public Task getTask(String taskid) {
+		Task task = taskManager.getLocalTask(taskid);
+		if (task == null) {
+			task = taskManager.getRemoteTask(taskid);
+		}
+		return task;
+	}
+	
+	/**
 	 * Add a response to the given task in the database.
 	 *
 	 * @param task The task you want a response added to

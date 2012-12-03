@@ -111,7 +111,6 @@ public class TextResponseView extends ResponseView {
 				ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(currentActivity,
 						android.R.layout.simple_list_item_1, (ArrayList) aTask.getResponses());
 				responses.setAdapter(adapter);
-				finish();
 			}
 		});
 

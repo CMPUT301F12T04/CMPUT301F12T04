@@ -13,6 +13,8 @@ package com.example.cmput301.view;
 
 
 import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -26,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -36,6 +39,8 @@ import com.example.cmput301.R;
 import com.example.cmput301.controller.PhotoResponseController;
 import com.example.cmput301.model.Task;
 import com.example.cmput301.model.response.PictureResponse;
+import com.example.cmput301.model.response.Response;
+import com.example.cmput301.model.response.TextResponse;
 import com.example.cmput301.model.response.factory.PictureResponseFactory;
 
 @TargetApi(15)
@@ -44,7 +49,7 @@ public class PhotoResponseView extends ResponseView {
 	private PhotoResponseController prController;
 
 	Task t1;
-	pResponseListAdapter pRLA;
+	public pResponseListAdapter pRLA;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {	
 
@@ -91,6 +96,21 @@ public class PhotoResponseView extends ResponseView {
 		
 		
 	}
+	
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		t1 = prController.getTask(t1.getId());
+		List<Response> r = t1.getResponses();
+
+		ListView photoList = (ListView) findViewById(R.id.photo_response_list);
+		pRLA = new pResponseListAdapter(this);
+		photoList.setAdapter(pRLA);
+
+	}
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.photo_response_view, menu);
 		return true;
@@ -143,29 +163,27 @@ public class PhotoResponseView extends ResponseView {
 			View row = getRow(convertView);
 
 			//set the annotation of the photo response
-			getAnnoView(convertView,position);
+			getAnnoView(row,position);
 
 			//set the time stamp of the photo response
-			getTimeView(convertView,position);
+			getTimeView(row,position);
 
 			//Sets the image for the response, all tasks are currently set for TEXT only
-			setTaskTypeImg(convertView,position);
+			setTaskTypeImg(row,position);
 		
 			return row;
 		}
 
 		
-		private void setTaskTypeImg(View convertView, int position)
+		private void setTaskTypeImg(View row, int position)
 		{
-			View row = getRow(convertView);
 
 			ImageView taskTypeImg = (ImageView) row.findViewById(R.id.entry_responsePhoto);
 			taskTypeImg.setImageBitmap((Bitmap)t1.getResponses().get(position).getContent());
 		}
 
-		private View getRow(View convertView)
+		private View getRow(View row)
 		{
-			View row = convertView;
 
 			if (row == null) {
 				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -174,18 +192,16 @@ public class PhotoResponseView extends ResponseView {
 			return row;
 		}
 
-		private TextView getTimeView(View convertView, int position)
+		private TextView getTimeView(View row, int position)
 		{
-			View row = getRow(convertView);
 			
 			TextView timeView = (TextView) row.findViewById(R.id.p_entry_responseTime);
 			timeView.setText(t1.getResponses().get(position).getTimestamp().toString());
 			return timeView;
 		}
 
-		private void getAnnoView(View convertView, int position)
+		private void getAnnoView(View row, int position)
 		{
-			View row = getRow(convertView);
 			
 			TextView annoView = (TextView) row.findViewById(R.id.p_entry_responseAno);
 			annoView.setText(t1.getResponses().get(position).getAnnotation());

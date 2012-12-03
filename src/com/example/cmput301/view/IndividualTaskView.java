@@ -148,7 +148,6 @@ public class IndividualTaskView extends Activity {
 			bundle.putSerializable("task", t);
 			in.putExtras(bundle);
 			startActivity(in);
-			finish();
 		}
 		if (item.getItemId() == R.id.menu_vote) {
 			itController.voteTask(t);
