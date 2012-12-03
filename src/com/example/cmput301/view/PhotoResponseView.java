@@ -11,7 +11,6 @@
  ******************************************************************************/
 package com.example.cmput301.view;
 
-
 import java.util.ArrayList;
 
 import android.annotation.TargetApi;
@@ -54,15 +53,17 @@ public class PhotoResponseView extends ResponseView {
 
 	Task aTask;
 	public pResponseListAdapter pRLA;
+
 	@Override
-	public void onCreate(Bundle savedInstanceState) {	
+	public void onCreate(Bundle savedInstanceState) {
 
 		respFactory = new PictureResponseFactory();
 		super.onCreate(savedInstanceState);
-		prController = new PhotoResponseController(this.getApplicationContext(), this);
+		prController = new PhotoResponseController(
+				this.getApplicationContext(), this);
 		setContentView(R.layout.photo_response_view);
 
-		//set action bar to have back option
+		// set action bar to have back option
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
@@ -77,12 +78,13 @@ public class PhotoResponseView extends ResponseView {
 		setTitle(taskTile);
 
 		// setting the description of the task
-		TextView title = (TextView) findViewById(R.id.p_task_des_view);
-		title.setText("Votes: " + aTask.getVotes() + "\n\n" + taskDesc);
-		
-		
-		
-		//set up the listview to use custom adapter
+		TextView desc = (TextView) findViewById(R.id.textView2);
+		desc.setText("Description: " + taskDesc);
+		TextView votes = (TextView) findViewById(R.id.textView3);
+		votes.setText("Votes: " + aTask.getVotes());
+
+		// set up the listview to use custom adapter
+
 		ListView photoList = (ListView) findViewById(R.id.photo_response_list);
 		pRLA = new pResponseListAdapter(this);
 		photoList.setAdapter(pRLA);
@@ -95,26 +97,23 @@ public class PhotoResponseView extends ResponseView {
 				Bitmap b = (Bitmap) aTask.getResponses().get(pos).getContent();
 				in.putExtra("photo", b );
 				startActivity(in); 
-				
-			}});
-		
-		
+			}});	
 	}
 	
-	/**
-	 * Overrided method used to refresh the list view when resumed
-	 */
-	@Override
-	public void onResume() {
-		super.onResume();
+/**
+ * Overrided method used to refresh the list view when resumed
+ */
+@Override
+public void onResume() {
+	super.onResume();
 
-		aTask = prController.getTask(aTask.getId());
+	aTask = prController.getTask(aTask.getId());
 
-		ListView photoList = (ListView) findViewById(R.id.photo_response_list);
-		pRLA = new pResponseListAdapter(this);
-		photoList.setAdapter(pRLA);
+	ListView photoList = (ListView) findViewById(R.id.photo_response_list);
+	pRLA = new pResponseListAdapter(this);
+	photoList.setAdapter(pRLA);
 
-	}
+}
 
 	/**
 	 * Set to use custom menu
@@ -129,7 +128,7 @@ public class PhotoResponseView extends ResponseView {
 	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		//go back, kills activity
+		// go back, kills activity
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 		}
@@ -138,6 +137,7 @@ public class PhotoResponseView extends ResponseView {
 			prController.deleteTask(aTask.getId());
 			finish();
 		}
+
 		//upload the task
 		if (item.getItemId() == R.id.menu_p_task_upload)
 		{
@@ -151,37 +151,40 @@ public class PhotoResponseView extends ResponseView {
 			title.setText("Votes: " + aTask.getVotes() + "\n\n"
 					+ aTask.getDescription());
 		}
-		//take a picture, go to selection view
-		if (item.getItemId() == R.id.menu_camera) {
-			Intent in = new Intent(PhotoResponseView.this, PictureSelectionView.class);
-			startActivityForResult(in,PHOTO_RESPONSES_CAMERA_CODE);
+		// take a picture, go to selection view
+		if (item.getItemId() == R.id.menu_camera) {	
+
+			Intent in = new Intent(PhotoResponseView.this,
+					PictureSelectionView.class);
+			startActivityForResult(in, PHOTO_RESPONSES_CAMERA_CODE);
 		}
 		return true;
 	}
-	
-	/**
-	 * Custom adapter used to display photo responses as
-	 * a listview entry
-	 */
+
+/**
+ * Custom adapter used to display photo responses as
+ * a listview entry
+ */
 	class pResponseListAdapter extends BaseAdapter {
 		private Context context;
+
 		pResponseListAdapter(Context context) {
 			this.context = context;
 		}
 
 		/**
-		 * Overrided method that allows a photo response to display it's image, annotation and
-		 * timestamp.
+		 * Overrided method that allows a photo response to display it's image,
+		 * annotation and timestamp.
 		 */
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View row = getRow(convertView);
 
-			//set the annotation of the photo response
-			getAnnoView(row,position);
+			// set the annotation of the photo response
+			getAnnoView(row, position);
 
-			//set the time stamp of the photo response
-			getTimeView(row,position);
+			// set the time stamp of the photo response
+			getTimeView(row, position);
 
 			//Sets the image for the photo response
 			setTaskTypeImg(row,position);
@@ -189,41 +192,46 @@ public class PhotoResponseView extends ResponseView {
 			return row;
 		}
 
+		
 		/**
 		 * Sets the image of the task entry to match its type
 		 * @param row of the listview
 		 * @param position the position in the list
 		 */
-		private void setTaskTypeImg(View row, int position)
-		{
+		private void setTaskTypeImg(View row, int position) {
 
-			ImageView taskTypeImg = (ImageView) row.findViewById(R.id.entry_responsePhoto);
-			taskTypeImg.setImageBitmap((Bitmap)aTask.getResponses().get(position).getContent());
+			ImageView taskTypeImg = (ImageView) row
+					.findViewById(R.id.entry_responsePhoto);
+			taskTypeImg.setImageBitmap((Bitmap) aTask.getResponses().get(position)
+					.getContent());
 		}
 
-		private View getRow(View row)
-		{
+		private View getRow(View row) {
 
 			if (row == null) {
-				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+				LayoutInflater inflater = ((Activity) context)
+						.getLayoutInflater();
 				row = inflater.inflate(R.layout.photo_response_entry, null);
 			}
 			return row;
 		}
 
-		private TextView getTimeView(View row, int position)
-		{
-			
-			TextView timeView = (TextView) row.findViewById(R.id.p_entry_responseTime);
-			timeView.setText(aTask.getResponses().get(position).getTimestamp().toString());
+
+		private TextView getTimeView(View row, int position) {
+
+			TextView timeView = (TextView) row
+					.findViewById(R.id.p_entry_responseTime);
+			timeView.setText(aTask.getResponses().get(position).getTimestamp()
+					.toString());
 			return timeView;
 		}
 
-		private void getAnnoView(View row, int position)
-		{
-			
-			TextView annoView = (TextView) row.findViewById(R.id.p_entry_responseAno);
+		private void getAnnoView(View row, int position) {
+
+			TextView annoView = (TextView) row
+					.findViewById(R.id.p_entry_responseAno);
 			annoView.setText(aTask.getResponses().get(position).getAnnotation());
+
 		}
 
 		public int getCount() {
@@ -278,8 +286,8 @@ public class PhotoResponseView extends ResponseView {
 	    	deleteButton.setEnabled(false);
 	    	deleteButton.setVisible(false);	
 	    }		
+
 		return true;
 	}
-			
 
 }

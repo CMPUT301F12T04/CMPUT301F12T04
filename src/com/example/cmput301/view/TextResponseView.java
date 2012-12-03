@@ -107,19 +107,13 @@ public class TextResponseView extends ResponseView {
 				}
 				//setting list of responses for task
 				ListView responses = (ListView) findViewById(R.id.text_response_list);
-				@SuppressWarnings({ "rawtypes", "unchecked" })
-				ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(currentActivity,
-						android.R.layout.simple_list_item_1, (ArrayList) aTask.getResponses());
-				responses.setAdapter(adapter);
+				responses.setAdapter(new TextAdapter(currentActivity, aTask));
 			}
 		});
 
 		//setting list of responses for task
 		ListView responses = (ListView) findViewById(R.id.text_response_list);
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(this,
-				android.R.layout.simple_list_item_1, (ArrayList) aTask.getResponses());
-		responses.setAdapter(adapter);
+		responses.setAdapter(new TextAdapter(currentActivity, aTask));
 	}
 
 

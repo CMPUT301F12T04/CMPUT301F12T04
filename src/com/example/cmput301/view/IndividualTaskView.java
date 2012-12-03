@@ -11,8 +11,6 @@
  ******************************************************************************/
 package com.example.cmput301.view;
 
-import java.util.ArrayList;
-import java.util.List;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -21,13 +19,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.cmput301.model.*;
-import com.example.cmput301.model.response.Response;
-import com.example.cmput301.model.response.TextResponse;
 import com.example.cmput301.controller.*;
 import com.example.cmput301.R;
 
@@ -72,21 +67,18 @@ public class IndividualTaskView extends Activity {
 		taskPos = bundle.getInt("id");
 
 		// setting the description of the task
-		TextView title = (TextView) findViewById(R.id.indvidual_des_view);
-		title.setText("Votes: " + aTask.getVotes() + "\n\n" + taskDesc);
+
+		TextView desc = (TextView) findViewById(R.id.textView2);
+		desc.setText("Description: " + taskDesc);
+		TextView votes = (TextView) findViewById(R.id.textView3);
+		votes.setText("Votes: " + aTask.getVotes());
+		
 
 		// setting the title of the task to be the activity title
 		setTitle(taskTile);
 
-		ListView responses = (ListView) findViewById(R.id.individual_res_list);
-		List<Response> r = itController.getTask(aTask.getId()).getResponses();
-
-		//setting custom adapter to display responses
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(
-				this, android.R.layout.simple_list_item_1, (ArrayList) r);
-		Log.d("RESPONSELIST", "" + r.size());
-		responses.setAdapter(adapter);
+		ListView responses = (ListView) findViewById(R.id.individual_res_list);		
+		responses.setAdapter(new TextAdapter(this, aTask));
 	}
 
 	/**
@@ -106,16 +98,14 @@ public class IndividualTaskView extends Activity {
 	public void onResume() {
 		super.onResume();
 
+
 		aTask = itController.getTask(aTask.getId());
-		List<Response> r = aTask.getResponses();
+
 
 		//update list view, reset adapter
 		ListView responses = (ListView) findViewById(R.id.individual_res_list);
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(
-				this, android.R.layout.simple_list_item_1,
-				(ArrayList) r);
-		responses.setAdapter(adapter);
+	
+		responses.setAdapter(new TextAdapter(this, aTask));
 
 	}
 
@@ -166,6 +156,7 @@ public class IndividualTaskView extends Activity {
 		}
 		return true;
 	}
+
 	/**
 	 * Overrided method used to check and see if task has been shared,
 	 * if so then disable the share and delete button.
@@ -183,4 +174,7 @@ public class IndividualTaskView extends Activity {
 			
 		return true;
 	}
+	
+
+	
 }
