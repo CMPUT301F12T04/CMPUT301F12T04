@@ -13,8 +13,6 @@ package TestProject.src;
  ******************************************************************************/
 
 import android.test.AndroidTestCase;
-import android.test.InstrumentationTestCase;
-import android.test.IsolatedContext;
 import android.util.Log;
 
 public class TestDatabaseManager extends AndroidTestCase {

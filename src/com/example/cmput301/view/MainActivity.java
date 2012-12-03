@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -279,7 +278,6 @@ SearchView.OnCloseListener {
 	 */
 	class Callback implements ConnUpdateCallback {
 		public void finished() {
-			Log.d("TEST","WORKED");
 			if(mDialog.isShowing())
 			{
 				mDialog.dismiss();

@@ -1,14 +1,9 @@
 package TestProject.src.response;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
-
 import com.example.cmput301.model.response.PictureResponse;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.test.AndroidTestCase;
 
 public class TestPhotoResponse extends AndroidTestCase {

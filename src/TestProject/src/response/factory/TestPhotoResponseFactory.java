@@ -4,10 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.example.cmput301.model.response.PictureResponse;
-import com.example.cmput301.model.response.TextResponse;
 import com.example.cmput301.model.response.factory.PictureResponseFactory;
-
-import android.graphics.Bitmap;
 import android.test.AndroidTestCase;
 
 public class TestPhotoResponseFactory extends AndroidTestCase {

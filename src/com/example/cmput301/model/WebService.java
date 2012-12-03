@@ -28,8 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 import com.example.cmput301.application.StringRes;
 import com.example.cmput301.model.response.PictureResponse;
 import com.example.cmput301.model.response.Response;
@@ -156,10 +154,8 @@ public class WebService
 
 			// Send data and get response
 			String httpResponse = getHttpResponse(conn,data);
-			Log.d("RESPOSNE",httpResponse);
+			
 			// convert string response to json object
-//			Log.d("RESPONSE","Data: "+ data);
-//			Log.d("RESPONSE","ID:" +id);
 			JSONObject jsonObject = toJsonTask(httpResponse);
 			
 			// convert json object to task and return
@@ -187,17 +183,15 @@ public class WebService
 	{
 		try
 		{	
-			Log.d("RESPONSE", "TASKKKK");
 			//get current version of task from webservice
 			Task webTask = get(task.getId());
-//			delete(task.getId());
+
 			// add new response
-//			Log.d("RESPONSE", (String)response.getContent());
 			webTask.addResponse(response);
 			
 			// get data string
 			String dataString = getDataString(toJson(webTask), "update");
-			Log.d("RESPONSE",dataString);
+
 			// setup connection
 			HttpURLConnection conn = setupConnections();
 			

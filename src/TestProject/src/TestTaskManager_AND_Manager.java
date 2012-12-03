@@ -15,7 +15,6 @@ package TestProject.src;
 import com.example.cmput301.model.Manager;
 import com.example.cmput301.model.Task;
 import com.example.cmput301.model.TaskManager;
-import com.example.cmput301.model.WebService;
 import com.example.cmput301.model.response.TextResponse;
 
 import TestProject.src.stubs.DatabaseManager;
