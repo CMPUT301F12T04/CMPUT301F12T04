@@ -59,6 +59,13 @@ public class PhotoResponseController
 	private class AddResponse extends AsyncTask<Object,Void,Task>
 	{
 		@Override
+		protected void onPreExecute()
+		{
+			//start loading screen in main controller
+			callBack.startUploadingScreen();
+		}
+		
+		@Override
 		protected Task doInBackground(Object... args)
 		{
 			if(args.length==2)
@@ -66,9 +73,15 @@ public class PhotoResponseController
 				Task task = (Task)args[0];
 				Response response = (Response)args[1];
 				taskManager.postResponse(task, response);
+				taskManager.Refresh();
 				return task;
 			}
 			return null;
+		}
+		protected void onPostExecute(Task result)
+		{
+			Log.d("RESPONSE","WORKED SOMEWHAT");
+			callBack.finished();
 		}
 	}
 	
