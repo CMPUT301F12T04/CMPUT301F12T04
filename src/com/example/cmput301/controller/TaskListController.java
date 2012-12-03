@@ -4,6 +4,8 @@
 package com.example.cmput301.controller;
 
 
+import android.util.Log;
+
 import com.example.cmput301.controller.MainController.TaskListAdapter;
 import com.example.cmput301.model.Manager;
 import java.util.ArrayList;
@@ -149,8 +151,11 @@ public class TaskListController
 		tasks = taskManager.getPrivateTasks();
 		if (adapter != null)
 		{
+			Log.d("adapter","notify");
 			adapter.notifyDataSetChanged();
 		}
+
+		Log.d("adapter","null");
 	}
 
 

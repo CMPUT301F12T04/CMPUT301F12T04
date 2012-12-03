@@ -56,7 +56,7 @@ public class MainController {
 		checkout.setAdapter(new TaskListAdapter(activity));
 		if (checkout.getAdapter() != null) {  
 			checkout.getAdapter().notifyDataSetChanged();
-		}	
+		}
 	}
 
 	/**

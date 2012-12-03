@@ -180,6 +180,7 @@ SearchView.OnCloseListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		mainController.checkoutPrivate();
 		refreshList();
 	}
 
@@ -321,7 +322,6 @@ SearchView.OnCloseListener {
 
 	@Override
 	public boolean onQueryTextSubmit(String arg0) {
-
 		return onClose();
 	}
 }
