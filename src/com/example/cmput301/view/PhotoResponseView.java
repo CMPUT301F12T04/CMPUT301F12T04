@@ -11,7 +11,6 @@
  ******************************************************************************/
 package com.example.cmput301.view;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,54 +49,56 @@ public class PhotoResponseView extends ResponseView {
 
 	Task t1;
 	public pResponseListAdapter pRLA;
+
 	@Override
-	public void onCreate(Bundle savedInstanceState) {	
+	public void onCreate(Bundle savedInstanceState) {
 
 		respFactory = new PictureResponseFactory();
 		super.onCreate(savedInstanceState);
-		prController = new PhotoResponseController(this.getApplicationContext(), this);
+		prController = new PhotoResponseController(
+				this.getApplicationContext(), this);
 		setContentView(R.layout.photo_response_view);
 
-		//set action bar to have back option
+		// set action bar to have back option
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		
-		//fake task and responses
+
+		// fake task and responses
 		Bundle bundle = getIntent().getExtras();
-		t1 = (Task) bundle.getSerializable("task");	
+		t1 = (Task) bundle.getSerializable("task");
 		String taskTile = t1.getName();
 		String taskDesc = t1.getDescription();
 
-		//set title to be task title
+		// set title to be task title
 		taskTile = t1.getName();
 		setTitle(taskTile);
 
 		// setting the description of the task
-		TextView title = (TextView) findViewById(R.id.p_task_des_view);
-		title.setText("Votes: " + t1.getVotes() + "\n\n" + taskDesc);
-		
-		
-		
-		//set up the listview to use custom adapter
+		TextView desc = (TextView) findViewById(R.id.textView2);
+		desc.setText("Description: " + taskDesc);
+		TextView votes = (TextView) findViewById(R.id.textView3);
+		votes.setText("Votes: " + t1.getVotes());
+
+		// set up the listview to use custom adapter
 		ListView photoList = (ListView) findViewById(R.id.photo_response_list);
 		pRLA = new pResponseListAdapter(this);
 		photoList.setAdapter(pRLA);
 		photoList.setOnItemClickListener(new OnItemClickListener() {
-	
-			public void onItemClick(AdapterView<?> adp, View view,
-					int pos, long id) {
-				Intent in = new Intent(PhotoResponseView.this, EnlargedPhotoView.class);
-				//passing task to enlarge photo view
+
+			public void onItemClick(AdapterView<?> adp, View view, int pos,
+					long id) {
+				Intent in = new Intent(PhotoResponseView.this,
+						EnlargedPhotoView.class);
+				// passing task to enlarge photo view
 				Bitmap b = (Bitmap) t1.getResponses().get(pos).getContent();
-				in.putExtra("photo", b );
-				startActivity(in); 
-				
-			}});
-		
-		
+				in.putExtra("photo", b);
+				startActivity(in);
+
+			}
+		});
+
 	}
-	
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -110,18 +111,18 @@ public class PhotoResponseView extends ResponseView {
 		photoList.setAdapter(pRLA);
 
 	}
-	
+
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.photo_response_view, menu);
 		return true;
 	}
-	
-    /**
-     * Overrided method that just enables the back button to kill the activity
-     */
+
+	/**
+	 * Overrided method that just enables the back button to kill the activity
+	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		//go back, kills activity
+		// go back, kills activity
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 		}
@@ -129,8 +130,7 @@ public class PhotoResponseView extends ResponseView {
 			prController.deleteTask(t1.getId());
 			finish();
 		}
-		if (item.getItemId() == R.id.menu_p_task_upload)
-		{
+		if (item.getItemId() == R.id.menu_p_task_upload) {
 			prController.shareTask(t1.getId());
 			finish();
 		}
@@ -140,70 +140,74 @@ public class PhotoResponseView extends ResponseView {
 			title.setText("Votes: " + t1.getVotes() + "\n\n"
 					+ t1.getDescription());
 		}
-		//take a picture, go to selection view
+		// take a picture, go to selection view
 		if (item.getItemId() == R.id.menu_camera) {
-			 Intent in = new Intent(PhotoResponseView.this, PictureSelectionView.class);
-			 startActivityForResult(in,PHOTO_RESPONSES_CAMERA_CODE);
+			Intent in = new Intent(PhotoResponseView.this,
+					PictureSelectionView.class);
+			startActivityForResult(in, PHOTO_RESPONSES_CAMERA_CODE);
 		}
-			return true;
-		}
-	
+		return true;
+	}
+
 	class pResponseListAdapter extends BaseAdapter {
 		private Context context;
+
 		pResponseListAdapter(Context context) {
 			this.context = context;
 		}
 
 		/**
-		 * Overrided method that allows a photo response to display it's image, annotation and
-		 * timestamp.
+		 * Overrided method that allows a photo response to display it's image,
+		 * annotation and timestamp.
 		 */
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View row = getRow(convertView);
 
-			//set the annotation of the photo response
-			getAnnoView(row,position);
+			// set the annotation of the photo response
+			getAnnoView(row, position);
 
-			//set the time stamp of the photo response
-			getTimeView(row,position);
+			// set the time stamp of the photo response
+			getTimeView(row, position);
 
-			//Sets the image for the response, all tasks are currently set for TEXT only
-			setTaskTypeImg(row,position);
-		
+			// Sets the image for the response, all tasks are currently set for
+			// TEXT only
+			setTaskTypeImg(row, position);
+
 			return row;
 		}
 
-		
-		private void setTaskTypeImg(View row, int position)
-		{
+		private void setTaskTypeImg(View row, int position) {
 
-			ImageView taskTypeImg = (ImageView) row.findViewById(R.id.entry_responsePhoto);
-			taskTypeImg.setImageBitmap((Bitmap)t1.getResponses().get(position).getContent());
+			ImageView taskTypeImg = (ImageView) row
+					.findViewById(R.id.entry_responsePhoto);
+			taskTypeImg.setImageBitmap((Bitmap) t1.getResponses().get(position)
+					.getContent());
 		}
 
-		private View getRow(View row)
-		{
+		private View getRow(View row) {
 
 			if (row == null) {
-				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+				LayoutInflater inflater = ((Activity) context)
+						.getLayoutInflater();
 				row = inflater.inflate(R.layout.photo_response_entry, null);
 			}
 			return row;
 		}
 
-		private TextView getTimeView(View row, int position)
-		{
-			
-			TextView timeView = (TextView) row.findViewById(R.id.p_entry_responseTime);
-			timeView.setText(t1.getResponses().get(position).getTimestamp().toString());
+		private TextView getTimeView(View row, int position) {
+
+			TextView timeView = (TextView) row
+					.findViewById(R.id.p_entry_responseTime);
+			timeView.setText(t1.getResponses().get(position).getTimestamp()
+					.toString());
 			return timeView;
 		}
 
-		private void getAnnoView(View row, int position)
-		{
-			
-			TextView annoView = (TextView) row.findViewById(R.id.p_entry_responseAno);
+		private void getAnnoView(View row, int position) {
+
+			TextView annoView = (TextView) row
+					.findViewById(R.id.p_entry_responseAno);
 			annoView.setText(t1.getResponses().get(position).getAnnotation());
 		}
 
@@ -219,40 +223,40 @@ public class PhotoResponseView extends ResponseView {
 			return position;
 		}
 	}
+
 	@SuppressWarnings("unchecked")
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
-		if(requestCode == PHOTO_RESPONSES_CAMERA_CODE && resultCode == RESULT_OK ) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == PHOTO_RESPONSES_CAMERA_CODE
+				&& resultCode == RESULT_OK) {
 			ArrayList<String> annoList = new ArrayList<String>();
 			ArrayList<Bitmap> bitList = new ArrayList<Bitmap>();
-					
+
 			annoList = (ArrayList<String>) data.getSerializableExtra("annos");
 			bitList = (ArrayList<Bitmap>) data.getSerializableExtra("photos");
-			
-			for(int i = 0; i<annoList.size();i++)
-			{
-				PictureResponse pR = (PictureResponse) respFactory.createResponse(
-						annoList.get(i), bitList.get(i));
-				
+
+			for (int i = 0; i < annoList.size(); i++) {
+				PictureResponse pR = (PictureResponse) respFactory
+						.createResponse(annoList.get(i), bitList.get(i));
+
 				prController.addResponse(t1, pR);
 			}
-			
+
 			pRLA.notifyDataSetChanged();
-			
+
 		}
 	}
+
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem shareButton = menu.findItem(R.id.menu_p_task_upload);
 		MenuItem deleteButton = menu.findItem(R.id.menu_delete);
-	    if(t1.getStatus() == Task.STATUS_SHARED)
-	    {
-	    	shareButton.setEnabled(false);
-	    	shareButton.setVisible(false);	
-	    	deleteButton.setEnabled(false);
-	    	deleteButton.setVisible(false);	
-	    }
-			
+		if (t1.getStatus() == Task.STATUS_SHARED) {
+			shareButton.setEnabled(false);
+			shareButton.setVisible(false);
+			deleteButton.setEnabled(false);
+			deleteButton.setVisible(false);
+		}
+
 		return true;
 	}
-			
 
 }

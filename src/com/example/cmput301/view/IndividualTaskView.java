@@ -16,12 +16,17 @@ import java.util.List;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -74,22 +79,18 @@ public class IndividualTaskView extends Activity {
 		taskPos = bundle.getInt("id");
 
 		// setting the description of the task
-		TextView title = (TextView) findViewById(R.id.indvidual_des_view);
-		title.setText("Votes: " + t.getVotes() + "\n\n" + taskDesc);
-
+		TextView desc = (TextView) findViewById(R.id.textView2);
+		desc.setText("Description: " + taskDesc);
+		TextView votes = (TextView) findViewById(R.id.textView3);
+		votes.setText("Votes: " + t.getVotes());
+		
+		
 		// setting the title of the task to be the activity title
 		setTitle(taskTile);
 
 		ListView responses = (ListView) findViewById(R.id.individual_res_list);
-
-		List<Response> r = itController.getTask(t.getId()).getResponses();
-
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(
-				this, android.R.layout.simple_list_item_1, (ArrayList) r);
-		Log.d("RESPONSELIST", "" + r.size());
-
-		responses.setAdapter(adapter);
+		
+		responses.setAdapter(new TextAdapter(this, t));
 	}
 
 	/**
@@ -108,14 +109,10 @@ public class IndividualTaskView extends Activity {
 		super.onResume();
 
 		t = itController.getTask(t.getId());
-		List<Response> r = t.getResponses();
 
 		ListView responses = (ListView) findViewById(R.id.individual_res_list);
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(
-				this, android.R.layout.simple_list_item_1,
-				(ArrayList) r);
-		responses.setAdapter(adapter);
+	
+		responses.setAdapter(new TextAdapter(this, t));
 
 	}
 
@@ -166,6 +163,7 @@ public class IndividualTaskView extends Activity {
 		}
 		return true;
 	}
+	
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem shareButton = menu.findItem(R.id.menu_upload);
 		MenuItem deleteButton = menu.findItem(R.id.menu_delete);
@@ -179,4 +177,7 @@ public class IndividualTaskView extends Activity {
 			
 		return true;
 	}
+	
+
+	
 }
