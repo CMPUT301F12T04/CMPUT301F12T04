@@ -13,7 +13,6 @@ package com.example.cmput301.view;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -28,7 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,16 +37,22 @@ import com.example.cmput301.R;
 import com.example.cmput301.controller.PhotoResponseController;
 import com.example.cmput301.model.Task;
 import com.example.cmput301.model.response.PictureResponse;
-import com.example.cmput301.model.response.Response;
-import com.example.cmput301.model.response.TextResponse;
 import com.example.cmput301.model.response.factory.PictureResponseFactory;
 
+/**
+ * 
+ * View class used to display the photo type tasks and to show their
+ * photo responses. Photo responses are shown as a listview, and their
+ * individual entry consists of a photo, an annotation and a timestamp.
+ * Several options are available such as upvoting, deleting, sharing tasks.
+ *
+ */
 @TargetApi(15)
 public class PhotoResponseView extends ResponseView {
 	private static final int PHOTO_RESPONSES_CAMERA_CODE = 1;
 	private PhotoResponseController prController;
 
-	Task t1;
+	Task aTask;
 	public pResponseListAdapter pRLA;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {	
@@ -62,19 +66,19 @@ public class PhotoResponseView extends ResponseView {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
-		//fake task and responses
+		//Get task name and description
 		Bundle bundle = getIntent().getExtras();
-		t1 = (Task) bundle.getSerializable("task");	
-		String taskTile = t1.getName();
-		String taskDesc = t1.getDescription();
+		aTask = (Task) bundle.getSerializable("task");	
+		String taskTile = aTask.getName();
+		String taskDesc = aTask.getDescription();
 
 		//set title to be task title
-		taskTile = t1.getName();
+		taskTile = aTask.getName();
 		setTitle(taskTile);
 
 		// setting the description of the task
 		TextView title = (TextView) findViewById(R.id.p_task_des_view);
-		title.setText("Votes: " + t1.getVotes() + "\n\n" + taskDesc);
+		title.setText("Votes: " + aTask.getVotes() + "\n\n" + taskDesc);
 		
 		
 		
@@ -88,7 +92,7 @@ public class PhotoResponseView extends ResponseView {
 					int pos, long id) {
 				Intent in = new Intent(PhotoResponseView.this, EnlargedPhotoView.class);
 				//passing task to enlarge photo view
-				Bitmap b = (Bitmap) t1.getResponses().get(pos).getContent();
+				Bitmap b = (Bitmap) aTask.getResponses().get(pos).getContent();
 				in.putExtra("photo", b );
 				startActivity(in); 
 				
@@ -97,57 +101,68 @@ public class PhotoResponseView extends ResponseView {
 		
 	}
 	
-	
+	/**
+	 * Overrided method used to refresh the list view when resumed
+	 */
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		t1 = prController.getTask(t1.getId());
-		List<Response> r = t1.getResponses();
+		aTask = prController.getTask(aTask.getId());
 
 		ListView photoList = (ListView) findViewById(R.id.photo_response_list);
 		pRLA = new pResponseListAdapter(this);
 		photoList.setAdapter(pRLA);
 
 	}
-	
+
+	/**
+	 * Set to use custom menu
+	 */
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.photo_response_view, menu);
 		return true;
 	}
-	
-    /**
-     * Overrided method that just enables the back button to kill the activity
-     */
+
+	/**
+	 * Overrided method that listens on selected options on actionbar
+	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		//go back, kills activity
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 		}
+		//delete the task
 		if (item.getItemId() == R.id.menu_delete) {
-			prController.deleteTask(t1.getId());
+			prController.deleteTask(aTask.getId());
 			finish();
 		}
+		//upload the task
 		if (item.getItemId() == R.id.menu_p_task_upload)
 		{
-			prController.shareTask(t1.getId());
+			prController.shareTask(aTask.getId());
 			finish();
 		}
+		//upvote the task
 		if (item.getItemId() == R.id.menu_vote) {
-			prController.voteTask(t1);
+			prController.voteTask(aTask);
 			TextView title = (TextView) findViewById(R.id.p_task_des_view);
-			title.setText("Votes: " + t1.getVotes() + "\n\n"
-					+ t1.getDescription());
+			title.setText("Votes: " + aTask.getVotes() + "\n\n"
+					+ aTask.getDescription());
 		}
 		//take a picture, go to selection view
 		if (item.getItemId() == R.id.menu_camera) {
-			 Intent in = new Intent(PhotoResponseView.this, PictureSelectionView.class);
-			 startActivityForResult(in,PHOTO_RESPONSES_CAMERA_CODE);
+			Intent in = new Intent(PhotoResponseView.this, PictureSelectionView.class);
+			startActivityForResult(in,PHOTO_RESPONSES_CAMERA_CODE);
 		}
-			return true;
-		}
+		return true;
+	}
 	
+	/**
+	 * Custom adapter used to display photo responses as
+	 * a listview entry
+	 */
 	class pResponseListAdapter extends BaseAdapter {
 		private Context context;
 		pResponseListAdapter(Context context) {
@@ -168,18 +183,22 @@ public class PhotoResponseView extends ResponseView {
 			//set the time stamp of the photo response
 			getTimeView(row,position);
 
-			//Sets the image for the response, all tasks are currently set for TEXT only
+			//Sets the image for the photo response
 			setTaskTypeImg(row,position);
 		
 			return row;
 		}
 
-		
+		/**
+		 * Sets the image of the task entry to match its type
+		 * @param row of the listview
+		 * @param position the position in the list
+		 */
 		private void setTaskTypeImg(View row, int position)
 		{
 
 			ImageView taskTypeImg = (ImageView) row.findViewById(R.id.entry_responsePhoto);
-			taskTypeImg.setImageBitmap((Bitmap)t1.getResponses().get(position).getContent());
+			taskTypeImg.setImageBitmap((Bitmap)aTask.getResponses().get(position).getContent());
 		}
 
 		private View getRow(View row)
@@ -196,7 +215,7 @@ public class PhotoResponseView extends ResponseView {
 		{
 			
 			TextView timeView = (TextView) row.findViewById(R.id.p_entry_responseTime);
-			timeView.setText(t1.getResponses().get(position).getTimestamp().toString());
+			timeView.setText(aTask.getResponses().get(position).getTimestamp().toString());
 			return timeView;
 		}
 
@@ -204,53 +223,61 @@ public class PhotoResponseView extends ResponseView {
 		{
 			
 			TextView annoView = (TextView) row.findViewById(R.id.p_entry_responseAno);
-			annoView.setText(t1.getResponses().get(position).getAnnotation());
+			annoView.setText(aTask.getResponses().get(position).getAnnotation());
 		}
 
 		public int getCount() {
-			return t1.getResponses().size();
+			return aTask.getResponses().size();
 		}
 
 		public Object getItem(int position) {
-			return t1.getResponses().get(position);
+			return aTask.getResponses().get(position);
 		}
-
+		
 		public long getItemId(int position) {
 			return position;
 		}
 	}
+	/**
+	 * Gets the returned image and annotation from the responses made by camera and adds it
+	 * to the current task
+	 */
 	@SuppressWarnings("unchecked")
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
 		if(requestCode == PHOTO_RESPONSES_CAMERA_CODE && resultCode == RESULT_OK ) {
+			//all the images and annotations
 			ArrayList<String> annoList = new ArrayList<String>();
 			ArrayList<Bitmap> bitList = new ArrayList<Bitmap>();
-					
+				
+			//getting them
 			annoList = (ArrayList<String>) data.getSerializableExtra("annos");
 			bitList = (ArrayList<Bitmap>) data.getSerializableExtra("photos");
 			
+			//add them as responses to the task
 			for(int i = 0; i<annoList.size();i++)
 			{
 				PictureResponse pR = (PictureResponse) respFactory.createResponse(
 						annoList.get(i), bitList.get(i));
-				
-				prController.addResponse(t1, pR);
+				prController.addResponse(aTask, pR);
 			}
-			
 			pRLA.notifyDataSetChanged();
-			
 		}
 	}
+	
+	/**
+	 * Overrided method used to check and see if task has been shared,
+	 * if so then disable the share and delete button.
+	 */
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem shareButton = menu.findItem(R.id.menu_p_task_upload);
 		MenuItem deleteButton = menu.findItem(R.id.menu_delete);
-	    if(t1.getStatus() == Task.STATUS_SHARED)
+	    if(aTask.getStatus() == Task.STATUS_SHARED)
 	    {
 	    	shareButton.setEnabled(false);
 	    	shareButton.setVisible(false);	
 	    	deleteButton.setEnabled(false);
 	    	deleteButton.setVisible(false);	
-	    }
-			
+	    }		
 		return true;
 	}
 			

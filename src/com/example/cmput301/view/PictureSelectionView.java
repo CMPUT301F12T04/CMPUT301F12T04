@@ -40,6 +40,13 @@ import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+/**
+ * View class used to hold temporary images taken by the camera. This is a 
+ * picture selection view, in which the user keeps on taking pictures and
+ * eventually when they are done, will select the images they desire by using
+ * checkboxes that are supplied within the list view and respond to the task
+ * by pressing the respond button.
+ */
 @TargetApi(15)
 public class PictureSelectionView extends Activity {
 
@@ -51,6 +58,10 @@ public class PictureSelectionView extends Activity {
 	PhotoRespAdapter pRespAdapter;
 	ResponseFactory respFactory = new PictureResponseFactory();
 
+	/**
+	 * Overrided method to set custom view of our picture response list,
+	 * it contains a list of pictures with an annotation and a checkbox
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {	
 		
@@ -148,11 +159,11 @@ public class PictureSelectionView extends Activity {
 	    row=inflater.inflate(R.layout.pic_response_entry, parent, false);  
 	   }
 	   
-	   //set the annotation for the picture response
+	   //set the annotation for temp picture response
 	   CheckedTextView checkedTextView = (CheckedTextView)row.findViewById(R.id.pic_annotation_entry);
 	   checkedTextView.setText(pResponses.get(position).getAnnotation());
 	   
-	   //set the image for the picture response 
+	   //set the image for temp picture response 
 	   ImageView respImage = (ImageView)row.findViewById(R.id.pic_response_entry);
 	   respImage.setImageBitmap((Bitmap) pResponses.get(position).getContent());
 	   

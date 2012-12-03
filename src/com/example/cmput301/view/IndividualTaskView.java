@@ -34,22 +34,20 @@ import com.example.cmput301.R;
 /**
  * This class is responsible for displaying the selected task that was selected
  * via MainActivity. The task title and description is displayed along with it's
- * responses (which is in a list form). There is an option to share the task and
+ * text responses (which is in a list form). There is an option to share the task and
  * to add a response to the task. An option to go back to MainActivity is also
- * available.
- * 
- * @author dyu2
+ * available. Added options include upvoting the task.
  */
 @TargetApi(15)
 public class IndividualTaskView extends Activity {
 
 	ProgressBar progressBar;
 	private IndividualTaskController itController;
-	Task t;
+	Task aTask;
 	int taskPos;
 
 	/**
-	 * Sets the main view of the selected task, the task is passed in and it's
+	 * Sets the main view of the selected task, the task is passed in and its
 	 * content is displayed on the screen
 	 */
 	@Override
@@ -68,27 +66,26 @@ public class IndividualTaskView extends Activity {
 
 		// Getting information from bundle passed from MainActivity
 		Bundle bundle = getIntent().getExtras();
-		t = (Task) bundle.getSerializable("task");
-		taskTile = t.getName();
-		taskDesc = t.getDescription();
+		aTask = (Task) bundle.getSerializable("task");
+		taskTile = aTask.getName();
+		taskDesc = aTask.getDescription();
 		taskPos = bundle.getInt("id");
 
 		// setting the description of the task
 		TextView title = (TextView) findViewById(R.id.indvidual_des_view);
-		title.setText("Votes: " + t.getVotes() + "\n\n" + taskDesc);
+		title.setText("Votes: " + aTask.getVotes() + "\n\n" + taskDesc);
 
 		// setting the title of the task to be the activity title
 		setTitle(taskTile);
 
 		ListView responses = (ListView) findViewById(R.id.individual_res_list);
+		List<Response> r = itController.getTask(aTask.getId()).getResponses();
 
-		List<Response> r = itController.getTask(t.getId()).getResponses();
-
+		//setting custom adapter to display responses
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(
 				this, android.R.layout.simple_list_item_1, (ArrayList) r);
 		Log.d("RESPONSELIST", "" + r.size());
-
 		responses.setAdapter(adapter);
 	}
 
@@ -98,18 +95,21 @@ public class IndividualTaskView extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		getMenuInflater().inflate(R.menu.individual_task_view, menu);
-		
+		getMenuInflater().inflate(R.menu.individual_task_view, menu);		
 		return true;
 	}
 
+	/**
+	 * Refresh the view on any newly added responses
+	 */
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		t = itController.getTask(t.getId());
-		List<Response> r = t.getResponses();
+		aTask = itController.getTask(aTask.getId());
+		List<Response> r = aTask.getResponses();
 
+		//update list view, reset adapter
 		ListView responses = (ListView) findViewById(R.id.individual_res_list);
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		ArrayAdapter<TextResponse> adapter = new ArrayAdapter<TextResponse>(
@@ -128,48 +128,52 @@ public class IndividualTaskView extends Activity {
 	/**
 	 * Method used to handle various user selected commands. These commands
 	 * include uploading a task, responding to a task and Going back to the
-	 * previous screen.
+	 * previous screen ,up voting a task, and deleting a task.
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		// do upload, currently set to just kill activity
+		//Do upload
 		if (item.getItemId() == R.id.menu_upload) {
-			itController.shareTask(t.getId());
-
+			itController.shareTask(aTask.getId());
 			finish();
 		}
+		//Launch the respond to a task activity
 		if (item.getItemId() == R.id.menu_respond) {
-			// Should launch the respond to a task activity here.
 			Intent in = new Intent(IndividualTaskView.this,
 					TextResponseView.class);
 			Bundle bundle = new Bundle();
 			bundle.putInt("id", taskPos);
-			bundle.putSerializable("task", t);
+			bundle.putSerializable("task", aTask);
 			in.putExtras(bundle);
 			startActivity(in);
 		}
+		//Do an up vote
 		if (item.getItemId() == R.id.menu_vote) {
-			itController.voteTask(t);
+			itController.voteTask(aTask);
 			TextView title = (TextView) findViewById(R.id.indvidual_des_view);
-			title.setText("Votes: " + t.getVotes() + "\n\n"
-					+ t.getDescription());
+			title.setText("Votes: " + aTask.getVotes() + "\n\n"
+					+ aTask.getDescription());
 		}
-
+		//Delete the task
 		if (item.getItemId() == R.id.menu_delete) {
-			itController.deleteTask(t.getId());
+			itController.deleteTask(aTask.getId());
 			finish();
 		}
-		
+		//go back, kill activity
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 		}
 		return true;
 	}
+	/**
+	 * Overrided method used to check and see if task has been shared,
+	 * if so then disable the share and delete button.
+	 */
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem shareButton = menu.findItem(R.id.menu_upload);
 		MenuItem deleteButton = menu.findItem(R.id.menu_delete);
-	    if(t.getStatus() == Task.STATUS_SHARED)
+	    if(aTask.getStatus() == Task.STATUS_SHARED)
 	    {
 	    	shareButton.setEnabled(false);
 	    	shareButton.setVisible(false);	

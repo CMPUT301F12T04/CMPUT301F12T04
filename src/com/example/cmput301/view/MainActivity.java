@@ -41,17 +41,14 @@ import com.example.cmput301.R;
 import com.example.cmput301.application.*;
 
 
-
-
 /**
  * The main screen of our application, which consists mainly of a list of tasks.
  * It consists of several available options available to the user. Which include
  * a drop down navigation, a search option, and an add new task option. The body
  * of this view is made up of the list of tasks. Each task can be clicked on for
  * further information and additional task related commands.
- *
- * @author dyu2
- *
+ * 
+ * New addition: A refresh button to get new remote tasks 
  */
 @TargetApi(15)
 public class MainActivity extends Activity  implements  SearchView.OnQueryTextListener,
@@ -59,9 +56,9 @@ SearchView.OnCloseListener {
 
 	private SearchView mSearchView;
 	private MainController mainController;
-	//setting up list view and using customAdapter for tasks
 	ListView taskview;
 	ProgressDialog mDialog;
+	
 	/**
 	 * Method is responsible for the creation of the view of the activity,
 	 * Things such as the actionbar and the list of tasks are set here.
@@ -98,7 +95,7 @@ SearchView.OnCloseListener {
 				R.array.taskview_options,
 				R.layout.spinner_dropdown_item);
 
-		//When item is clicked, a toast is displayed for now
+		//When item is clicked, the appropriate list will be loaded
 		mOnNavigationListener = new OnNavigationListener() {
 			String[] choices = getResources().getStringArray(R.array.taskview_options);
 
@@ -124,21 +121,19 @@ SearchView.OnCloseListener {
 
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
 
-
 		taskview = (ListView) findViewById(R.id.mainActivityList);
 		taskview.setAdapter(mainController.getListAdapter());
 		taskview.setOnItemClickListener(new OnItemClickListener() {
 			//When item is clicked individual task view is opened,
-			//the task is passed to individual task view
+			//the task is passed to the appropriate view
 			public void onItemClick(AdapterView<?> adp, View view,
 					int pos, long id) {
-
 
 				if(mainController.getList().get(pos).getType().equals(
 						PictureResponse.class.toString()))
 				{
 					Intent in = new Intent(MainActivity.this, PhotoResponseView.class);
-					//passing task to individual task view
+					//passing task to photo response view
 					Bundle bundle = new Bundle();
 					bundle.putInt("id", pos);
 					bundle.putSerializable("task", mainController.getList().get(pos));
@@ -167,6 +162,8 @@ SearchView.OnCloseListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
+		
+		//Activating search button on actionbar
 		MenuItem searchItem = menu.findItem(R.id.menu_search);
 		mSearchView = (SearchView) searchItem.getActionView();
 		mSearchView.setOnQueryTextListener(this);
@@ -184,6 +181,9 @@ SearchView.OnCloseListener {
 		refreshList();
 	}
 
+	/**
+	 * Refreshes the list view on the main screen depending on selection
+	 */
 	private void refreshList()
 	{
 		int navIndex = getActionBar().getSelectedNavigationIndex();
@@ -193,7 +193,9 @@ SearchView.OnCloseListener {
 	/**
 	 * Overrided method, that checks if the add option was click. If so a dialog
 	 * box will appear and the task can be defined. The database will be updated
-	 * accordingly
+	 * accordingly. There is also a refresh button, when clicked on will do a 
+	 * refresh of remote tasks. This method is used to listen on action bar
+	 * buttons.
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -263,6 +265,8 @@ SearchView.OnCloseListener {
 			dialog.show();
 			dialog.setTitle("Adding a Task");
 		}
+		
+		//remote tasks button, when pressed will get remote tasks
 		if(item.getItemId() == R.id.menu_refresh)
 		{
 			mainController.updateRemoteTasks();

@@ -26,43 +26,45 @@ import android.widget.Toast;
  * screen.
  */
 public class AnnotationInputView extends Activity {
-	
+
+	/**
+	 * Overrided method used to display a prompt to the user
+	 * to get an annotation for the photo that was just taken
+	 */
 	public void onCreate(Bundle savedInstanceState) {	
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.get_annotation_view);
-	
-		    final EditText annoInput;
-			annoInput = (EditText) findViewById(R.id.photo_annotation);
 
-			Button postBut;
-			postBut = (Button) findViewById(R.id.postAnnoButton);
+		final EditText annoInput;
+		annoInput = (EditText) findViewById(R.id.photo_annotation);
+
+		Button postBut;
+		postBut = (Button) findViewById(R.id.postAnnoButton);
 
 
-			postBut.setOnClickListener(new View.OnClickListener() {
-				//Post has been clicked.
-				public void onClick(View v) {
-					
-					String annotation;					
-					annotation = annoInput.getText().toString();
-					
-					//annotation was empty
-					if(annotation.equals(""))
-					{
-						Toast.makeText(getApplicationContext(), 
-								"Text input is required!", Toast.LENGTH_SHORT).show();
-					}
-					//get annotation and pass back to parent activity
-					else
-					{
-						Intent i = new Intent();
-						i.putExtra("annotation", annotation);
-						setResult(Activity.RESULT_OK, i);
-						finish();
-					}
+		postBut.setOnClickListener(new View.OnClickListener() {
+			//Post has been clicked.
+			public void onClick(View v) {
+
+				String annotation;					
+				annotation = annoInput.getText().toString();
+
+				//annotation was empty
+				if(annotation.equals(""))
+				{
+					Toast.makeText(getApplicationContext(), 
+							"Text input is required!", Toast.LENGTH_SHORT).show();
 				}
-			});
+				//get annotation and pass back to parent activity (PhotoResponseView)
+				else
+				{
+					Intent i = new Intent();
+					i.putExtra("annotation", annotation);
+					setResult(Activity.RESULT_OK, i);
+					finish();
+				}
+			}
+		});
 	}
-
-	
 
 }
