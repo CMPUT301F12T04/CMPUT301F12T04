@@ -11,31 +11,40 @@
       implementation
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    <item android:id="@+id/menu_delete"
+
+
+    <item
+        android:id="@+id/menu_respond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/ic_content_new_attachment"
+        android:orderInCategory="1"
+        android:showAsAction="always"
+        android:title="Respond"/>
+     <item
+        android:id="@+id/menu_vote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/ic_rating_good"
+        android:orderInCategory="2"
+        android:showAsAction="always"
+        android:title="Vote"/>
+     <item
+        android:id="@+id/menu_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/ic_social_share"
+        android:orderInCategory="3"
+        android:showAsAction="ifRoom"
+        android:title="Share"/>
+    <item
+        android:id="@+id/menu_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@android:drawable/ic_menu_delete"
-        android:showAsAction="always"
-        android:orderInCategory="1"/>    
-    <item android:id="@+id/menu_upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:icon="@android:drawable/ic_menu_upload"
-        android:showAsAction="always"
-        android:orderInCategory="2"/>
-    <item android:id="@+id/menu_respond"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:icon="@android:drawable/ic_menu_set_as"
-        android:showAsAction="always"
-        android:orderInCategory="3"/>
-    <item android:id="@+id/menu_vote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:icon="@android:drawable/arrow_up_float"
-        android:showAsAction="always"
-        android:orderInCategory="4"/>
+        android:orderInCategory="4"
+        android:showAsAction="ifRoom"
+        android:title="Delete"/>
 
 
 </menu>
