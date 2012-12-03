@@ -1,1 +1,10 @@
-com.example.cmput301
+TestProject.src
+TestProject.src.response
+TestProject.src.response.factory
+TestProject.src.stubs
+com.example.cmput301.application
+com.example.cmput301.controller
+com.example.cmput301.model
+com.example.cmput301.model.response
+com.example.cmput301.model.response.factory
+com.example.cmput301.view
