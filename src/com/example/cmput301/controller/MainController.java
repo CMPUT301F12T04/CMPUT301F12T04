@@ -30,14 +30,7 @@ import com.example.cmput301.model.response.PictureResponse;
 import com.example.cmput301.application.*;
 
 import com.example.cmput301.R;
-/**
- * This is a go between method for the View and Model components for this
- * application. It was written in a very hacky way because the original author
- * decided to tell us two days before it was due he couldn't handle this.
- *
- * Note: In future versions this will be broken into multiple controllers
- * depending on the view.
- */
+
 public class MainController {
 	private TaskListController checkout = new TaskListController();
 	public static ConnUpdateCallback callBack; 
@@ -181,10 +174,10 @@ public class MainController {
 	 */
 	class TaskListAdapter extends BaseAdapter {
 		private Context context;
+		
 		TaskListAdapter(Context context) {
 			this.context = context;
 		}
-
 		/**
 		 * Overrided method that allows a task to display it's title and
 		 * description. An image can also be included to indicate the type of
@@ -200,14 +193,13 @@ public class MainController {
 			}
 
 			//set the title of the task
-			TextView titleView = getTitleView(convertView);
+			TextView titleView = getTitleView(row);
 			titleView.setText(checkout.getTasks().get(position).getName());
 
 			//set the description of the task
-			TextView descView =getDescView(convertView);
+			TextView descView = getDescView(row);
 			descView.setSingleLine(false);
 			descView.setText(checkout.getTasks().get(position).getDescription() + "\nVotes: " + checkout.getTasks().get(position).getVotes());
-
 			//Sets the image for the task, task in this case is a picture type task
 			if(checkout.getTasks().get(position).getType().equals(PictureResponse.class.toString()))
 			{
@@ -256,7 +248,7 @@ public class MainController {
 		}
 
 		public long getItemId(int position) {
-			return position;
+			return position; 
 		}
 	}
 
