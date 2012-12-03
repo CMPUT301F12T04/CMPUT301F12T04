@@ -268,6 +268,7 @@ public void onResume() {
 				prController.addResponse(aTask, pR);
 			}
 			pRLA.notifyDataSetChanged();
+			finish();
 		}
 	}
 	

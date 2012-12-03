@@ -192,7 +192,7 @@ public class WebService
 			Task webTask = get(task.getId());
 //			delete(task.getId());
 			// add new response
-			Log.d("RESPONSE", (String)response.getContent());
+//			Log.d("RESPONSE", (String)response.getContent());
 			webTask.addResponse(response);
 			
 			// get data string

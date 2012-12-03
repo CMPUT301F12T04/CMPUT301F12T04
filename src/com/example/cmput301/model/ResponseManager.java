@@ -34,7 +34,7 @@ public class ResponseManager
 		}
 		else
 		{
-			Log.d("RESPONSE", "Content ====" + (String) response.getContent());
+//			Log.d("RESPONSE", "Content ====" + (String) response.getContent());
 			Task updatedTask = WebService.post(task, response);
 			Manager.dbman.updateTask(updatedTask);
 		}
