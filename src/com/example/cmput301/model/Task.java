@@ -104,7 +104,9 @@ public class Task implements Comparable<Object>, Serializable, Cloneable
 	 */
 	public void addResponse(Response response)
 	{
-		this.responses.add(response);
+		if(response.getClass().toString().equals(type)) {
+			this.responses.add(response);
+		}
 	}
 
 	// getters and setters

@@ -24,14 +24,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.example.cmput301.R;
@@ -105,6 +103,10 @@ public class PhotoResponseView extends ResponseView {
 
 		//go back, kills activity
 		if (item.getItemId() == android.R.id.home) {
+			finish();
+		}
+		if (item.getItemId() == R.id.menu_delete) {
+			prController.deleteTask(t1.getId());
 			finish();
 		}
 		if (item.getItemId() == R.id.menu_p_task_upload)
@@ -224,10 +226,13 @@ public class PhotoResponseView extends ResponseView {
 	}
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem shareButton = menu.findItem(R.id.menu_p_task_upload);
+		MenuItem deleteButton = menu.findItem(R.id.menu_delete);
 	    if(t1.getStatus() == Task.STATUS_SHARED)
 	    {
 	    	shareButton.setEnabled(false);
 	    	shareButton.setVisible(false);	
+	    	deleteButton.setEnabled(false);
+	    	deleteButton.setVisible(false);	
 	    }
 			
 		return true;

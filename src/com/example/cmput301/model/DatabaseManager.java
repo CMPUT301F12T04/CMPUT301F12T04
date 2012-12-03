@@ -47,6 +47,10 @@ public class DatabaseManager {
 		DatabaseSingleton ds = DatabaseSingleton.getInstance(context);
 		db = ds.getDB();
 	}
+	
+	public DatabaseManager() {
+		
+	}
 
 	/**
 	 * Post a task to the "local" table of the database.
@@ -54,7 +58,6 @@ public class DatabaseManager {
 	 * @param task The task to be added.
 	 * @return The task that was added along with it's id.
 	 */
-	//fixed
 	public Task postLocal(Task task) {
 		if(task.getId()==null)
 		{
