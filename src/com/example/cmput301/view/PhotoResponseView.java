@@ -147,9 +147,8 @@ public void onResume() {
 		//upvote the task
 		if (item.getItemId() == R.id.menu_vote) {
 			prController.voteTask(aTask);
-			TextView title = (TextView) findViewById(R.id.p_task_des_view);
-			title.setText("Votes: " + aTask.getVotes() + "\n\n"
-					+ aTask.getDescription());
+			TextView votes = (TextView) findViewById(R.id.textView3);
+			votes.setText("Votes: " + aTask.getVotes());
 		}
 		// take a picture, go to selection view
 		if (item.getItemId() == R.id.menu_camera) {	

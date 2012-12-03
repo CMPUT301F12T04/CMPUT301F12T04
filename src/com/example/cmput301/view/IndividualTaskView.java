@@ -141,9 +141,8 @@ public class IndividualTaskView extends Activity {
 		//Do an up vote
 		if (item.getItemId() == R.id.menu_vote) {
 			itController.voteTask(aTask);
-			TextView title = (TextView) findViewById(R.id.indvidual_des_view);
-			title.setText("Votes: " + aTask.getVotes() + "\n\n"
-					+ aTask.getDescription());
+			TextView votes = (TextView) findViewById(R.id.textView3);
+			votes.setText("Votes: " + aTask.getVotes());
 		}
 		//Delete the task
 		if (item.getItemId() == R.id.menu_delete) {
