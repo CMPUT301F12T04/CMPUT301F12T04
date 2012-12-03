@@ -12,17 +12,17 @@ package TestProject.src;
  *     implementation
  ******************************************************************************/
 
+import android.test.AndroidTestCase;
 import android.test.InstrumentationTestCase;
 import android.test.IsolatedContext;
 import android.util.Log;
 
-public class TestDatabaseManager extends InstrumentationTestCase {
+public class TestDatabaseManager extends AndroidTestCase {
 
 	
 	public void testDeleteLocalTask() {
 	
-		IsolatedContext ctxt = new IsolatedContext(null, getInstrumentation().getContext());
-		Log.d("SHIT FUCK MOTHER FUCKER", "" + ctxt.getApplicationContext());
+		Log.d("=/", "" + mContext.getApplicationContext());
 	}
 
 	public void testGetLocalTask() {

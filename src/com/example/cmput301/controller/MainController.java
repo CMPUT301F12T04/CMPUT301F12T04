@@ -40,7 +40,7 @@ import com.example.cmput301.R;
  */
 public class MainController {
 	private TaskListController checkout = new TaskListController();
-	public static ConnUpdateCallback callBack;
+	public static ConnUpdateCallback callBack; 
 	private Context context;
 
 	/**
@@ -51,10 +51,10 @@ public class MainController {
 	 */
 	public MainController(Context context, Activity activity) {
 		this.context = context;
-		checkout.setTaskManager(new Manager(context));
+		checkout.setTaskManager(new Manager(context)); 
 		checkout.setTasks(checkout.getTaskManager().getPrivateTasks());
 		checkout.setAdapter(new TaskListAdapter(activity));
-		if (checkout.getAdapter() != null) {
+		if (checkout.getAdapter() != null) {  
 			checkout.getAdapter().notifyDataSetChanged();
 		}	
 	}
